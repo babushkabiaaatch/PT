@@ -84,7 +84,8 @@ PAGES_PER_SEARCH = 1       # one all-time page per query, plus one fresh page; c
 FRESH_DAYS = 45            # "new" videos = published in the last 45 days
 NEW_PAPER_DAYS = 60        # papers = first published in the last 60 days
 MIN_SECONDS = 240          # skip anything shorter than 4 minutes (kills Shorts)
-MAX_FOR_GEMINI = 300       # top-viewed videos sent to Gemini (ALL fresh ones are added on top)
+MAX_FOR_GEMINI = 300       # total all-time candidates sent to Gemini across both sections
+MAX_PER_CATEGORY = MAX_FOR_GEMINI // 2  # reserve half the review capacity for each section
 MAX_PAPERS_FOR_GEMINI = 120
 VIDEO_BATCH = 40           # videos judged per Gemini request
 PAPER_BATCH = 20           # papers judged per Gemini request
@@ -394,7 +395,9 @@ VIDEO_PROMPT = """You are curating a personal video site with exactly two sectio
 - "Longevity": videos about living longer and healthier (aging science, healthspan, exercise, sleep or
   nutrition for long life, medical longevity research).
 For each numbered video below, decide whether to KEEP it. Reject clickbait, unrelated content,
-product ads, and videos that only mention the topic in passing.
+product ads, and videos that only mention the topic in passing. Each video includes a candidate
+section based on the YouTube search that found it. Use that as a strong category hint, while still
+checking that the title and description genuinely fit the site's topic.
 Return ONLY a JSON array, one object per video, like this:
 [{"i": 0, "keep": true, "cat": "Goggins", "topic": "mental toughness"}]
 "cat" must be "Goggins" or "Longevity". "topic" is 2-4 words.
@@ -495,7 +498,10 @@ def judge_videos(batch):
     lines = []
     for i, v in enumerate(batch):
         desc = v["description"][:200].replace("\n", " ")
-        lines.append(f"[{i}] {v['title']} | channel: {v['channel']} | {desc}")
+        lines.append(
+            f"[{i}] candidate section: {v['guess']} | {v['title']} "
+            f"| channel: {v['channel']} | {desc}"
+        )
     verdicts = {x["i"]: x for x in call_gemini(VIDEO_PROMPT + "\n".join(lines))}
     labels = []
     for i in range(len(batch)):
@@ -669,17 +675,34 @@ def main():
     )
 
     fresh_cutoff = (TODAY - datetime.timedelta(days=FRESH_DAYS)).isoformat()
-    candidates.sort(key=lambda video: -video["views"])
-    chosen = candidates[:MAX_FOR_GEMINI]
-    chosen_ids = {video["id"] for video in chosen}
-    chosen.extend(
-        video for video in candidates
-        if video["published"] >= fresh_cutoff and video["id"] not in chosen_ids
-    )
+
+    # Select candidates separately so a large/high-view category cannot crowd out the other.
+    chosen = []
+    chosen_ids = set()
+    for category in ("Goggins", "Longevity"):
+        category_candidates = [v for v in candidates if v["guess"] == category]
+        category_candidates.sort(key=lambda video: -video["views"])
+        category_chosen = category_candidates[:MAX_PER_CATEGORY]
+        category_ids = {video["id"] for video in category_chosen}
+        category_chosen.extend(
+            video for video in category_candidates
+            if video["published"] >= fresh_cutoff and video["id"] not in category_ids
+        )
+        chosen.extend(category_chosen)
+        chosen_ids.update(video["id"] for video in category_chosen)
+        print(f"  {category}: {len(category_chosen)} candidates selected.")
+
     print(f"{len(chosen)} video candidates sent to Gemini.")
 
     # --- Videos, step C: Gemini judges ---
     labels = load_labels()
+    # Earlier runs may have rejected Longevity candidates before category-balanced selection.
+    # Reconsider those now that the candidate pool is balanced and includes the search category.
+    for video in chosen:
+        if video["guess"] == "Longevity":
+            previous = labels.get(video["id"], {})
+            if previous and previous.get("keep") is False:
+                labels.pop(video["id"], None)
     gemini_ok = judge_all(chosen, labels, judge_videos, VIDEO_BATCH)
     if not gemini_ok:
         print("  Gemini could not finish video judging. Unjudged videos will NOT be added.")
@@ -692,9 +715,9 @@ def main():
         label = labels.get(video["id"])
         if not label or not label.get("keep"):
             continue
-        category = label.get("cat")
-        if category not in ("Goggins", "Longevity"):
-            category = video["guess"]
+        # Keep the category assigned from search provenance. Gemini decides relevance,
+        # while this prevents one section's videos being mislabeled into the other.
+        category = video["guess"]
         newly_kept_videos.append({
             "id": video["id"],
             "title": video["title"],
