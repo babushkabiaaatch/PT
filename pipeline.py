@@ -151,11 +151,20 @@ def check_keys():
 # 3. YOUTUBE HELPERS
 # ---------------------------------------------------------------
 
+
 def search_youtube(query, fresh=False):
-    """Ask YouTube for videos matching query; fail loudly on API errors."""
+    """Search YouTube, handling exhausted API quota gracefully."""
+
+    global YOUTUBE_QUOTA_EXHAUSTED
+
+    if YOUTUBE_QUOTA_EXHAUSTED:
+        print(f"Skipping YouTube search: quota exhausted ({query})")
+        return []
+
     ids = []
     page_token = None
     pages = 1 if fresh else PAGES_PER_SEARCH
+
     for _ in range(pages):
         params = {
             "part": "snippet",
@@ -164,10 +173,12 @@ def search_youtube(query, fresh=False):
             "maxResults": 50,
             "key": YOUTUBE_KEY,
         }
+
         if fresh:
             cutoff = TODAY - datetime.timedelta(days=FRESH_DAYS)
             params["order"] = "date"
             params["publishedAfter"] = cutoff.isoformat() + "T00:00:00Z"
+
         if page_token:
             params["pageToken"] = page_token
 
@@ -176,18 +187,43 @@ def search_youtube(query, fresh=False):
             params=params,
             timeout=45,
         )
+
         try:
             data = response.json()
         except ValueError:
             raise RuntimeError(
-                f"YouTube returned a non-JSON response for query {query!r} "
-                f"(HTTP {response.status_code})."
+                f"YouTube returned invalid JSON for {query} "
+                f"(HTTP {response.status_code})"
             )
 
         if response.status_code != 200 or "error" in data:
-            message = data.get("error", {}).get("message", response.text[:500])
+            error = data.get("error", {})
+            message = error.get("message", response.text[:500])
+
+            reasons = [
+                item.get("reason", "")
+                for item in error.get("errors", [])
+            ]
+
+            quota_errors = {
+                "quotaExceeded",
+                "dailyLimitExceeded",
+                "rateLimitExceeded",
+            }
+
+            if (
+                response.status_code == 429
+                or quota_errors.intersection(reasons)
+            ):
+                YOUTUBE_QUOTA_EXHAUSTED = True
+                print(
+                    "WARNING: YouTube API quota exhausted. "
+                    "Skipping remaining searches."
+                )
+                return ids
+
             raise RuntimeError(
-                f"YouTube search failed for query {query!r} "
+                f"YouTube search failed for '{query}' "
                 f"(HTTP {response.status_code}): {message}"
             )
 
@@ -196,10 +232,14 @@ def search_youtube(query, fresh=False):
             for item in data.get("items", [])
             if item.get("id", {}).get("videoId")
         )
+
         page_token = data.get("nextPageToken")
+
         if not page_token:
             break
+
     return ids
+
 
 
 def get_details(video_ids):
