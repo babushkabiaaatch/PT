@@ -1,1 +1,9 @@
-{"updated": "2026-11-20T13:18:16+00:00", "videos": 0, "new_videos": 0, "papers": 0}
+{
+  "updated": "2026-11-20T14:06:14+00:00",
+  "videos": 17,
+  "new_videos": 1,
+  "papers": 75,
+  "video_candidates": 17,
+  "paper_candidates": 120,
+  "gemini_ok": true
+}
