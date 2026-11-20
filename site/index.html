@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GogginsTube</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b0b0d">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root { --bg:#0b0b0d; --card:#17171b; --text:#f2f2f2; --muted:#9a9aa5; --goggins:#ff3b30; --long:#30d158; --tough:#ff9f0a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family: system-ui, sans-serif; }
+  header { padding:20px 24px 8px; }
+  h1 { margin:0; font-size:28px; letter-spacing:1px; }
+  h1 span { color:var(--goggins); }
+  .sub { color:var(--muted); margin:4px 0 0; font-size:14px; }
+  .controls { display:flex; flex-wrap:wrap; gap:8px; padding:12px 24px; align-items:center; }
+  .controls button, .controls select, .controls input {
+    background:var(--card); color:var(--text); border:1px solid #2a2a31; border-radius:999px;
+    padding:8px 16px; font-size:14px; cursor:pointer; }
+  .controls button.active { background:var(--text); color:var(--bg); font-weight:600; }
+  .controls input { cursor:text; min-width:180px; }
+  .controls select:disabled, .controls button:disabled { opacity:.35; cursor:default; }
+
+  #grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px; padding:8px 24px 40px; }
+  #grid.papers { grid-template-columns:1fr; max-width:900px; }
+  .card { background:var(--card); border-radius:12px; overflow:hidden; cursor:pointer; position:relative; transition:transform .15s; }
+  .card:hover { transform:translateY(-3px); }
+  .card img { width:100%; display:block; aspect-ratio:16/9; object-fit:cover; }
+  .card .info { padding:10px 12px 12px; }
+  .card .title { font-size:14px; font-weight:600; line-height:1.3; margin:0 0 6px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .meta { font-size:12px; color:var(--muted); }
+  .badge { position:absolute; top:8px; left:8px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; color:#000; }
+  .badge.Goggins { background:var(--goggins); color:#fff; }
+  .badge.Longevity { background:var(--long); }
+  .badge.Toughness { background:var(--tough); }
+  .new { position:absolute; top:8px; right:8px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; background:#fff; color:#000; }
+  .time { position:absolute; right:8px; top:calc(56.25% - 28px); background:rgba(0,0,0,.8); font-size:12px; padding:2px 6px; border-radius:4px; }
+  .card.watched { opacity:.45; }
+
+  .paper { background:var(--card); border-radius:12px; padding:16px 18px; }
+  .paper .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+  .tag { font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; color:#000; }
+  .tag.Longevity { background:var(--long); }
+  .tag.Toughness { background:var(--tough); }
+  .tag.chip { background:#2a2a31; color:var(--text); font-weight:600; }
+  .tag.warn { background:#3a2f12; color:#ffd479; font-weight:600; }
+  .tag.new { background:#fff; color:#000; position:static; }
+  .paper h3 { margin:0 0 6px; font-size:16px; line-height:1.35; }
+  .paper .sum { margin:10px 0; font-size:14px; line-height:1.5; }
+  .paper a { color:var(--long); font-size:14px; font-weight:600; text-decoration:none; }
+  .paper a:hover { text-decoration:underline; }
+  #note { display:none; padding:0 24px 8px; color:var(--muted); font-size:13px; max-width:900px; }
+
+  #modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.92); z-index:10; align-items:center; justify-content:center; flex-direction:column; padding:16px; }
+  #modal.open { display:flex; }
+  #player { width:min(960px, 100%); aspect-ratio:16/9; border:0; border-radius:12px; }
+  #modalTitle { max-width:960px; margin:12px 0; font-size:16px; text-align:center; }
+  #close { background:var(--card); color:var(--text); border:0; border-radius:999px; padding:10px 22px; font-size:15px; cursor:pointer; }
+  #empty { padding:40px 24px; color:var(--muted); display:none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GOGGINS<span>TUBE</span></h1>
+  <p class="sub" id="status">Stay hard. Live long.</p>
+</header>
+
+<div class="controls">
+  <button class="tab active" data-cat="All">All</button>
+  <button class="tab" data-cat="Goggins">Goggins</button>
+  <button class="tab" data-cat="Longevity">Longevity</button>
+  <button class="tab" data-cat="Research">Research</button>
+  <input id="search" placeholder="Search...">
+  <select id="sort">
+    <option value="newest">Newest</option>
+    <option value="views">Most viewed</option>
+    <option value="shortest">Shortest</option>
+    <option value="longest">Longest</option>
+  </select>
+  <button id="hideWatched">Hide watched</button>
+</div>
+
+<div id="note">Summaries are written by AI from each paper's abstract and can be wrong. Open the paper before you trust it. Preprints are not peer reviewed. This is reading material, not medical advice.</div>
+<div id="grid"></div>
+<div id="empty">Nothing to show. Did you run pipeline.py first? (and open this page via python -m http.server)</div>
+
+<div id="modal">
+  <iframe id="player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <p id="modalTitle"></p>
+  <button id="close">Close</button>
+</div>
+
+<script>
+let videos = [];
+let papers = [];
+let category = "All";
+let hideWatched = false;
+
+// "Watched" list is saved in your browser only. try/catch in case storage is blocked.
+let watched = new Set();
+try { watched = new Set(JSON.parse(localStorage.getItem("watched") || "[]")); } catch (e) {}
+function saveWatched() {
+  try { localStorage.setItem("watched", JSON.stringify([...watched])); } catch (e) {}
+}
+
+function fmtTime(s) {
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  const mm = h ? String(m).padStart(2, "0") : m;
+  return (h ? h + ":" : "") + mm + ":" + String(sec).padStart(2, "0");
+}
+function fmtViews(n) {
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + "M views";
+  if (n >= 1e3) return Math.round(n / 1e3) + "K views";
+  return n + " views";
+}
+function daysAgo(dateStr) {
+  const d = new Date(dateStr);
+  if (isNaN(d)) return null;
+  return Math.max(0, Math.floor((Date.now() - d.getTime()) / 86400000));
+}
+function fmtAgo(dateStr) {
+  const n = daysAgo(dateStr);
+  if (n === null) return "";
+  if (n === 0) return "today";
+  if (n < 30) return n + "d ago";
+  if (n < 365) return Math.floor(n / 30) + "mo ago";
+  return Math.floor(n / 365) + "y ago";
+}
+function isNew(dateStr) { const n = daysAgo(dateStr); return n !== null && n <= 14; }
+
+function render() {
+  const q = document.getElementById("search").value.toLowerCase();
+  const sortEl = document.getElementById("sort");
+  const grid = document.getElementById("grid");
+  const research = category === "Research";
+
+  sortEl.disabled = research;                 // papers are always newest first
+  document.getElementById("hideWatched").disabled = research;
+  document.getElementById("note").style.display = research ? "block" : "none";
+  grid.className = research ? "papers" : "";
+  grid.innerHTML = "";
+
+  const list = research ? renderPapers(q) : renderVideos(q, sortEl.value);
+  document.getElementById("empty").style.display = list ? "none" : "block";
+}
+
+function renderVideos(q, sort) {
+  let list = videos.filter(v =>
+    (category === "All" || v.category === category) &&
+    ((v.title + " " + v.channel + " " + (v.topic || "")).toLowerCase().includes(q)) &&
+    !(hideWatched && watched.has(v.id)));
+
+  const sorters = {
+    views: (a, b) => b.views - a.views,
+    newest: (a, b) => (b.published || "").localeCompare(a.published || ""),
+    shortest: (a, b) => a.seconds - b.seconds,
+    longest: (a, b) => b.seconds - a.seconds,
+  };
+  list.sort(sorters[sort]);
+
+  const grid = document.getElementById("grid");
+  for (const v of list) {
+    const card = document.createElement("div");
+    card.className = "card" + (watched.has(v.id) ? " watched" : "");
+    card.innerHTML = `
+      <img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg" alt="">
+      <span class="badge ${v.category}">${v.category}</span>
+      ${isNew(v.published) ? '<span class="new">NEW</span>' : ""}
+      <span class="time">${fmtTime(v.seconds)}</span>
+      <div class="info">
+        <p class="title"></p>
+        <div class="meta"></div>
+      </div>`;
+    // textContent (not innerHTML) so weird characters in titles can't break the page
+    card.querySelector(".title").textContent = v.title;
+    card.querySelector(".meta").textContent =
+      `${v.channel} · ${fmtViews(v.views)} · ${fmtAgo(v.published)}` + (v.topic ? ` · ${v.topic}` : "");
+    card.onclick = () => openVideo(v);
+    grid.appendChild(card);
+  }
+  return list.length;
+}
+
+function renderPapers(q) {
+  const list = papers
+    .filter(p => (p.title + " " + p.journal + " " + p.summary + " " + p.authors).toLowerCase().includes(q))
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const grid = document.getElementById("grid");
+  for (const p of list) {
+    const el = document.createElement("div");
+    el.className = "paper";
+    el.innerHTML = `
+      <div class="tags"></div>
+      <h3></h3>
+      <div class="meta"></div>
+      <p class="sum"></p>
+      <a target="_blank" rel="noopener">Read paper ↗</a>`;
+    const tags = el.querySelector(".tags");
+    const addTag = (text, cls) => { const t = document.createElement("span"); t.className = "tag " + cls; t.textContent = text; tags.appendChild(t); };
+    addTag(p.category, p.category);
+    if (p.evidence) addTag(p.evidence, "chip");
+    if (p.preprint) addTag("Preprint (not peer reviewed)", "warn");
+    if (isNew(p.date)) addTag("NEW", "new");
+
+    el.querySelector("h3").textContent = p.title;
+    el.querySelector(".meta").textContent = [p.journal, p.authors, p.date].filter(Boolean).join(" · ");
+    el.querySelector(".sum").textContent = "AI summary: " + p.summary;
+    const link = el.querySelector("a");
+    if (/^https:\/\//.test(p.url)) link.href = p.url; else link.remove();
+    grid.appendChild(el);
+  }
+  return list.length;
+}
+
+function openVideo(v) {
+  document.getElementById("player").src = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
+  document.getElementById("modalTitle").textContent = v.title;
+  document.getElementById("modal").classList.add("open");
+  watched.add(v.id);
+  saveWatched();
+}
+function closeVideo() {
+  document.getElementById("player").src = "";      // stops the video
+  document.getElementById("modal").classList.remove("open");
+  render();
+}
+
+document.getElementById("close").onclick = closeVideo;
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeVideo(); });
+document.getElementById("search").oninput = render;
+document.getElementById("sort").onchange = render;
+document.getElementById("hideWatched").onclick = e => {
+  hideWatched = !hideWatched;
+  e.target.classList.toggle("active", hideWatched);
+  render();
+};
+document.querySelectorAll(".tab").forEach(btn => btn.onclick = () => {
+  category = btn.dataset.cat;
+  document.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b === btn));
+  render();
+});
+
+function fmtUpdated(iso) {
+  const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+  if (isNaN(m)) return "";
+  if (m < 60) return Math.max(m, 1) + "m ago";
+  if (m < 1440) return Math.floor(m / 60) + "h ago";
+  return Math.floor(m / 1440) + "d ago";
+}
+// "Updated 3h ago" line (optional: the site works without status.json)
+fetch("status.json").then(r => r.json()).then(s => {
+  document.getElementById("status").textContent =
+    `Stay hard. Live long. · Updated ${fmtUpdated(s.updated)} · ${s.new_videos} new videos · ${s.papers} papers`;
+}).catch(() => {});
+
+// Lets the site install as an app on your phone
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+
+// Load both data files. Papers are optional: the site still works without papers.json.
+Promise.all([
+  fetch("videos.json").then(r => r.json()).catch(() => []),
+  fetch("papers.json").then(r => r.json()).catch(() => []),
+]).then(([v, p]) => { videos = v; papers = p; render(); });
+</script>
+</body>
+</html>
