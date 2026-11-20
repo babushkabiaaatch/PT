@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-GogginsTube pipeline  (YouTube + Europe PMC research papers + Gemini)
+GogginsTube pipeline  (YouTube + multi-source research + Gemini)
 ---------------------------------------------------------------------
 What this does, in plain words:
   1. Checks both of your keys work (keys live in keys.py)
   2. Searches YouTube twice: once for the all-time best videos, once for the NEWEST ones
-  3. Searches Europe PMC (a free database of medical research, including brand-new
-     preprints) for recent longevity and mental-toughness papers
+  3. Searches Europe PMC, PubMed, bioRxiv, medRxiv, arXiv, Crossref and optionally
+     Springer Nature for recent longevity and mental-toughness research metadata
   4. Asks Gemini (an AI) to judge everything: keep or reject, plus a topic tag.
      For papers it also writes a one-sentence plain-English summary.
   5. Saves videos.json and papers.json, which your website (index.html) reads
@@ -20,6 +20,7 @@ import json
 import time
 import datetime
 import requests
+import xml.etree.ElementTree as ET
 
 try:
     from keys import YOUTUBE_KEY, GEMINI_KEY      # on your laptop, keys live in keys.py
@@ -84,8 +85,7 @@ PAGES_PER_SEARCH = 1       # one all-time page per query, plus one fresh page; c
 FRESH_DAYS = 45            # "new" videos = published in the last 45 days
 NEW_PAPER_DAYS = 60        # papers = first published in the last 60 days
 MIN_SECONDS = 240          # skip anything shorter than 4 minutes (kills Shorts)
-MAX_FOR_GEMINI = 300       # total all-time candidates sent to Gemini across both sections
-MAX_PER_CATEGORY = MAX_FOR_GEMINI // 2  # reserve half the review capacity for each section
+MAX_FOR_GEMINI = 300       # top-viewed videos sent to Gemini (ALL fresh ones are added on top)
 MAX_PAPERS_FOR_GEMINI = 120
 VIDEO_BATCH = 40           # videos judged per Gemini request
 PAPER_BATCH = 20           # papers judged per Gemini request
@@ -104,50 +104,13 @@ YOUTUBE_QUOTA_EXHAUSTED = False
 # ---------------------------------------------------------------
 
 def check_keys():
-    """Validate the configured API keys before starting discovery."""
-    if not YOUTUBE_KEY or not GEMINI_KEY:
-        print("Missing API keys.")
-        print("GitHub Actions needs repository secrets named YOUTUBE_API_KEY and GEMINI_API_KEY.")
-        print("For local runs, provide keys.py with YOUTUBE_KEY and GEMINI_KEY.")
+    """Check required credentials without spending YouTube search quota."""
+    if not YOUTUBE_KEY:
+        print("Missing YOUTUBE_API_KEY. Existing videos will be retained; papers can still update.")
+    if not GEMINI_KEY:
+        print("Missing GEMINI_API_KEY. Existing libraries will be retained; no AI judging can run.")
         return False
-
-    try:
-        youtube_response = requests.get(
-            "https://www.googleapis.com/youtube/v3/videos",
-            params={
-                "part": "id",
-                "id": "dQw4w9WgXcQ",
-                "key": YOUTUBE_KEY,
-            },
-            timeout=30,
-        )
-        youtube_data = youtube_response.json()
-        if youtube_response.status_code != 200 or "error" in youtube_data:
-            message = youtube_data.get("error", {}).get("message", youtube_response.text[:500])
-            print(f"YouTube API key/check failed (HTTP {youtube_response.status_code}): {message}")
-            return False
-        print("OK YouTube API key works")
-    except Exception as exc:
-        print(f"YouTube API key check could not complete: {exc}")
-        return False
-
-    try:
-        gemini_response = requests.get(
-            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}",
-            headers={"x-goog-api-key": GEMINI_KEY},
-            timeout=30,
-        )
-        gemini_data = gemini_response.json()
-        if gemini_response.status_code != 200 or "error" in gemini_data:
-            message = gemini_data.get("error", {}).get("message", gemini_response.text[:500])
-            print(f"Gemini model/key check failed (HTTP {gemini_response.status_code}): {message}")
-            print(f"Configured model: {GEMINI_MODEL}")
-            return False
-        print(f"OK Gemini API key and model work ({GEMINI_MODEL})")
-    except Exception as exc:
-        print(f"Gemini API key check could not complete: {exc}")
-        return False
-
+    # Do not call YouTube here: a quota-exhausted YouTube API must not block paper discovery.
     return True
 
 
@@ -311,78 +274,233 @@ def strip_tags(text):
     return re.sub(r"<[^>]+>", "", text or "").strip()
 
 
-def fetch_papers():
-    """Download recent papers. Raises only when every search request fails."""
-    since = (TODAY - datetime.timedelta(days=NEW_PAPER_DAYS)).isoformat()
-    papers = {}
-    successful_searches = 0
-    failures = []
+def _paper_record(source, source_id, title, authors="", journal="", date="", url="", abstract="", category="Longevity", preprint=False, doi=""):
+    title = strip_tags(title)
+    if not title:
+        return None
+    stable = (doi or f"{source}:{source_id}").lower().strip()
+    return {
+        "id": "paper:" + stable,
+        "title": title,
+        "authors": strip_tags(authors)[:300],
+        "journal": strip_tags(journal) or source,
+        "date": str(date or "")[:10],
+        "url": url or (f"https://doi.org/{doi}" if doi else ""),
+        "preprint": bool(preprint),
+        "abstract": strip_tags(abstract)[:5000],
+        "guess": category,
+        "source": source,
+        "doi": doi or "",
+    }
 
+
+def _category_for_text(text):
+    value = (text or "").lower()
+    toughness_terms = ("mental toughness", "psychological resilience", "grit", "ultra-endurance", "perceived exertion", "stress resilience")
+    return "Toughness" if any(term in value for term in toughness_terms) else "Longevity"
+
+
+def _date_window():
+    return ((TODAY - datetime.timedelta(days=NEW_PAPER_DAYS)).isoformat(), TODAY.isoformat())
+
+
+def fetch_europe_pmc(papers):
+    since, until = _date_window()
     for category, terms in PAPER_SEARCHES.items():
-        query = (
-            f"({terms}) AND (FIRST_PDATE:[{since} TO {TODAY.isoformat()}]) "
-            "AND (HAS_ABSTRACT:y)"
-        )
-        print("Searching papers:", category)
+        query = f"({terms}) AND (FIRST_PDATE:[{since} TO {until}]) AND (HAS_ABSTRACT:y)"
         try:
-            response = requests.get(
-                "https://www.ebi.ac.uk/europepmc/webservices/rest/search",
-                params={
-                    "query": query,
-                    "format": "json",
-                    "resultType": "core",
-                    "pageSize": 100,
-                },
-                timeout=60,
-            )
+            response = requests.get("https://www.ebi.ac.uk/europepmc/webservices/rest/search", params={
+                "query": query, "format": "json", "resultType": "core", "pageSize": 100,
+            }, timeout=45)
             response.raise_for_status()
-            data = response.json()
-            if data.get("error"):
-                raise RuntimeError(str(data["error"]))
-            successful_searches += 1
+            for item in response.json().get("resultList", {}).get("result", []):
+                doi = item.get("doi", "")
+                source, pid = item.get("source", "EPMC"), item.get("id", "")
+                url = f"https://doi.org/{doi}" if doi else f"https://europepmc.org/article/{source}/{pid}"
+                rec = _paper_record("Europe PMC", f"{source}:{pid}", item.get("title"), item.get("authorString"),
+                    item.get("journalTitle") or "Preprint", item.get("firstPublicationDate") or item.get("pubYear"),
+                    url, item.get("abstractText"), category, source == "PPR", doi)
+                if rec and rec["abstract"]: papers[rec["id"]] = rec
+            print(f"  Europe PMC ({category}) completed")
         except Exception as exc:
-            failures.append(f"{category}: {exc}")
-            print(f"  Paper search problem ({category}): {exc}")
-            continue
+            print(f"  Europe PMC ({category}) unavailable: {exc}")
 
-        for item in data.get("resultList", {}).get("result", []):
-            paper_id = f"paper:{item.get('source', '')}:{item.get('id', '')}"
-            if paper_id in papers or not item.get("title"):
-                continue
 
-            doi = item.get("doi")
-            url = (
-                f"https://doi.org/{doi}"
-                if doi
-                else f"https://europepmc.org/article/{item.get('source')}/{item.get('id')}"
-            )
-            authors = [
-                author.strip()
-                for author in (item.get("authorString") or "").rstrip(".").split(",")
-                if author.strip()
-            ]
-            papers[paper_id] = {
-                "id": paper_id,
-                "title": strip_tags(item["title"]),
-                "authors": ", ".join(authors[:3]) + (" et al." if len(authors) > 3 else ""),
-                "journal": item.get("journalTitle")
-                    or (item.get("bookOrReportDetails") or {}).get("publisher")
-                    or "Preprint",
-                "date": item.get("firstPublicationDate") or str(item.get("pubYear", "")),
-                "url": url,
-                "preprint": item.get("source") == "PPR",
-                "abstract": strip_tags(item.get("abstractText")),
-                "guess": category,
-            }
+def fetch_pubmed(papers):
+    """Fetch PubMed abstracts using NCBI E-utilities; API key is optional."""
+    since, until = _date_window()
+    for category, terms in PAPER_SEARCHES.items():
+        try:
+            q = f"({terms}) AND ({since}[Date - Publication] : {until}[Date - Publication])"
+            params = {"db":"pubmed", "term":q, "retmode":"json", "retmax":50, "sort":"date"}
+            if os.environ.get("NCBI_API_KEY"): params["api_key"] = os.environ["NCBI_API_KEY"]
+            search = requests.get("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi", params=params, timeout=40)
+            search.raise_for_status()
+            ids = search.json().get("esearchresult", {}).get("idlist", [])
+            if not ids: continue
+            fetch_params = {"db":"pubmed", "id":",".join(ids), "retmode":"xml"}
+            if os.environ.get("NCBI_API_KEY"): fetch_params["api_key"] = os.environ["NCBI_API_KEY"]
+            result = requests.get("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi", params=fetch_params, timeout=60)
+            result.raise_for_status()
+            root = ET.fromstring(result.text)
+            for article in root.findall('.//PubmedArticle'):
+                pmid = article.findtext('.//PMID', default='')
+                title = ''.join(article.find('.//ArticleTitle').itertext()) if article.find('.//ArticleTitle') is not None else ''
+                abstract = ' '.join(''.join(x.itertext()) for x in article.findall('.//Abstract/AbstractText'))
+                authors = []
+                for au in article.findall('.//Author')[:5]:
+                    name = ' '.join(x for x in [au.findtext('ForeName'), au.findtext('LastName')] if x)
+                    if name: authors.append(name)
+                journal = article.findtext('.//Journal/Title', default='PubMed')
+                pubdate = article.findtext('.//PubDate/Year') or article.findtext('.//PubDate/MedlineDate', default='')
+                doi = ''
+                for aid in article.findall('.//ArticleId'):
+                    if aid.attrib.get('IdType') == 'doi': doi = aid.text or ''; break
+                rec = _paper_record('PubMed', pmid, title, ', '.join(authors), journal, pubdate,
+                    f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/", abstract, category, False, doi)
+                if rec and rec['abstract']: papers[rec['id']] = rec
+            print(f"  PubMed ({category}) completed")
+            time.sleep(0.4)
+        except Exception as exc:
+            print(f"  PubMed ({category}) unavailable: {exc}")
 
-    if successful_searches == 0:
-        raise RuntimeError(
-            "All Europe PMC searches failed. Existing papers.json will be preserved. "
-            + " | ".join(failures)
-        )
 
-    result = sorted(papers.values(), key=lambda paper: paper["date"], reverse=True)
-    print(f"  Found {len(result)} recent papers.")
+def fetch_biorxiv_server(papers, server):
+    since, until = _date_window()
+    try:
+        url = f"https://api.biorxiv.org/details/{server}/{since}/{until}/0/json"
+        records = []
+        # bioRxiv/medRxiv return paginated batches; fetch a few pages, not just the first 30.
+        for cursor in range(0, 150, 30):
+            page_url = f"https://api.biorxiv.org/details/{server}/{since}/{until}/{cursor}/json"
+            response = requests.get(page_url, timeout=60, headers={"User-Agent":"GogginsTube/1.0 (research metadata aggregator)"})
+            response.raise_for_status()
+            page = response.json().get("collection", [])
+            if not page:
+                break
+            records.extend(page)
+            if len(page) < 30:
+                break
+            time.sleep(1.0)
+        for item in records:
+            text = " ".join([item.get("title", ""), item.get("abstract", ""), item.get("category", "")])
+            category = _category_for_text(text)
+            # Keep only papers relevant to the two site's research themes.
+            terms = PAPER_SEARCHES[category].lower().replace('"','')
+            haystack = text.lower()
+            keywords = [w.strip() for w in terms.replace(' or ', '|').split('|') if len(w.strip()) > 4]
+            if not any(w in haystack for w in keywords): continue
+            doi = item.get("doi", "")
+            rec = _paper_record(server, doi or item.get("title", ""), item.get("title"), item.get("authors"),
+                server, item.get("date"), f"https://doi.org/{doi}" if doi else "", item.get("abstract"), category, True, doi)
+            if rec and rec['abstract']: papers[rec['id']] = rec
+        print(f"  {server} completed ({len(records)} records scanned)")
+    except Exception as exc:
+        print(f"  {server} unavailable: {exc}")
+
+
+def fetch_arxiv(papers):
+    since, until = _date_window()
+    query = ' OR '.join(['all:"biological aging"', 'all:longevity', 'all:healthspan', 'all:"mental resilience"', 'all:"exercise physiology"'])
+    try:
+        response = requests.get("https://export.arxiv.org/api/query", params={
+            "search_query": query, "start": 0, "max_results": 60, "sortBy":"submittedDate", "sortOrder":"descending"
+        }, timeout=60, headers={"User-Agent":"GogginsTube/1.0"})
+        response.raise_for_status()
+        root = ET.fromstring(response.text)
+        ns = {"a":"http://www.w3.org/2005/Atom"}
+        for entry in root.findall('a:entry', ns):
+            published = entry.findtext('a:published', default='', namespaces=ns)[:10]
+            if not (since <= published <= until): continue
+            title = ' '.join(entry.findtext('a:title', default='', namespaces=ns).split())
+            abstract = ' '.join(entry.findtext('a:summary', default='', namespaces=ns).split())
+            link = next((x.attrib.get('href','') for x in entry.findall('a:link', ns) if x.attrib.get('rel') == 'alternate'), '')
+            aid = entry.findtext('a:id', default='', namespaces=ns).rsplit('/',1)[-1]
+            authors = ', '.join(x.findtext('a:name', default='', namespaces=ns) for x in entry.findall('a:author', ns)[:4])
+            category = _category_for_text(title + ' ' + abstract)
+            rec = _paper_record('arXiv', aid, title, authors, 'arXiv preprint', published, link, abstract, category, True)
+            if rec and rec['abstract']: papers[rec['id']] = rec
+        print("  arXiv completed")
+    except Exception as exc:
+        print(f"  arXiv unavailable: {exc}")
+    time.sleep(3.1)  # arXiv requests should be spaced conservatively.
+
+
+def fetch_crossref(papers):
+    since, until = _date_window()
+    mailto = os.environ.get("CONTACT_EMAIL", "")
+    for category, terms in PAPER_SEARCHES.items():
+        try:
+            phrase = "longevity healthspan ageing" if category == "Longevity" else "mental toughness psychological resilience endurance"
+            params = {"query.bibliographic":phrase, "filter":f"from-pub-date:{since},until-pub-date:{until}", "rows":50, "select":"DOI,title,author,container-title,published,abstract,type"}
+            if mailto: params["mailto"] = mailto
+            response = requests.get("https://api.crossref.org/works", params=params, timeout=45,
+                headers={"User-Agent":f"GogginsTube/1.0 (mailto:{mailto})" if mailto else "GogginsTube/1.0"})
+            response.raise_for_status()
+            for item in response.json().get("message", {}).get("items", []):
+                title = (item.get("title") or [""])[0]
+                abstract = item.get("abstract", "")
+                doi = item.get("DOI", "")
+                authors = ', '.join(' '.join(x for x in [a.get('given'),a.get('family')] if x) for a in item.get('author',[])[:4])
+                dateparts = (item.get('published') or {}).get('date-parts', [[]])[0]
+                pubdate = '-'.join(str(x).zfill(2) if i else str(x) for i,x in enumerate(dateparts)) if dateparts else ''
+                journal = (item.get("container-title") or [""])[0] or "Crossref"
+                rec = _paper_record('Crossref', doi, title, authors, journal, pubdate, f"https://doi.org/{doi}" if doi else "", abstract, category, False, doi)
+                # Crossref often has no abstract; avoid sending empty/metadata-only records to Gemini.
+                if rec and rec['abstract']: papers[rec['id']] = rec
+            print(f"  Crossref ({category}) completed")
+        except Exception as exc:
+            print(f"  Crossref ({category}) unavailable: {exc}")
+
+
+def fetch_springer_nature(papers):
+    api_key = os.environ.get("SPRINGER_NATURE_API_KEY", "")
+    if not api_key:
+        print("  Springer Nature skipped (optional SPRINGER_NATURE_API_KEY not configured).")
+        return
+    for category, phrase in [("Longevity", "longevity OR healthspan OR ageing"), ("Toughness", '"mental toughness" OR resilience OR endurance')]:
+        try:
+            response = requests.get("https://api.springernature.com/meta/v2/json", params={
+                "q":phrase, "p":50, "api_key":api_key
+            }, timeout=45)
+            response.raise_for_status()
+            for item in response.json().get("records", []):
+                doi = item.get("doi", "")
+                title = item.get("title", "")
+                abstract = item.get("abstract", "")
+                pubdate = item.get("publicationDate", "")[:10]
+                rec = _paper_record('Springer Nature', doi or title, title, item.get("creators", ""),
+                    item.get("publicationName", "Springer Nature"), pubdate,
+                    f"https://doi.org/{doi}" if doi else item.get("url", ""), abstract, category, False, doi)
+                if rec and rec['abstract']: papers[rec['id']] = rec
+            print(f"  Springer Nature ({category}) completed")
+        except Exception as exc:
+            print(f"  Springer Nature ({category}) unavailable: {exc}")
+
+
+def fetch_papers():
+    """Aggregate recent metadata/abstracts from independent scholarly sources.
+
+    Every source is optional at runtime: a failure in one provider does not block others.
+    Full-text articles are not downloaded; the site links to publisher/open versions.
+    """
+    papers = {}
+    providers = [
+        ("Europe PMC", lambda: fetch_europe_pmc(papers)),
+        ("PubMed", lambda: fetch_pubmed(papers)),
+        ("bioRxiv", lambda: fetch_biorxiv_server(papers, "biorxiv")),
+        ("medRxiv", lambda: fetch_biorxiv_server(papers, "medrxiv")),
+        ("arXiv", lambda: fetch_arxiv(papers)),
+        ("Crossref", lambda: fetch_crossref(papers)),
+        ("Springer Nature", lambda: fetch_springer_nature(papers)),
+    ]
+    for name, fetcher in providers:
+        try:
+            fetcher()
+        except Exception as exc:
+            print(f"  {name} failed; continuing with other sources: {exc}")
+    result = sorted(papers.values(), key=lambda x: x.get("date", ""), reverse=True)
+    print(f"  Aggregated {len(result)} unique papers across providers.")
     return result
 
 
@@ -395,9 +513,7 @@ VIDEO_PROMPT = """You are curating a personal video site with exactly two sectio
 - "Longevity": videos about living longer and healthier (aging science, healthspan, exercise, sleep or
   nutrition for long life, medical longevity research).
 For each numbered video below, decide whether to KEEP it. Reject clickbait, unrelated content,
-product ads, and videos that only mention the topic in passing. Each video includes a candidate
-section based on the YouTube search that found it. Use that as a strong category hint, while still
-checking that the title and description genuinely fit the site's topic.
+product ads, and videos that only mention the topic in passing.
 Return ONLY a JSON array, one object per video, like this:
 [{"i": 0, "keep": true, "cat": "Goggins", "topic": "mental toughness"}]
 "cat" must be "Goggins" or "Longevity". "topic" is 2-4 words.
@@ -498,10 +614,7 @@ def judge_videos(batch):
     lines = []
     for i, v in enumerate(batch):
         desc = v["description"][:200].replace("\n", " ")
-        lines.append(
-            f"[{i}] candidate section: {v['guess']} | {v['title']} "
-            f"| channel: {v['channel']} | {desc}"
-        )
+        lines.append(f"[{i}] expected category: {v.get('guess', 'unknown')} | {v['title']} | channel: {v['channel']} | {desc}")
     verdicts = {x["i"]: x for x in call_gemini(VIDEO_PROMPT + "\n".join(lines))}
     labels = []
     for i in range(len(batch)):
@@ -531,15 +644,17 @@ def judge_papers(batch):
 
 
 def load_labels():
-    """Gemini's past verdicts are saved in labels.json, so re-running never repeats work."""
-    if os.path.exists("labels.json"):
-        with open("labels.json") as f:
-            return json.load(f)
+    """Keep Gemini verdict cache inside site/ so GitHub Actions commits it."""
+    path = os.path.join(OUT_DIR, "labels.json")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+            return data if isinstance(data, dict) else {}
     return {}
 
 
 def save_labels(labels):
-    write_json_atomic("labels.json", labels)
+    write_json_atomic(os.path.join(OUT_DIR, "labels.json"), labels)
 
 
 def judge_all(items, labels, judge, batch_size):
@@ -601,200 +716,158 @@ def merge_by_id(existing, discovered):
 # ---------------------------------------------------------------
 
 def main():
-    if not check_keys():
-        raise SystemExit("API key validation failed. No website data files were changed.")
-
     os.makedirs(OUT_DIR, exist_ok=True)
     videos_path = os.path.join(OUT_DIR, "videos.json")
     papers_path = os.path.join(OUT_DIR, "papers.json")
     status_path = os.path.join(OUT_DIR, "status.json")
-
     existing_videos = load_existing_list(videos_path)
     existing_papers = load_existing_list(papers_path)
 
-    # --- Videos, step A: search YouTube (all-time results, then recent results) ---
-    # Store every category that found an ID. A first-match-only dict loses overlaps.
-    found = {}  # video ID -> set of source categories
-    search_count = 0
-    for category, queries in VIDEO_SEARCHES.items():
-        for query in queries:
-            print("Searching videos:", query)
-            for video_id in search_youtube(query):
-                found.setdefault(video_id, set()).add(category)
-            search_count += 1
+    if not GEMINI_KEY:
+        print("Missing GEMINI_API_KEY. Cannot judge new items; existing site data will be retained.")
+        gemini_available = False
+    else:
+        gemini_available = True
 
-        fresh_query = FRESH_SEARCHES.get(category)
-        if fresh_query:
-            print("Searching recent videos:", fresh_query)
-            for video_id in search_youtube(fresh_query, fresh=True):
-                found.setdefault(video_id, set()).add(category)
-            search_count += 1
-
-    if not found:
-        raise RuntimeError(
-            "YouTube searches returned zero video IDs. This usually indicates an API, "
-            "quota, network or search configuration problem. Existing website data "
-            "has been preserved."
-        )
-
-    print(f"\\nFound {len(found)} unique video IDs across {search_count} searches. Fetching details...")
-    details = get_details(list(found))
-    if not details:
-        raise RuntimeError(
-            "YouTube returned no video details for the discovered IDs. "
-            "Existing website data has been preserved."
-        )
-
-    # --- Videos, step B: remove Shorts and assign broad candidate categories ---
-    candidates = []
-    for item in details:
-        snippet = item.get("snippet") or {}
-        content_details = item.get("contentDetails") or {}
-        if not snippet or not content_details.get("duration"):
-            continue
-
-        seconds = duration_to_seconds(content_details["duration"])
-        guess = guess_category(item, found.get(item.get("id"), set()))
-        if seconds < MIN_SECONDS or guess is None:
-            continue
-
-        candidates.append({
-            "id": item["id"],
-            "title": snippet.get("title", ""),
-            "channel": snippet.get("channelTitle", ""),
-            "description": snippet.get("description", ""),
-            "seconds": seconds,
-            "views": int((item.get("statistics") or {}).get("viewCount", 0)),
-            "published": snippet.get("publishedAt", "")[:10],
-            "guess": guess,
-        })
-
-    print(
-        f"Eligible candidates after duration/category checks: {len(candidates)} "
-        f"(minimum duration: {MIN_SECONDS // 60} minutes)."
-    )
-
-    fresh_cutoff = (TODAY - datetime.timedelta(days=FRESH_DAYS)).isoformat()
-
-    # Select candidates separately so a large/high-view category cannot crowd out the other.
-    chosen = []
-    chosen_ids = set()
-    for category in ("Goggins", "Longevity"):
-        category_candidates = [v for v in candidates if v["guess"] == category]
-        category_candidates.sort(key=lambda video: -video["views"])
-        category_chosen = category_candidates[:MAX_PER_CATEGORY]
-        category_ids = {video["id"] for video in category_chosen}
-        category_chosen.extend(
-            video for video in category_candidates
-            if video["published"] >= fresh_cutoff and video["id"] not in category_ids
-        )
-        chosen.extend(category_chosen)
-        chosen_ids.update(video["id"] for video in category_chosen)
-        print(f"  {category}: {len(category_chosen)} candidates selected.")
-
-    print(f"{len(chosen)} video candidates sent to Gemini.")
-
-    # --- Videos, step C: Gemini judges ---
-    labels = load_labels()
-    # Earlier runs may have rejected Longevity candidates before category-balanced selection.
-    # Reconsider those now that the candidate pool is balanced and includes the search category.
-    for video in chosen:
-        if video["guess"] == "Longevity":
-            previous = labels.get(video["id"], {})
-            if previous and previous.get("keep") is False:
-                labels.pop(video["id"], None)
-    gemini_ok = judge_all(chosen, labels, judge_videos, VIDEO_BATCH)
-    if not gemini_ok:
-        print("  Gemini could not finish video judging. Unjudged videos will NOT be added.")
-        print("  Previously saved videos and previously judged items will be retained.")
-    save_labels(labels)
+    # --- Video discovery. Quota exhaustion skips video work, not the research feeds. ---
+    found = {}
+    video_search_ok = False
+    if not YOUTUBE_KEY:
+        print("No YOUTUBE_API_KEY configured. Retaining existing videos and continuing with papers.")
+    else:
+        for category, queries in VIDEO_SEARCHES.items():
+            for query in queries:
+                print("Searching videos:", query)
+                try:
+                    ids = search_youtube(query)
+                    if ids: video_search_ok = True
+                    for video_id in ids: found.setdefault(video_id, set()).add(category)
+                except Exception as exc:
+                    print(f"  Search failed ({query}): {exc}")
+                    if YOUTUBE_QUOTA_EXHAUSTED: break
+            if YOUTUBE_QUOTA_EXHAUSTED: break
+            fresh_query = FRESH_SEARCHES.get(category)
+            if fresh_query:
+                print("Searching recent videos:", fresh_query)
+                try:
+                    ids = search_youtube(fresh_query, fresh=True)
+                    if ids: video_search_ok = True
+                    for video_id in ids: found.setdefault(video_id, set()).add(category)
+                except Exception as exc:
+                    print(f"  Recent search failed ({category}): {exc}")
+                if YOUTUBE_QUOTA_EXHAUSTED: break
 
     newly_kept_videos = []
-    for video in chosen:
-        # Only add videos with an explicit Gemini decision. Never bulk-add unreviewed results.
-        label = labels.get(video["id"])
-        if not label or not label.get("keep"):
-            continue
-        # Keep the category assigned from search provenance. Gemini decides relevance,
-        # while this prevents one section's videos being mislabeled into the other.
-        category = video["guess"]
-        newly_kept_videos.append({
-            "id": video["id"],
-            "title": video["title"],
-            "channel": video["channel"],
-            "seconds": video["seconds"],
-            "views": video["views"],
-            "published": video["published"],
-            "category": category,
-            "topic": label.get("topic", ""),
-        })
+    candidates = []
+    labels = load_labels()
+    fresh_cutoff = (TODAY - datetime.timedelta(days=FRESH_DAYS)).isoformat()
 
-    # Keep older saved videos even if they were not returned by today's search.
+    if found and gemini_available:
+        try:
+            details = get_details(list(found))
+            for item in details:
+                snippet = item.get("snippet") or {}
+                content_details = item.get("contentDetails") or {}
+                if not snippet or not content_details.get("duration"): continue
+                seconds = duration_to_seconds(content_details["duration"])
+                guess = guess_category(item, found.get(item.get("id"), set()))
+                if seconds < MIN_SECONDS or guess is None: continue
+                candidates.append({
+                    "id":item["id"], "title":snippet.get("title", ""),
+                    "channel":snippet.get("channelTitle", ""), "description":snippet.get("description", ""),
+                    "seconds":seconds, "views":int((item.get("statistics") or {}).get("viewCount", 0)),
+                    "published":snippet.get("publishedAt", "")[:10], "guess":guess,
+                })
+            # Fair allocation: rank each category separately so Goggins cannot crowd out Longevity.
+            chosen = []
+            for category in ("Goggins", "Longevity"):
+                group = [v for v in candidates if v["guess"] == category]
+                group.sort(key=lambda v: -v["views"])
+                chosen.extend(group[:150])
+                fresh = [v for v in group[150:] if v["published"] >= fresh_cutoff]
+                chosen.extend(fresh[:50])
+            # De-duplicate while preserving order.
+            unique = {}
+            for video in chosen: unique[video["id"]] = video
+            chosen = list(unique.values())
+            print(f"Eligible video candidates: {len(candidates)}; balanced Gemini review: {len(chosen)}.")
+            if chosen:
+                gemini_ok = judge_all(chosen, labels, judge_videos, VIDEO_BATCH)
+                if gemini_ok:
+                    for video in chosen:
+                        label = labels.get(video["id"])
+                        if not label or not label.get("keep"): continue
+                        category = label.get("cat")
+                        if category not in ("Goggins", "Longevity"):
+                            category = video["guess"]
+                        newly_kept_videos.append({
+                            "id":video["id"], "title":video["title"], "channel":video["channel"],
+                            "seconds":video["seconds"], "views":video["views"], "published":video["published"],
+                            "category":category, "topic":label.get("topic", ""),
+                        })
+                else:
+                    print("Gemini video review incomplete; unjudged videos will not be added.")
+        except Exception as exc:
+            print(f"Video processing failed; existing videos will be retained: {exc}")
+    elif YOUTUBE_QUOTA_EXHAUSTED:
+        print("YouTube quota exhausted. Skipping video discovery; continuing to research providers.")
+    elif not found:
+        print("No video IDs found. Existing videos will be retained; continuing to research providers.")
+
     videos = merge_by_id(existing_videos, newly_kept_videos)
     videos.sort(key=lambda video: (-int(video.get("views", 0)), video.get("published", "")))
     write_json_atomic(videos_path, videos)
+    goggins_count = sum(v.get("category") == "Goggins" for v in videos)
+    longevity_count = sum(v.get("category") == "Longevity" for v in videos)
+    new_videos = sum((v.get("published") or "") >= fresh_cutoff for v in videos)
+    print(f"Saved video library: {len(videos)} ({goggins_count} Goggins, {longevity_count} Longevity).")
 
-    goggins_count = sum(1 for video in videos if video.get("category") == "Goggins")
-    longevity_count = sum(1 for video in videos if video.get("category") == "Longevity")
-    new_videos = sum(
-        1 for video in videos
-        if (video.get("published") or "") >= fresh_cutoff
-    )
-    print(
-        f"\\nSaved library: {len(videos)} videos "
-        f"({goggins_count} Goggins, {longevity_count} Longevity)."
-    )
-    print(f"  {new_videos} were published in the last {FRESH_DAYS} days.")
-
-    # --- Papers ---
-    print()
-    newly_kept_papers = []
+    # --- Multi-source research. Each provider can fail independently. ---
     paper_candidates_count = 0
+    newly_kept_papers = []
     try:
-        paper_candidates = fetch_papers()[:MAX_PAPERS_FOR_GEMINI]
+        paper_candidates = fetch_papers()
         paper_candidates_count = len(paper_candidates)
-        if paper_candidates and gemini_ok:
-            gemini_ok = judge_all(paper_candidates, labels, judge_papers, PAPER_BATCH)
-        elif paper_candidates:
-            print("Skipping paper judging because Gemini had a problem; saved papers are retained.")
-
-        if gemini_ok:
-            for paper in paper_candidates:
-                label = labels.get(paper["id"])
-                if not label or not label.get("keep"):
-                    continue
-                if label.get("cat") not in ("Longevity", "Toughness") or not label.get("summary"):
-                    continue
-                newly_kept_papers.append({
-                    "id": paper["id"],
-                    "title": paper["title"],
-                    "authors": paper["authors"],
-                    "journal": paper["journal"],
-                    "date": paper["date"],
-                    "url": paper["url"],
-                    "preprint": paper["preprint"],
-                    "category": label["cat"],
-                    "summary": label["summary"],
-                    "evidence": label.get("evidence", "other"),
-                })
+        # Cap total Gemini work while retaining a fair split between paper themes.
+        paper_candidates.sort(key=lambda p: p.get("date", ""), reverse=True)
+        selected = []
+        for category in ("Longevity", "Toughness"):
+            selected.extend([p for p in paper_candidates if p.get("guess") == category][:MAX_PAPERS_FOR_GEMINI // 2])
+        # Keep IDs unique if they were found by more than one source.
+        selected = list({p["id"]:p for p in selected}.values())
+        if selected and gemini_available:
+            paper_ok = judge_all(selected, labels, judge_papers, PAPER_BATCH)
+            if paper_ok:
+                for paper in selected:
+                    label = labels.get(paper["id"])
+                    if not label or not label.get("keep"): continue
+                    if label.get("cat") not in ("Longevity", "Toughness") or not label.get("summary"): continue
+                    newly_kept_papers.append({
+                        "id":paper["id"], "title":paper["title"], "authors":paper["authors"],
+                        "journal":paper["journal"], "date":paper["date"], "url":paper["url"],
+                        "preprint":paper["preprint"], "category":label["cat"],
+                        "summary":label["summary"], "evidence":label.get("evidence", "other"),
+                        "source":paper.get("source", paper.get("journal", "")),
+                    })
+            else:
+                print("Gemini paper review incomplete; existing papers will be retained and cache preserved.")
+        elif selected:
+            print("Gemini unavailable; existing papers retained.")
     except Exception as exc:
-        print(f"Paper discovery failed; existing papers will be retained: {exc}")
+        print(f"Research aggregation failed; existing papers will be retained: {exc}")
 
     papers = merge_by_id(existing_papers, newly_kept_papers)
     papers.sort(key=lambda paper: paper.get("date", ""), reverse=True)
     write_json_atomic(papers_path, papers)
     save_labels(labels)
-    print(f"Saved research library: {len(papers)} papers ({paper_candidates_count} candidates this run).")
+    print(f"Saved research library: {len(papers)} papers ({paper_candidates_count} raw candidates this run).")
 
-    # Status is written last, after the data files have been saved successfully.
     status = {
-        "updated": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
-        "videos": len(videos),
-        "new_videos": new_videos,
-        "papers": len(papers),
-        "video_candidates": len(candidates),
-        "paper_candidates": paper_candidates_count,
-        "gemini_ok": bool(gemini_ok),
+        "updated":datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+        "videos":len(videos), "new_videos":new_videos, "papers":len(papers),
+        "video_candidates":len(candidates), "paper_candidates":paper_candidates_count,
+        "gemini_ok":bool(gemini_available), "youtube_quota_exhausted":bool(YOUTUBE_QUOTA_EXHAUSTED),
+        "video_categories":{"Goggins":goggins_count,"Longevity":longevity_count},
     }
     write_json_atomic(status_path, status)
     print("Pipeline completed successfully.")
