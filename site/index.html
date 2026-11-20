@@ -254,7 +254,7 @@ function fmtUpdated(iso) {
   return Math.floor(m / 1440) + "d ago";
 }
 // "Updated 3h ago" line (optional: the site works without status.json)
-fetch("status.json").then(r => r.json()).then(s => {
+fetch("status.json", { cache: "no-store" }).then(r => r.json()).then(s => {
   document.getElementById("status").textContent =
     `Stay hard. Live long. · Updated ${fmtUpdated(s.updated)} · ${s.new_videos} new videos · ${s.papers} papers`;
 }).catch(() => {});
@@ -264,8 +264,8 @@ if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catc
 
 // Load both data files. Papers are optional: the site still works without papers.json.
 Promise.all([
-  fetch("videos.json").then(r => r.json()).catch(() => []),
-  fetch("papers.json").then(r => r.json()).catch(() => []),
+  fetch("videos.json", { cache: "no-store" }).then(r => r.json()).catch(() => []),
+  fetch("papers.json", { cache: "no-store" }).then(r => r.json()).catch(() => []),
 ]).then(([v, p]) => { videos = v; papers = p; render(); });
 </script>
 </body>

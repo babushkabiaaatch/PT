@@ -33,7 +33,7 @@ except ImportError:                               # in the cloud (GitHub), they 
 
 # If you ever see "model not found" or "no longer available",
 # swap in the model name that the message recommends.
-GEMINI_MODEL = "gemini-3.5-flash-lite"
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL") or "gemini-3.5-flash-lite"
 
 VIDEO_SEARCHES = {
     "Goggins": [
@@ -54,12 +54,23 @@ VIDEO_SEARCHES = {
         "zone 2 cardio VO2 max longevity",
         "Valter Longo fasting longevity",
         "blue zones longevity",
+        "sleep science healthy aging",
+        "strength training healthy aging",
+        "metabolic health insulin resistance",
+        "cardiorespiratory fitness VO2 max science",
+        "protein muscle aging research",
+        "circadian rhythm sleep health",
+        "aging biology geroscience",
     ],
 }
 
-# A video is only a Longevity CANDIDATE if its title/description has one of these words.
-LONGEVITY_WORDS = ["longevity", "aging", "ageing", "healthspan", "lifespan",
-                   "live longer", "anti-aging", "vo2 max", "blue zone"]
+
+
+# One broad recent-only search per section keeps daily search quota under control.
+FRESH_SEARCHES = {
+    "Goggins": "David Goggins",
+    "Longevity": "longevity healthspan exercise sleep",
+}
 
 # Research paper searches (Europe PMC search language: OR, AND, quotes for exact phrases)
 PAPER_SEARCHES = {
@@ -69,7 +80,7 @@ PAPER_SEARCHES = {
                  'OR "perceived exertion" OR "grit"',
 }
 
-PAGES_PER_SEARCH = 2       # all-time pass: each page = up to 50 results
+PAGES_PER_SEARCH = 1       # one all-time page per query, plus one fresh page; controls YouTube quota
 FRESH_DAYS = 45            # "new" videos = published in the last 45 days
 NEW_PAPER_DAYS = 60        # papers = first published in the last 60 days
 MIN_SECONDS = 240          # skip anything shorter than 4 minutes (kills Shorts)
@@ -89,31 +100,51 @@ TODAY = datetime.date.today()
 # ---------------------------------------------------------------
 
 def check_keys():
-    """Test both keys before doing any real work. Returns True if both are OK."""
-    keys = [YOUTUBE_KEY, GEMINI_KEY]
-    if not all(isinstance(k, str) and k.strip() and "PASTE_" not in k for k in keys):
-        print("Open keys.py and paste BOTH keys in it first. (In GitHub: check your two Secrets.)")
-        print('Each line should look like:  YOUTUBE_KEY = "AIza...your key..."')
+    """Validate the configured API keys before starting discovery."""
+    if not YOUTUBE_KEY or not GEMINI_KEY:
+        print("Missing API keys.")
+        print("GitHub Actions needs repository secrets named YOUTUBE_API_KEY and GEMINI_API_KEY.")
+        print("For local runs, provide keys.py with YOUTUBE_KEY and GEMINI_KEY.")
         return False
 
-    ok = True
-    r = requests.get("https://www.googleapis.com/youtube/v3/videos",
-                     params={"part": "id", "id": "dQw4w9WgXcQ", "key": YOUTUBE_KEY}, timeout=30).json()
-    if "error" in r:
-        print("X YouTube key FAILED:", r["error"].get("message"))
-        print("  -> It must be a key from a Google Cloud project where 'YouTube Data API v3' is enabled.")
-        ok = False
-    else:
-        print("OK YouTube key works")
+    try:
+        youtube_response = requests.get(
+            "https://www.googleapis.com/youtube/v3/videos",
+            params={
+                "part": "id",
+                "id": "dQw4w9WgXcQ",
+                "key": YOUTUBE_KEY,
+            },
+            timeout=30,
+        )
+        youtube_data = youtube_response.json()
+        if youtube_response.status_code != 200 or "error" in youtube_data:
+            message = youtube_data.get("error", {}).get("message", youtube_response.text[:500])
+            print(f"YouTube API key/check failed (HTTP {youtube_response.status_code}): {message}")
+            return False
+        print("OK YouTube API key works")
+    except Exception as exc:
+        print(f"YouTube API key check could not complete: {exc}")
+        return False
 
-    r = requests.get(f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}",
-                     headers={"x-goog-api-key": GEMINI_KEY}, timeout=30).json()
-    if "error" in r:
-        print("X Gemini key/model FAILED:", r["error"].get("message"))
-        ok = False
-    else:
-        print("OK Gemini key works")
-    return ok
+    try:
+        gemini_response = requests.get(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}",
+            headers={"x-goog-api-key": GEMINI_KEY},
+            timeout=30,
+        )
+        gemini_data = gemini_response.json()
+        if gemini_response.status_code != 200 or "error" in gemini_data:
+            message = gemini_data.get("error", {}).get("message", gemini_response.text[:500])
+            print(f"Gemini model/key check failed (HTTP {gemini_response.status_code}): {message}")
+            print(f"Configured model: {GEMINI_MODEL}")
+            return False
+        print(f"OK Gemini API key and model work ({GEMINI_MODEL})")
+    except Exception as exc:
+        print(f"Gemini API key check could not complete: {exc}")
+        return False
+
+    return True
 
 
 # ---------------------------------------------------------------
@@ -121,25 +152,50 @@ def check_keys():
 # ---------------------------------------------------------------
 
 def search_youtube(query, fresh=False):
-    """Ask YouTube for videos matching `query`. fresh=True means 'newest first, recent only'."""
+    """Ask YouTube for videos matching query; fail loudly on API errors."""
     ids = []
     page_token = None
     pages = 1 if fresh else PAGES_PER_SEARCH
     for _ in range(pages):
-        params = {"part": "snippet", "q": query, "type": "video",
-                  "maxResults": 50, "key": YOUTUBE_KEY}
+        params = {
+            "part": "snippet",
+            "q": query,
+            "type": "video",
+            "maxResults": 50,
+            "key": YOUTUBE_KEY,
+        }
         if fresh:
             cutoff = TODAY - datetime.timedelta(days=FRESH_DAYS)
             params["order"] = "date"
             params["publishedAfter"] = cutoff.isoformat() + "T00:00:00Z"
         if page_token:
             params["pageToken"] = page_token
-        data = requests.get("https://www.googleapis.com/youtube/v3/search",
-                            params=params, timeout=30).json()
-        if "error" in data:
-            print("  YouTube said:", data["error"].get("message"))
-            break
-        ids.extend(item["id"]["videoId"] for item in data.get("items", []))
+
+        response = requests.get(
+            "https://www.googleapis.com/youtube/v3/search",
+            params=params,
+            timeout=45,
+        )
+        try:
+            data = response.json()
+        except ValueError:
+            raise RuntimeError(
+                f"YouTube returned a non-JSON response for query {query!r} "
+                f"(HTTP {response.status_code})."
+            )
+
+        if response.status_code != 200 or "error" in data:
+            message = data.get("error", {}).get("message", response.text[:500])
+            raise RuntimeError(
+                f"YouTube search failed for query {query!r} "
+                f"(HTTP {response.status_code}): {message}"
+            )
+
+        ids.extend(
+            item["id"]["videoId"]
+            for item in data.get("items", [])
+            if item.get("id", {}).get("videoId")
+        )
         page_token = data.get("nextPageToken")
         if not page_token:
             break
@@ -147,13 +203,30 @@ def search_youtube(query, fresh=False):
 
 
 def get_details(video_ids):
-    """Fetch title, channel, length, views for each video (50 at a time)."""
+    """Fetch title, channel, length and views for each video (50 at a time)."""
     details = []
     for start in range(0, len(video_ids), 50):
         chunk = video_ids[start:start + 50]
-        data = requests.get("https://www.googleapis.com/youtube/v3/videos", params={
-            "part": "snippet,contentDetails,statistics",
-            "id": ",".join(chunk), "key": YOUTUBE_KEY}, timeout=30).json()
+        response = requests.get(
+            "https://www.googleapis.com/youtube/v3/videos",
+            params={
+                "part": "snippet,contentDetails,statistics",
+                "id": ",".join(chunk),
+                "key": YOUTUBE_KEY,
+            },
+            timeout=45,
+        )
+        try:
+            data = response.json()
+        except ValueError:
+            raise RuntimeError(
+                f"YouTube details returned non-JSON (HTTP {response.status_code})."
+            )
+        if response.status_code != 200 or "error" in data:
+            message = data.get("error", {}).get("message", response.text[:500])
+            raise RuntimeError(
+                f"YouTube details failed (HTTP {response.status_code}): {message}"
+            )
         details.extend(data.get("items", []))
     return details
 
@@ -168,15 +241,18 @@ def duration_to_seconds(iso):
 
 
 def guess_category(item, searched_for):
-    """Use the original YouTube search category as the initial classification."""
+    """Assign a broad candidate category from all searches that found this video."""
+    snippet = item.get("snippet", {})
+    title = snippet.get("title", "").lower()
+    channel = snippet.get("channelTitle", "").lower()
+    searched_categories = set(searched_for or [])
 
-    title = item["snippet"]["title"].lower()
-    channel = item["snippet"]["channelTitle"].lower()
-
+    # Explicit Goggins matches take priority when a video appears in both streams.
     if "goggins" in title or "goggins" in channel:
         return "Goggins"
 
-    if searched_for == "Longevity":
+    # A video discovered by any longevity query is eligible for Gemini review.
+    if "Longevity" in searched_categories:
         return "Longevity"
 
     return None
@@ -192,38 +268,76 @@ def strip_tags(text):
 
 
 def fetch_papers():
-    """Download recent papers. Returns a list of paper dicts, newest first."""
+    """Download recent papers. Raises only when every search request fails."""
     since = (TODAY - datetime.timedelta(days=NEW_PAPER_DAYS)).isoformat()
     papers = {}
+    successful_searches = 0
+    failures = []
+
     for category, terms in PAPER_SEARCHES.items():
-        query = f"({terms}) AND (FIRST_PDATE:[{since} TO {TODAY.isoformat()}]) AND (HAS_ABSTRACT:y)"
+        query = (
+            f"({terms}) AND (FIRST_PDATE:[{since} TO {TODAY.isoformat()}]) "
+            "AND (HAS_ABSTRACT:y)"
+        )
         print("Searching papers:", category)
         try:
-            data = requests.get("https://www.ebi.ac.uk/europepmc/webservices/rest/search", params={
-                "query": query, "format": "json", "resultType": "core", "pageSize": 100,
-            }, timeout=60).json()
-        except Exception as e:
-            print("  Paper search problem:", e)
+            response = requests.get(
+                "https://www.ebi.ac.uk/europepmc/webservices/rest/search",
+                params={
+                    "query": query,
+                    "format": "json",
+                    "resultType": "core",
+                    "pageSize": 100,
+                },
+                timeout=60,
+            )
+            response.raise_for_status()
+            data = response.json()
+            if data.get("error"):
+                raise RuntimeError(str(data["error"]))
+            successful_searches += 1
+        except Exception as exc:
+            failures.append(f"{category}: {exc}")
+            print(f"  Paper search problem ({category}): {exc}")
             continue
-        for x in data.get("resultList", {}).get("result", []):
-            pid = f"paper:{x.get('source', '')}:{x.get('id', '')}"
-            if pid in papers or not x.get("title"):
+
+        for item in data.get("resultList", {}).get("result", []):
+            paper_id = f"paper:{item.get('source', '')}:{item.get('id', '')}"
+            if paper_id in papers or not item.get("title"):
                 continue
-            doi = x.get("doi")
-            url = f"https://doi.org/{doi}" if doi else f"https://europepmc.org/article/{x.get('source')}/{x.get('id')}"
-            authors = [a.strip() for a in (x.get("authorString") or "").rstrip(".").split(",") if a.strip()]
-            papers[pid] = {
-                "id": pid,
-                "title": strip_tags(x["title"]),
+
+            doi = item.get("doi")
+            url = (
+                f"https://doi.org/{doi}"
+                if doi
+                else f"https://europepmc.org/article/{item.get('source')}/{item.get('id')}"
+            )
+            authors = [
+                author.strip()
+                for author in (item.get("authorString") or "").rstrip(".").split(",")
+                if author.strip()
+            ]
+            papers[paper_id] = {
+                "id": paper_id,
+                "title": strip_tags(item["title"]),
                 "authors": ", ".join(authors[:3]) + (" et al." if len(authors) > 3 else ""),
-                "journal": x.get("journalTitle") or (x.get("bookOrReportDetails") or {}).get("publisher") or "Preprint",
-                "date": x.get("firstPublicationDate") or str(x.get("pubYear", "")),
+                "journal": item.get("journalTitle")
+                    or (item.get("bookOrReportDetails") or {}).get("publisher")
+                    or "Preprint",
+                "date": item.get("firstPublicationDate") or str(item.get("pubYear", "")),
                 "url": url,
-                "preprint": x.get("source") == "PPR",
-                "abstract": strip_tags(x.get("abstractText")),
+                "preprint": item.get("source") == "PPR",
+                "abstract": strip_tags(item.get("abstractText")),
                 "guess": category,
             }
-    result = sorted(papers.values(), key=lambda p: p["date"], reverse=True)
+
+    if successful_searches == 0:
+        raise RuntimeError(
+            "All Europe PMC searches failed. Existing papers.json will be preserved. "
+            + " | ".join(failures)
+        )
+
+    result = sorted(papers.values(), key=lambda paper: paper["date"], reverse=True)
     print(f"  Found {len(result)} recent papers.")
     return result
 
@@ -263,23 +377,74 @@ Papers:
 
 
 def call_gemini(prompt):
-    """Send a prompt to Gemini and get back a list of JSON objects."""
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
-    body = {"contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {"responseMimeType": "application/json", "temperature": 0}}
+    """Send a prompt to Gemini and safely parse its JSON-array response."""
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{GEMINI_MODEL}:generateContent"
+    )
+    body = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "responseMimeType": "application/json",
+            "temperature": 0,
+        },
+    }
+
     for attempt in range(3):
-        r = requests.post(url, headers={"x-goog-api-key": GEMINI_KEY}, json=body, timeout=120)
-        if r.status_code == 429:
-            print("  Gemini says slow down. Waiting 40 seconds...")
-            time.sleep(40)
+        response = requests.post(
+            url,
+            headers={"x-goog-api-key": GEMINI_KEY},
+            json=body,
+            timeout=120,
+        )
+        try:
+            data = response.json()
+        except ValueError:
+            raise RuntimeError(
+                f"Gemini returned non-JSON (HTTP {response.status_code}): "
+                f"{response.text[:500]}"
+            )
+
+        if response.status_code == 429:
+            wait_seconds = 40 * (attempt + 1)
+            print(f"  Gemini rate limit reached. Waiting {wait_seconds} seconds...")
+            time.sleep(wait_seconds)
             continue
-        data = r.json()
-        if r.status_code != 200:
-            raise RuntimeError(data.get("error", {}).get("message", str(data)))
-        text = data["candidates"][0]["content"]["parts"][0]["text"]
-        array = re.search(r"\[.*\]", text, re.S).group(0)      # grab the JSON list
-        return json.loads(array)
-    raise RuntimeError("Gemini kept saying slow down (you may have hit the free daily limit).")
+
+        if response.status_code != 200:
+            message = data.get("error", {}).get("message", str(data))
+            raise RuntimeError(f"Gemini API error (HTTP {response.status_code}): {message}")
+
+        candidates = data.get("candidates") or []
+        if not candidates:
+            raise RuntimeError(
+                "Gemini returned no candidates. Response: " + json.dumps(data)[:1000]
+            )
+
+        parts = candidates[0].get("content", {}).get("parts", [])
+        response_text = "".join(part.get("text", "") for part in parts)
+        if not response_text.strip():
+            raise RuntimeError("Gemini returned an empty response.")
+
+        try:
+            parsed = json.loads(response_text)
+        except json.JSONDecodeError:
+            match = re.search(r"\[.*\]", response_text, re.S)
+            if not match:
+                raise RuntimeError(
+                    "Gemini response did not contain a JSON array: "
+                    + response_text[:1000]
+                )
+            parsed = json.loads(match.group(0))
+
+        if not isinstance(parsed, list):
+            raise RuntimeError("Gemini response was valid JSON but not a list.")
+        return parsed
+
+    raise RuntimeError(
+        "Gemini kept returning HTTP 429 after retries. "
+        "Check the API quota or try the workflow again later."
+    )
 
 
 def judge_videos(batch):
@@ -325,8 +490,7 @@ def load_labels():
 
 
 def save_labels(labels):
-    with open("labels.json", "w") as f:
-        json.dump(labels, f)
+    write_json_atomic("labels.json", labels)
 
 
 def judge_all(items, labels, judge, batch_size):
@@ -348,103 +512,226 @@ def judge_all(items, labels, judge, batch_size):
     return True
 
 
+def load_existing_list(path):
+    """Load an existing website JSON list; never silently discard a corrupt file."""
+    if not os.path.exists(path):
+        return []
+    with open(path, encoding="utf-8") as file:
+        data = json.load(file)
+    if not isinstance(data, list):
+        raise RuntimeError(f"{path} must contain a JSON list. Existing file was left untouched.")
+    return data
+
+
+def write_json_atomic(path, data):
+    """Write JSON via a temporary file so an interrupted run cannot truncate the live file."""
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    temporary_path = path + ".tmp"
+    with open(temporary_path, "w", encoding="utf-8") as file:
+        json.dump(data, file, ensure_ascii=False, indent=2)
+        file.write("\n")
+    os.replace(temporary_path, path)
+
+
+def merge_by_id(existing, discovered):
+    """Merge newly discovered items into the saved library without duplicates or data loss."""
+    merged = {}
+    for item in existing:
+        item_id = item.get("id")
+        if item_id:
+            merged[item_id] = item
+    for item in discovered:
+        item_id = item.get("id")
+        if item_id:
+            merged[item_id] = {**merged.get(item_id, {}), **item}
+    return list(merged.values())
+
+
 # ---------------------------------------------------------------
 # 6. MAIN PROGRAM
 # ---------------------------------------------------------------
 
 def main():
     if not check_keys():
-        return
+        raise SystemExit("API key validation failed. No website data files were changed.")
 
-    # --- Videos, step A: search YouTube (all-time best, then newest) ---
-    found = {}   # video ID -> which category's search found it
+    os.makedirs(OUT_DIR, exist_ok=True)
+    videos_path = os.path.join(OUT_DIR, "videos.json")
+    papers_path = os.path.join(OUT_DIR, "papers.json")
+    status_path = os.path.join(OUT_DIR, "status.json")
+
+    existing_videos = load_existing_list(videos_path)
+    existing_papers = load_existing_list(papers_path)
+
+    # --- Videos, step A: search YouTube (all-time results, then recent results) ---
+    # Store every category that found an ID. A first-match-only dict loses overlaps.
+    found = {}  # video ID -> set of source categories
+    search_count = 0
     for category, queries in VIDEO_SEARCHES.items():
         for query in queries:
             print("Searching videos:", query)
-            for vid in search_youtube(query):
-                found.setdefault(vid, category)
-            for vid in search_youtube(query, fresh=True):
-                found.setdefault(vid, category)
+            for video_id in search_youtube(query):
+                found.setdefault(video_id, set()).add(category)
+            search_count += 1
 
-    # --- Videos, step B: details + cheap keyword filter ---
-    print(f"\nFound {len(found)} videos. Fetching details...")
+        fresh_query = FRESH_SEARCHES.get(category)
+        if fresh_query:
+            print("Searching recent videos:", fresh_query)
+            for video_id in search_youtube(fresh_query, fresh=True):
+                found.setdefault(video_id, set()).add(category)
+            search_count += 1
+
+    if not found:
+        raise RuntimeError(
+            "YouTube searches returned zero video IDs. This usually indicates an API, "
+            "quota, network or search configuration problem. Existing website data "
+            "has been preserved."
+        )
+
+    print(f"\\nFound {len(found)} unique video IDs across {search_count} searches. Fetching details...")
+    details = get_details(list(found))
+    if not details:
+        raise RuntimeError(
+            "YouTube returned no video details for the discovered IDs. "
+            "Existing website data has been preserved."
+        )
+
+    # --- Videos, step B: remove Shorts and assign broad candidate categories ---
     candidates = []
-    for item in get_details(list(found)):
-        seconds = duration_to_seconds(item["contentDetails"]["duration"])
-        guess = guess_category(item, found[item["id"]])
+    for item in details:
+        snippet = item.get("snippet") or {}
+        content_details = item.get("contentDetails") or {}
+        if not snippet or not content_details.get("duration"):
+            continue
+
+        seconds = duration_to_seconds(content_details["duration"])
+        guess = guess_category(item, found.get(item.get("id"), set()))
         if seconds < MIN_SECONDS or guess is None:
             continue
+
         candidates.append({
             "id": item["id"],
-            "title": item["snippet"]["title"],
-            "channel": item["snippet"]["channelTitle"],
-            "description": item["snippet"].get("description", ""),
+            "title": snippet.get("title", ""),
+            "channel": snippet.get("channelTitle", ""),
+            "description": snippet.get("description", ""),
             "seconds": seconds,
-            "views": int(item["statistics"].get("viewCount", 0)),
-            "published": item["snippet"]["publishedAt"][:10],
+            "views": int((item.get("statistics") or {}).get("viewCount", 0)),
+            "published": snippet.get("publishedAt", "")[:10],
             "guess": guess,
         })
 
-    # Top-viewed ones, PLUS every fresh one (new videos have few views, so they'd get lost otherwise)
+    print(
+        f"Eligible candidates after duration/category checks: {len(candidates)} "
+        f"(minimum duration: {MIN_SECONDS // 60} minutes)."
+    )
+
     fresh_cutoff = (TODAY - datetime.timedelta(days=FRESH_DAYS)).isoformat()
-    candidates.sort(key=lambda v: -v["views"])
+    candidates.sort(key=lambda video: -video["views"])
     chosen = candidates[:MAX_FOR_GEMINI]
-    chosen_ids = {v["id"] for v in chosen}
-    chosen += [v for v in candidates if v["published"] >= fresh_cutoff and v["id"] not in chosen_ids]
-    print(f"{len(chosen)} video candidates go to Gemini.")
+    chosen_ids = {video["id"] for video in chosen}
+    chosen.extend(
+        video for video in candidates
+        if video["published"] >= fresh_cutoff and video["id"] not in chosen_ids
+    )
+    print(f"{len(chosen)} video candidates sent to Gemini.")
 
     # --- Videos, step C: Gemini judges ---
     labels = load_labels()
     gemini_ok = judge_all(chosen, labels, judge_videos, VIDEO_BATCH)
     if not gemini_ok:
-        print("  Videos not judged yet will use the keyword guess instead.")
+        print("  Gemini could not finish video judging. Unjudged videos will NOT be added.")
+        print("  Previously saved videos and previously judged items will be retained.")
+    save_labels(labels)
 
-    videos = []
-    for v in chosen:
-        label = labels.get(v["id"]) or {"keep": True, "cat": v["guess"], "topic": ""}
-        if not label["keep"]:
+    newly_kept_videos = []
+    for video in chosen:
+        # Only add videos with an explicit Gemini decision. Never bulk-add unreviewed results.
+        label = labels.get(video["id"])
+        if not label or not label.get("keep"):
             continue
-        videos.append({
-            "id": v["id"], "title": v["title"], "channel": v["channel"],
-            "seconds": v["seconds"], "views": v["views"], "published": v["published"],
-            "category": label["cat"], "topic": label.get("topic", ""),
+        category = label.get("cat")
+        if category not in ("Goggins", "Longevity"):
+            category = video["guess"]
+        newly_kept_videos.append({
+            "id": video["id"],
+            "title": video["title"],
+            "channel": video["channel"],
+            "seconds": video["seconds"],
+            "views": video["views"],
+            "published": video["published"],
+            "category": category,
+            "topic": label.get("topic", ""),
         })
-    videos.sort(key=lambda v: -v["views"])
-    os.makedirs(OUT_DIR, exist_ok=True)
-    with open(os.path.join(OUT_DIR, "videos.json"), "w") as f:
-        json.dump(videos, f)
-    goggins = sum(1 for v in videos if v["category"] == "Goggins")
-    new_videos = sum(1 for v in videos if v["published"] >= fresh_cutoff)
-    print(f"\nSaved {len(videos)} videos ({goggins} Goggins, {len(videos) - goggins} Longevity) to {OUT_DIR}/videos.json")
-    print(f"  {new_videos} of them are NEW (published in the last {FRESH_DAYS} days)")
+
+    # Keep older saved videos even if they were not returned by today's search.
+    videos = merge_by_id(existing_videos, newly_kept_videos)
+    videos.sort(key=lambda video: (-int(video.get("views", 0)), video.get("published", "")))
+    write_json_atomic(videos_path, videos)
+
+    goggins_count = sum(1 for video in videos if video.get("category") == "Goggins")
+    longevity_count = sum(1 for video in videos if video.get("category") == "Longevity")
+    new_videos = sum(
+        1 for video in videos
+        if (video.get("published") or "") >= fresh_cutoff
+    )
+    print(
+        f"\\nSaved library: {len(videos)} videos "
+        f"({goggins_count} Goggins, {longevity_count} Longevity)."
+    )
+    print(f"  {new_videos} were published in the last {FRESH_DAYS} days.")
 
     # --- Papers ---
     print()
-    papers = fetch_papers()[:MAX_PAPERS_FOR_GEMINI]
-    if papers and gemini_ok:
-        gemini_ok = judge_all(papers, labels, judge_papers, PAPER_BATCH)
-    elif papers:
-        print("Skipping paper judging because Gemini had a problem. Run again later.")
+    newly_kept_papers = []
+    paper_candidates_count = 0
+    try:
+        paper_candidates = fetch_papers()[:MAX_PAPERS_FOR_GEMINI]
+        paper_candidates_count = len(paper_candidates)
+        if paper_candidates and gemini_ok:
+            gemini_ok = judge_all(paper_candidates, labels, judge_papers, PAPER_BATCH)
+        elif paper_candidates:
+            print("Skipping paper judging because Gemini had a problem; saved papers are retained.")
 
-    kept = []
-    for p in papers:
-        label = labels.get(p["id"])
-        if not label or not label["keep"]:       # papers need Gemini's OK (no keyword fallback)
-            continue
-        kept.append({
-            "id": p["id"], "title": p["title"], "authors": p["authors"], "journal": p["journal"],
-            "date": p["date"], "url": p["url"], "preprint": p["preprint"],
-            "category": label["cat"], "summary": label["summary"], "evidence": label["evidence"],
-        })
-    with open(os.path.join(OUT_DIR, "papers.json"), "w") as f:
-        json.dump(kept, f)
-    print(f"Saved {len(kept)} research papers to {OUT_DIR}/papers.json")
+        if gemini_ok:
+            for paper in paper_candidates:
+                label = labels.get(paper["id"])
+                if not label or not label.get("keep"):
+                    continue
+                if label.get("cat") not in ("Longevity", "Toughness") or not label.get("summary"):
+                    continue
+                newly_kept_papers.append({
+                    "id": paper["id"],
+                    "title": paper["title"],
+                    "authors": paper["authors"],
+                    "journal": paper["journal"],
+                    "date": paper["date"],
+                    "url": paper["url"],
+                    "preprint": paper["preprint"],
+                    "category": label["cat"],
+                    "summary": label["summary"],
+                    "evidence": label.get("evidence", "other"),
+                })
+    except Exception as exc:
+        print(f"Paper discovery failed; existing papers will be retained: {exc}")
 
-    # A tiny status file so the site can say "Updated 3h ago"
-    status = {"updated": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
-              "videos": len(videos), "new_videos": new_videos, "papers": len(kept)}
-    with open(os.path.join(OUT_DIR, "status.json"), "w") as f:
-        json.dump(status, f)
+    papers = merge_by_id(existing_papers, newly_kept_papers)
+    papers.sort(key=lambda paper: paper.get("date", ""), reverse=True)
+    write_json_atomic(papers_path, papers)
+    save_labels(labels)
+    print(f"Saved research library: {len(papers)} papers ({paper_candidates_count} candidates this run).")
+
+    # Status is written last, after the data files have been saved successfully.
+    status = {
+        "updated": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+        "videos": len(videos),
+        "new_videos": new_videos,
+        "papers": len(papers),
+        "video_candidates": len(candidates),
+        "paper_candidates": paper_candidates_count,
+        "gemini_ok": bool(gemini_ok),
+    }
+    write_json_atomic(status_path, status)
+    print("Pipeline completed successfully.")
 
 
 if __name__ == "__main__":
