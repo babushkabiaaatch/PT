@@ -168,14 +168,17 @@ def duration_to_seconds(iso):
 
 
 def guess_category(item, searched_for):
-    """Quick keyword check. Returns 'Goggins', 'Longevity', or None (= junk)."""
+    """Use the original YouTube search category as the initial classification."""
+
     title = item["snippet"]["title"].lower()
     channel = item["snippet"]["channelTitle"].lower()
-    text = title + " " + item["snippet"].get("description", "").lower()
+
     if "goggins" in title or "goggins" in channel:
         return "Goggins"
-    if searched_for == "Longevity" and any(w in text for w in LONGEVITY_WORDS):
+
+    if searched_for == "Longevity":
         return "Longevity"
+
     return None
 
 
