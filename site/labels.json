@@ -40,9 +40,8 @@
     "topic": "ambition and drive"
   },
   "JV8mIfjwPeM": {
-    "keep": true,
-    "cat": "Goggins",
-    "topic": "self discipline"
+    "keep": false,
+    "why": "not embeddable"
   },
   "K1QDYuHGa_I": {
     "keep": true,
@@ -57,7 +56,8 @@
   "dIM7E8e9JKY": {
     "keep": true,
     "cat": "Goggins",
-    "topic": "embracing suffering"
+    "topic": "embracing suffering",
+    "sum_fail": 1
   },
   "AbDT2JTSnA8": {
     "keep": true,
@@ -72,7 +72,8 @@
   "GdHW1YipmVo": {
     "keep": true,
     "cat": "Goggins",
-    "topic": "victory in suffering"
+    "topic": "victory in suffering",
+    "sum_fail": 1
   },
   "X4nGU4DZUwE": {
     "keep": true,
@@ -839,390 +840,6 @@
     "evidence": "human study"
   },
   "_queue": {
-    "OT417jXWGjE": "Russian",
-    "H6OXCGfNmD0": "Russian",
-    "UFPKTPsHBKk": "Russian",
-    "-cXFTGvhBHM": "Russian",
-    "WSw3QRMl_1I": "Russian",
-    "hzEPWfX9HTQ": "Russian",
-    "w4kyRQVQszs": "Russian",
-    "X00Q2voctXc": "Russian",
-    "aSep1iN-p9E": "Russian",
-    "W9vm5pzKLRs": "Russian",
-    "_x58lqphRLo": "Russian",
-    "_kVrn_wRL9w": "Russian",
-    "v1chKKVUmq0": "Russian",
-    "WVyb-CDBaBQ": "Russian",
-    "NVRob6yKtlg": "Russian",
-    "lkhJuZ9pVkY": "Russian",
-    "Xdvn1T5Fe4c": "Russian",
-    "XJJaUkW2HGI": "Russian",
-    "Ia8gAomiqHw": "Russian",
-    "kEGuI3kwSyc": "Russian",
-    "Zja11n8rDIg": "Russian",
-    "FbM-ew25YE0": "Russian",
-    "SBWlOmOgXvU": "Russian",
-    "BnxqQ6pXvco": "Russian",
-    "RiP5nghy6Qg": "Russian",
-    "OQ9Tjcr8pjo": "Russian",
-    "XnQwt5LM4OQ": "Russian",
-    "KnGW-pBz9B4": "Russian",
-    "y4_To-xVO7k": "Russian",
-    "XHGBfY-88Tc": "Russian",
-    "z5nj7q9LEhs": "Russian",
-    "DTW8ZPgnolo": "Russian",
-    "4nw9IDMn6-A": "Russian",
-    "FFwUpewUHQk": "Russian",
-    "v3mBLTHsAkM": "Russian",
-    "XjkGvceXceY": "Russian",
-    "jd-raQD7vII": "Russian",
-    "VaHUtghDw2k": "Russian",
-    "LwYumtha-iU": "Russian",
-    "ZHfGZhD1IWg": "Russian",
-    "HtVrWp4DgnM": "Russian",
-    "YTkDPX-BHis": "Russian",
-    "gyzML0IymTs": "Russian",
-    "Z-MoHmGKMW0": "Russian",
-    "kNshDRMWpgg": "Russian",
-    "2mFZYF_t6hg": "Russian",
-    "LY9tXiJk6tA": "Russian",
-    "asHtwgA8LMc": "Russian",
-    "CXyRvuGCnnI": "Russian",
-    "_5bua4GlJiU": "Russian",
-    "uMs07uvuXyc": "Russian",
-    "ckMyI_UO6hY": "Russian",
-    "WFwy1VwAkAY": "Russian",
-    "diyKTTkQDWo": "Russian",
-    "fgj7I7KrOtg": "Russian",
-    "PKzmJBSYfzY": "Russian",
-    "YNVDVSnX5hY": "Russian",
-    "DcRyoia8-ZM": "Russian",
-    "yfQux5snRpw": "Russian",
-    "nln-H6_fdw0": "Russian",
-    "XVDSyQBAv1Q": "Russian",
-    "5QDn-WuDWwk": "Russian",
-    "XfbyuvPR7Bw": "Russian",
-    "TpdzCxnmmH4": "Russian",
-    "fqts8dfJdn4": "Russian",
-    "Z3dR3anbP3A": "Russian",
-    "365LaGM5Qvc": "Russian",
-    "bR2Sflu4D0c": "Russian",
-    "y9H1bviyJBA": "Russian",
-    "ZUrI1cIkwhk": "Russian",
-    "rZVCwfYDx8s": "Russian",
-    "Hmjlxe-Ir5k": "Russian",
-    "NPfd8Ba_8Fo": "Russian",
-    "Qi5cXiCpBnk": "Russian",
-    "D6wTuogebU8": "Longevity",
-    "ffgpqk5hZBE": "Longevity",
-    "N3e4GiSyr9c": "Russian",
-    "XtaSIuqpBns": "Russian",
-    "Q4pZnM7LeSo": "Russian",
-    "MOBGaVJH54A": "Russian",
-    "AlUMYm5YExA": "Russian",
-    "wGcqFV_alDk": "Russian",
-    "3rcBCMlVxSc": "Russian",
-    "7sFEx8Z4XQ8": "Russian",
-    "uRSmuuXg7hI": "Russian",
-    "h6RIj8WvYXM": "Russian",
-    "Mb-ynUI4Me4": "Russian",
-    "NwUYHTEEke8": "Russian",
-    "vJZs4TZLCwc": "Russian",
-    "M-3HEJpdx2I": "Russian",
-    "LVE0YirPS8I": "Russian",
-    "u5Ks53-THVE": "Russian",
-    "KopQglRZUFA": "Russian",
-    "TBI1dEe_X5E": "Russian",
-    "G3fGvuFg7x4": "Russian",
-    "awYvLQ53n3M": "Russian",
-    "mRNCLRo9JAM": "Russian",
-    "Rtm6_ayvBX0": "Russian",
-    "Fjkw9vYDukg": "Russian",
-    "-NbTi2_5Gps": "Russian",
-    "NduDs59WZqU": "Russian",
-    "MzXkiK4ROhQ": "Russian",
-    "-mf38m0rRfE": "Russian",
-    "ZyPPmqYu9nY": "Russian",
-    "ezja7-YQ72g": "Russian",
-    "y6SVjctaXJ4": "Russian",
-    "pNogULi28gs": "Russian",
-    "WSguH8tnTIo": "Russian",
-    "oM8eHOONclY": "Russian",
-    "pp_FbwCzPZM": "Russian",
-    "mbzvM7CNJN0": "Russian",
-    "SnxPAiuNPbA": "Russian",
-    "nlrjxL_frmk": "Russian",
-    "Qzo6jWpgJ5E": "Russian",
-    "-VBHghC4oug": "Russian",
-    "pfLVqvgkTbU": "Russian",
-    "ACn7xTNNRcc": "Russian",
-    "u6akTRg2ecw": "Russian",
-    "squ9XOfBKaY": "Russian",
-    "Fzvt4bgepks": "Russian",
-    "O1JxQ9OyJRQ": "Russian",
-    "xGCuF-h-XVc": "Russian",
-    "4BJwmJavX64": "Russian",
-    "lSCTGJbObOg": "Russian",
-    "p9XNf1EFz98": "Russian",
-    "H_c_crxV9O8": "Russian",
-    "IU0Zy67ZLpU": "Russian",
-    "3U4D77IB-j8": "Russian",
-    "GkTrJxOHJS0": "Russian",
-    "ADTwFvHACE4": "Russian",
-    "0-BD5WJ_hBk": "Russian",
-    "xXGwa1sfTq0": "Russian",
-    "a5bLHLqaNDg": "Russian",
-    "Lv39BhZJ2mg": "Russian",
-    "zMKiZDU00jo": "Russian",
-    "itFwx1CZM9I": "Russian",
-    "uXL7Pxjvz-E": "Russian",
-    "wCzD2jitlEs": "Russian",
-    "FSYe9GQc9Ow": "Russian",
-    "256FyJD5i9A": "Russian",
-    "poSl-JU8ajs": "Russian",
-    "1JJ1o-eqTHY": "Russian",
-    "Qu2YmZvGjv8": "Russian",
-    "kYg1fKIzohQ": "Russian",
-    "YNZ67LZMgx0": "Russian",
-    "MbvtSNMwshI": "Russian",
-    "LQ9Psk_n1EQ": "Russian",
-    "f4zd_M1jUzA": "Russian",
-    "ok09KmmxVWQ": "Russian",
-    "ySjVi4uGp2c": "Russian",
-    "2TVJI1D21bk": "Russian",
-    "sTcIuHutXag": "Russian",
-    "ZQ6CEQn9SmQ": "Russian",
-    "l9TRRR8Z_QQ": "Russian",
-    "UsaA3prpbWg": "Russian",
-    "DZPR3UVoHCU": "Russian",
-    "SJ-ip-OicNQ": "Russian",
-    "6IXtQx8SwBE": "Russian",
-    "-XvydxPvcyI": "Russian",
-    "-oCBnP_MEQA": "Russian",
-    "ghBGLrwBTk4": "Russian",
-    "7kbI0d2_T5s": "Russian",
-    "n-AfbcYQYeI": "Russian",
-    "RYvSIVoFOQA": "Russian",
-    "sw2V54gc-iQ": "Russian",
-    "CbZBD15Cwn0": "Russian",
-    "8-5-WaiMOJY": "Russian",
-    "i7SOvgZIhIM": "Russian",
-    "jwvJ34KELYo": "Russian",
-    "-qbTumiWw98": "Russian",
-    "3_fiyh0fXyM": "Russian",
-    "abgkVpMH1ZQ": "Russian",
-    "V1slfjrF6ZA": "Russian",
-    "tkJ5aiWOkXs": "Russian",
-    "LLNjftcLlLA": "Russian",
-    "vx6MLomGMNM": "Russian",
-    "bpAFSabRyJ8": "Russian",
-    "fNvsiRrKLj4": "Russian",
-    "M-RZ088Y0v0": "Russian",
-    "or8terUVLIw": "Russian",
-    "PCElEOJ8UDw": "Russian",
-    "dalB0YYQ1Lw": "Russian",
-    "3NYH-zyIfZY": "Russian",
-    "aMVWmYYjt3o": "Russian",
-    "1pQvYLggCWw": "Russian",
-    "GgCnpDg0jwc": "Russian",
-    "EASi0Djlgv4": "Russian",
-    "53GIoeOAam4": "Russian",
-    "WwtlgKatBPg": "Russian",
-    "6GqonOcxCQQ": "Russian",
-    "qIS6BCqR8bA": "Russian",
-    "n63PP-9Fj3I": "Russian",
-    "bzILjaOqN4U": "Russian",
-    "P2O8HWoMEX0": "Russian",
-    "nunVkD5wd1c": "Russian",
-    "hFWGPcA6r6s": "Russian",
-    "ahRV-a30jhE": "Russian",
-    "phNN7g8tavg": "Russian",
-    "IucCETSAaU8": "Russian",
-    "aLMIpk0Nkgw": "Russian",
-    "AyRPqHcRCx8": "Russian",
-    "_4MNz6X6nzE": "Russian",
-    "rDQ802sFP2Y": "Russian",
-    "9lhm8fd3yS0": "Russian",
-    "nPLoM-IAzXo": "Russian",
-    "a71I8yNxLOM": "Russian",
-    "VJhkIivWfTU": "Russian",
-    "Tc9Kz_LiCoQ": "Russian",
-    "6idM4p8PLqE": "Russian",
-    "MWXvj4eDnt4": "Russian",
-    "JRcV-A7r470": "Russian",
-    "64C3HxLr0cg": "Russian",
-    "07krcppZGxw": "Russian",
-    "qnfIZKnh7to": "Russian",
-    "uuFjnKmyckY": "Russian",
-    "LRuXjFF8A9c": "Russian",
-    "HzxZ2ovb3aM": "Russian",
-    "PMJoQiDgxjQ": "Russian",
-    "23PEkMd2svg": "Russian",
-    "6cKTSj4a8bQ": "Russian",
-    "F1aBhlBLwsA": "Russian",
-    "lNqRiL_kF20": "Russian",
-    "aBQptpP5ZOI": "Russian",
-    "-yT45RqTsho": "Russian",
-    "o_tKs9HXtU4": "Russian",
-    "38dpdR7Nq-0": "Russian",
-    "OVfSmehf_NI": "Russian",
-    "7zu4uLK1tfg": "Russian",
-    "hsfTkMhGClI": "Russian",
-    "j8QwQBWc8sM": "Russian",
-    "21zBGnmMFmQ": "Russian",
-    "8zuYw-DPTsM": "Russian",
-    "XTMNiYPHgkQ": "Russian",
-    "iEyj0jKHQA8": "Russian",
-    "z4-Ra9EDmzo": "Russian",
-    "P4MsDQkzeKY": "Russian",
-    "7wnKHZNzEys": "Russian",
-    "c-LYnJIMpK0": "Russian",
-    "t9YstQvhEso": "Russian",
-    "clNb2dy1ZEI": "Russian",
-    "QhhI0dyqbpE": "Russian",
-    "XAt0cSaJk1k": "Russian",
-    "Swj8GIIivXs": "Goggins",
-    "e9faloUNgKM": "Russian",
-    "tYDMSM5dosE": "Russian",
-    "SJ18HC9EyEE": "Russian",
-    "KSD0Zuyju4E": "Russian",
-    "G4ttgbMz-MY": "Russian",
-    "IPdAYo6j7ZA": "Russian",
-    "sSdZA2TciKs": "Russian",
-    "er0UDwUV9tM": "Russian",
-    "73U-OqpaU48": "Russian",
-    "e6lFvAQp0LE": "Russian",
-    "jBL1okgi1pw": "Russian",
-    "iS_JtFB3hCI": "Russian",
-    "2qNehUbHmqQ": "Russian",
-    "Wt13onywAWI": "Russian",
-    "skgREAy6zzo": "Russian",
-    "vJ0Qzk4PtP8": "Russian",
-    "aG6qsEAnyV0": "Russian",
-    "_P_zOT5xoSg": "Russian",
-    "xy2krshrkN0": "Russian",
-    "ujCFOPfqJbQ": "Russian",
-    "VmdVwaZ9M7A": "Russian",
-    "KiI_QwckpD0": "Russian",
-    "tXaakjk6QVg": "Russian",
-    "9AVRGZo1juQ": "Russian",
-    "MPHCoMeIUY8": "Russian",
-    "8QoaTQaBdLw": "Russian",
-    "GreFs5FalUI": "Russian",
-    "lnD9fmmgv0U": "Russian",
-    "0FFg214Hu2g": "Russian",
-    "GTAXUR5uslM": "Russian",
-    "BuLqsQow90U": "Russian",
-    "P3ajTw1X5pU": "Russian",
-    "QcdsHHPp2AA": "Russian",
-    "FYYJ1kdCLPU": "Russian",
-    "EtWzj-1FFV4": "Russian",
-    "vPWd7fidDyk": "Russian",
-    "HpMxE5iUpxM": "Russian",
-    "rNdOsiuz_u8": "Russian",
-    "Pc4g3H_As5w": "Russian",
-    "StgvD6yZ034": "Russian",
-    "n30XNTzUiCY": "Russian",
-    "ntZebzzBRw4": "Russian",
-    "qyKW82J7UZk": "Russian",
-    "K9i0DEn7vto": "Russian",
-    "JBxgbCdV0Xw": "Russian",
-    "-dFiOENeKLM": "Russian",
-    "WOsS6up4lNU": "Russian",
-    "kh9LmidMVaM": "Russian",
-    "GyQgq3rKUmc": "Russian",
-    "uQZEtXX57L8": "Russian",
-    "x937BseyPwY": "Russian",
-    "bkp7gMrU71g": "Russian",
-    "JHsASTt9rPQ": "Russian",
-    "FF8xvDKCVtg": "Russian",
-    "Fa880R-zaXc": "Russian",
-    "0yvn80DsRRY": "Russian",
-    "YCXLJsJic5A": "Russian",
-    "n4WS96HXV9k": "Russian",
-    "9HZb-jZ9HYI": "Russian",
-    "nNr0cT6294s": "Russian",
-    "JWDgaHqK-Jo": "Russian",
-    "8_QInJ2iZJM": "Russian",
-    "uvFblwaxWb4": "Russian",
-    "O9J88hfcpfY": "Russian",
-    "0_sgu9TvHSc": "Russian",
-    "RQ93s2i6w78": "Russian",
-    "RGOKiH3TeXw": "Russian",
-    "ZOHgXUjkwnQ": "Russian",
-    "RuTEmLzPTJ8": "Russian",
-    "T1bdLWYNhdY": "Russian",
-    "MfycGdWCiyg": "Russian",
-    "dsm5NTKeN5U": "Russian",
-    "mcIu7rs2Zgs": "Russian",
-    "O0yL8urEpt4": "Russian",
-    "sxjqV1e_2SY": "Russian",
-    "vBYGIFjkHlk": "Russian",
-    "FJKKfGmANF0": "Russian",
-    "be44_qJ-DjA": "Russian",
-    "dzp2r8I4WHQ": "Russian",
-    "I6TckLDCQGY": "Russian",
-    "WcDI7GgjQ_w": "Russian",
-    "MTthiqoKop8": "Russian",
-    "8LYvNaoTiqw": "Russian",
-    "taLSnATGmCA": "Russian",
-    "XSieKWEooL4": "Russian",
-    "Fg8FB9BAhXg": "Russian",
-    "_-IinJHgtoU": "Russian",
-    "aULH1fqrNcw": "Russian",
-    "PDmZfDreT_8": "Russian",
-    "wt5OYgllg38": "Russian",
-    "GZ2uc-3pQbA": "Russian",
-    "RBCr2r6cNr4": "Russian",
-    "c-NfdXUtVjU": "Russian",
-    "CnXu0hMgZUQ": "Russian",
-    "gHyTdY1W0Os": "Russian",
-    "3e6p16yuT-o": "Russian",
-    "h01zfqw5lIs": "Russian",
-    "o7AlIKWhITs": "Russian",
-    "7JPUhXISGV4": "Russian",
-    "fso-GKnG1Cc": "Russian",
-    "OGwvi6pS2fM": "Russian",
-    "FzKqF_82VVM": "Russian",
-    "p1iVw7lAxnY": "Russian",
-    "bEvKs9ZSPXA": "Russian",
-    "sDwgUgXsUy8": "Russian",
-    "6ckjVEJzzN8": "Russian",
-    "kmW3HeqqeAU": "Russian",
-    "Yzrk_0K_ozM": "Russian",
-    "wZIvW2FH4xI": "Russian",
-    "-XpUBQ0CjE4": "Russian",
-    "UUE-nrqGepM": "Russian",
-    "MWxH94uxUI0": "Russian",
-    "VPoBXSKmcZU": "Russian",
-    "ywqkwZMNX4M": "Russian",
-    "wNeqMvZxoVY": "Russian",
-    "UEwZLOt3HvM": "Russian",
-    "HQiza-ugb0o": "Russian",
-    "_XJ_OpAY4ek": "Russian",
-    "sNX_vsaxRWs": "Russian",
-    "HfRRgJAVWWk": "Russian",
-    "iAplA7l1am0": "Russian",
-    "3ThbknCP9KY": "Russian",
-    "TMsx2_TwVRU": "Russian",
-    "3dADYFBh2Ms": "Russian",
-    "vB2100t6VdI": "Russian",
-    "dl6O1WlC2SY": "Russian",
-    "pDn95P8hhkc": "Russian",
-    "UrFlJ7Nogkc": "Russian",
-    "rYiaMa8oKrY": "Russian",
-    "mLyJJ7evWns": "Russian",
-    "1Ms_yFU3nW4": "Russian",
-    "YtYkbKkJAs0": "Russian",
-    "hLbxGxvcOsQ": "Russian",
-    "GHQ86dECYYg": "Russian",
-    "TxEegIy85g0": "Russian",
-    "ThdV82vZGdI": "Russian",
-    "3lgvdIP6Fqg": "Russian",
-    "1veuBRVug8w": "Russian",
-    "wPC5NxLRw4A": "Russian",
-    "JU2iRQzHiEg": "Russian",
-    "ztMKLni-nN0": "Russian",
     "0nwh33NZcps": "Russian",
     "rapWYCAUpQo": "Russian",
     "EoZpMVQ7TJ8": "Russian",
@@ -1379,11 +996,9 @@
     "9mExXaGA45M": "Russian",
     "FE2w6xmcqxg": "Russian",
     "9jOZsfJDYAU": "Russian",
-    "DUMZbFO3lY8": "Russian",
     "oKP0nXmpMHg": "Russian",
     "JiMvx7-H8jc": "Russian",
     "eB93LBY4Wqo": "Russian",
-    "fA42Ba3WUUI": "Russian",
     "En8VGSrxFl4": "Russian",
     "NWqk6R5_rYs": "Russian",
     "1Bm1EBpZhzE": "Russian",
@@ -1405,7 +1020,6 @@
     "5Qogd_WCe5Y": "Russian",
     "OoQ2mGVlI7Q": "Russian",
     "jD8mWEFW4dI": "Russian",
-    "sykakBssebE": "Russian",
     "Kxg5x8U7muU": "Russian",
     "_u2lccMm8J0": "Russian",
     "el0tsB3TWzU": "Russian",
@@ -1449,7 +1063,6 @@
     "4FbyZUsKI3U": "Russian",
     "a7UUcHyHd4c": "Russian",
     "P-ZfdZf3PBo": "Russian",
-    "2x7f5mODSlk": "Russian",
     "XiuVN4xp5Ug": "Russian",
     "5dVsq7R0uBU": "Russian",
     "ZEEL-DNyNpc": "Russian",
@@ -1520,7 +1133,6 @@
     "Hs__kALLUrI": "Russian",
     "Dp1mleLCZQU": "Russian",
     "89H6uuzlKYw": "Russian",
-    "5DS3xr0r98s": "Russian",
     "SCRzvxUlHqM": "Russian",
     "-wgjPV5GbkY": "Russian",
     "kZnjNqJrgHI": "Russian",
@@ -1547,14 +1159,12 @@
     "ifn98nzN88o": "Russian",
     "aYCMSdzWO9U": "Russian",
     "qrtcOtNcLd8": "Russian",
-    "gUFlsPJ9juM": "Russian",
     "ptZQzc8PYZM": "Russian",
     "Nj16k8xMauo": "Russian",
     "oiASmqmWxHk": "Russian",
     "mklRqPn-Gbk": "Russian",
     "picWDGrQEbs": "Russian",
     "nGffANJVF6g": "Russian",
-    "4P-b7-ILvdc": "Russian",
     "pznv2kjp9-4": "Russian",
     "bS3gZ5BzrFw": "Russian",
     "GEDuoAyA2Aw": "Russian",
@@ -1733,7 +1343,6 @@
     "XN_0VAzga_A": "Russian",
     "SAfmYsAmDQQ": "Russian",
     "evsuZf54Mmc": "Russian",
-    "yvWZ-0EP8uQ": "Russian",
     "1jGOHhZSeJc": "Russian",
     "aVJsoYNHgIk": "Russian",
     "E8DCmgvqCCA": "Russian",
@@ -1880,7 +1489,6 @@
     "ufLzIyCzqnw": "Russian",
     "k2CCrhVB5n4": "Russian",
     "SlCI-W8Hop4": "Russian",
-    "L3OTZf86aPk": "Russian",
     "44DCGQFL1r8": "Russian",
     "D0GrDJojSwA": "Russian",
     "_yemRc81wH8": "Russian",
@@ -1957,7 +1565,6 @@
     "hnBNkVRjUTg": "Russian",
     "XCuNwc9s54I": "Russian",
     "RCqu45Mq9-g": "Russian",
-    "oCxCkogQak8": "Russian",
     "x7gABbosP-g": "Russian",
     "GzyOTHuGyXg": "Russian",
     "0R35-6Ol0gw": "Russian",
@@ -1969,8 +1576,6 @@
     "4ybdEOOFwmU": "Russian",
     "QY3RZgUJL7I": "Russian",
     "HdnUh70fqEE": "Russian",
-    "YROrPLnFxPk": "Russian",
-    "Kz5N8DhG92k": "Russian",
     "qaCuxMd-bVQ": "Russian",
     "cbT6L6yKmn8": "Russian",
     "gJegrhmcg2c": "Russian",
@@ -1985,7 +1590,6 @@
     "8PXjrl-bS6Q": "Russian",
     "rPQw__k8Vpg": "Russian",
     "EjCQfxVwtgQ": "Russian",
-    "4P6Cm2-E438": "Russian",
     "G7v2XNUuhN4": "Russian",
     "m3dsumtnfbU": "Russian",
     "wzJ9p-JxiHQ": "Russian",
@@ -2002,7 +1606,6 @@
     "l6BGy-Y5HV0": "Russian",
     "fxifNefpltw": "Russian",
     "CEG3DMeCnCg": "Russian",
-    "ZZ2cGkFy50w": "Russian",
     "9Q8MzIjBSyI": "Russian",
     "t4eLTRCkfhg": "Russian",
     "uPvooSvY7Gc": "Russian",
@@ -2039,26 +1642,20 @@
     "YQVxClfxZg0": "Russian",
     "v7g6Oa09IgY": "Russian",
     "YDOOjfIp7nM": "Russian",
-    "-PmddxuEVeU": "Russian",
     "ZM6XbWirLVo": "Russian",
     "CydkbJlkyfw": "Russian",
     "QqBqUq6UoAA": "Russian",
     "SiutRzBS2NY": "Russian",
     "goGSPpdha00": "Russian",
     "aWlN_bMqKoA": "Russian",
-    "D3fpQbfNpKo": "Russian",
     "D-evFTvaiwI": "Russian",
     "k3ykXUlIOXM": "Russian",
     "SeL1lFm4UI8": "Russian",
     "inIxZhh2QD8": "Russian",
     "BYTtX3gMPq0": "Russian",
     "sZip-qBVA4E": "Russian",
-    "VEPq7TZnYh0": "Russian",
-    "1GiUWkL8S40": "Russian",
     "wsJiveT8oEg": "Russian",
     "CT6OFP0uxmI": "Russian",
-    "p1SX8GU6VB0": "Russian",
-    "Ct4SOC6lV3M": "Russian",
     "cQIXU-S_5Kg": "Russian",
     "bwWGGCu4BhM": "Russian",
     "1i10cEkRREQ": "Russian",
@@ -2069,7 +1666,6 @@
     "WajXc2_u6MU": "Russian",
     "ZnwNM6y3hAM": "Russian",
     "lyEPUqRL6FI": "Russian",
-    "kMGkSfdETk4": "Russian",
     "abSunPTRFgU": "Russian",
     "Rqf8M2PtK38": "Russian",
     "KLIjFMPauCM": "Russian",
@@ -2083,7 +1679,6 @@
     "k472Hd_WKqY": "Russian",
     "VX9r997OBP0": "Russian",
     "NOZuqE4CikY": "Russian",
-    "x0V8ZJadNiM": "Russian",
     "tNjccLnJe0s": "Russian",
     "FvF3fDagnoc": "Russian",
     "SUsE9tju74M": "Russian",
@@ -2094,7 +1689,6 @@
     "mCbfwO0Jl2A": "Russian",
     "_TW-yJ7UUaE": "Russian",
     "gHK18fiwrKQ": "Russian",
-    "41qoWtRpFkA": "Russian",
     "v-lQ6Tzka2E": "Russian",
     "eZpIFzQ5C6E": "Russian",
     "Xo-abHrJ-54": "Russian",
@@ -2102,13 +1696,10 @@
     "XtYSqV2G6Ec": "Russian",
     "w7pU7SoRCa4": "Russian",
     "7hSzNBLTIIY": "Russian",
-    "JwHXIRI8NnU": "Russian",
     "anwGaC3O3j8": "Russian",
     "0_HQwb9ao7s": "Russian",
-    "EShLrVt68uI": "Russian",
     "QbkFwafduHs": "Russian",
     "FShq2GUvBwU": "Russian",
-    "HI-Pe2xRwY0": "Russian",
     "eEJb8aXmxS0": "Russian",
     "bVFoVktS-7s": "Russian",
     "IBISOS-WiAY": "Russian",
@@ -2126,7 +1717,6 @@
     "FnAnzZjX3uo": "Russian",
     "N1uF6Mt95Fw": "Russian",
     "a0YpHFz-RPk": "Russian",
-    "M_fR1I3j5f0": "Russian",
     "9ey8_iAirL0": "Russian",
     "C21LiyqRDQ0": "Russian",
     "BoYuxeFvqls": "Russian",
@@ -2156,7 +1746,6 @@
     "b5LHGzuHCeU": "Russian",
     "93RtMzK87-M": "Russian",
     "jce0qwbJs9k": "Russian",
-    "pgcgxnrxnUE": "Russian",
     "v0k-0wYOu3A": "Russian",
     "feTKlNdrEMQ": "Russian",
     "XiSpwGvYzGA": "Russian",
@@ -2353,8 +1942,6 @@
     "l_qON9Ixqxc": "Russian",
     "-lO6P10fl2o": "Russian",
     "PFMUsLpF0A4": "Russian",
-    "jFiYs4gGRhc": "Russian",
-    "itkXKcsIP8c": "Russian",
     "pSqrpKfOryg": "Russian",
     "yxlRSBlrk3E": "Russian",
     "i4lkKPyEWwU": "Longevity",
@@ -2363,26 +1950,14 @@
     "jZL5enq_GAM": "Russian",
     "rjqONcZjFoU": "Longevity",
     "KRRlzUlJrdQ": "Longevity",
-    "5QlAzEP1Xv8": "Russian",
     "Ox6Qzr_WZZo": "Russian",
-    "SgQEBTG_glQ": "Russian",
     "hzQyuOJcUKU": "Longevity",
-    "pod-y_ASkQU": "Russian",
-    "aAORprod2BU": "Russian",
     "XEUmD0r0UaU": "Russian",
     "9KNohudIeak": "Russian",
     "Otoh3AKGbmk": "Longevity",
-    "cVz-lQs3Doc": "Russian",
     "EioocZ6q7Ps": "Longevity",
-    "cfEow2dVkOc": "Russian",
     "yj7RThE-CWM": "Russian",
     "HgpI_4EcdSA": "Russian",
-    "jzhBevuc7-k": "Russian",
-    "0gO2QHOm36Y": "Russian",
-    "mSwrPEIsq8M": "Russian",
-    "RyrXrWz9x-E": "Russian",
-    "vSzR5PZeVfw": "Russian",
-    "fVMfEyio4no": "Russian",
     "lZJHaOoXdsk": "Longevity",
     "djES3w8Vr8g": "Longevity",
     "50_mJBuxY1A": "Longevity",
@@ -2398,11 +1973,24 @@
     "JuTtk3nhw-8": "Longevity",
     "K7fDnRrMTpU": "Longevity",
     "RE5p-po76Nw": "Longevity",
-    "BQQ67l8sRcw": "Russian",
     "OFH627BtuIY": "Longevity",
     "IvS_Vbss3kE": "Longevity",
     "_oq3IGHBZ8c": "Russian",
-    "QIz15aJR3Mw": "Goggins"
+    "QIz15aJR3Mw": "Goggins",
+    "NZ51n-HBnU8": "Russian",
+    "g4meTtbKgls": "Russian",
+    "yZOjorZsdYE": "Russian",
+    "wP2Js5Jf0q8": "Russian",
+    "QI6A8VIVhUY": "Russian",
+    "J77CyoBGJDA": "Russian",
+    "5j8i0E1kZE8": "Russian",
+    "eIdHyqB-mE0": "Goggins",
+    "S2eso4vLPms": "Goggins",
+    "DG-oAF1i_UA": "Goggins",
+    "VZIAey6SW8k": "Longevity",
+    "T1Kmibs1rC8": "Russian",
+    "CwG_5yBZpPc": "Russian",
+    "aRIqnDZ2zBw": "Russian"
   },
   "wbJ_Q1xsDHg": {
     "keep": true,
@@ -2721,12 +2309,8 @@
     "level": "A1"
   },
   "BoVRNDO-gXs": {
-    "keep": true,
-    "cat": "Russian",
-    "topic": "verb conjugation",
-    "q": 4,
-    "kind": "lesson",
-    "level": "A2"
+    "keep": false,
+    "why": "not embeddable"
   },
   "TTaabHnruKc": {
     "keep": true,
@@ -2868,12 +2452,8 @@
     "kind": "explainer"
   },
   "bHZEtMwuBCk": {
-    "keep": true,
-    "cat": "Russian",
-    "topic": "intermediate listening practice",
-    "q": 4,
-    "kind": "lesson",
-    "level": "B1"
+    "keep": false,
+    "why": "not embeddable"
   },
   "Ei97WYekUL4": {
     "keep": true,
@@ -3444,7 +3024,8 @@
     "topic": "apartment vocabulary",
     "q": 5,
     "kind": "lesson",
-    "level": "A2"
+    "level": "A2",
+    "sum_fail": 1
   },
   "QDZKHtA_iIU": {
     "keep": false
@@ -3844,7 +3425,8 @@
     "topic": "everyday phrases immersion",
     "q": 5,
     "kind": "lesson",
-    "level": "A2"
+    "level": "A2",
+    "sum_fail": 1
   },
   "s5-zXyiC8VA": {
     "keep": true,
@@ -5876,5 +5458,3594 @@
   },
   "arxiv:2611.23564": {
     "keep": false
+  },
+  "0_sgu9TvHSc": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "8LYvNaoTiqw": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "DUMZbFO3lY8": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "fA42Ba3WUUI": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "sykakBssebE": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "2x7f5mODSlk": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "5DS3xr0r98s": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "gUFlsPJ9juM": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "4P-b7-ILvdc": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "yvWZ-0EP8uQ": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "L3OTZf86aPk": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "oCxCkogQak8": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "YROrPLnFxPk": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "Kz5N8DhG92k": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "4P6Cm2-E438": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "ZZ2cGkFy50w": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "-PmddxuEVeU": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "D3fpQbfNpKo": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "VEPq7TZnYh0": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "1GiUWkL8S40": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "p1SX8GU6VB0": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "Ct4SOC6lV3M": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "kMGkSfdETk4": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "x0V8ZJadNiM": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "41qoWtRpFkA": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "JwHXIRI8NnU": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "EShLrVt68uI": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "HI-Pe2xRwY0": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "M_fR1I3j5f0": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "pgcgxnrxnUE": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "jFiYs4gGRhc": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "itkXKcsIP8c": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "5QlAzEP1Xv8": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "SgQEBTG_glQ": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "pod-y_ASkQU": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "aAORprod2BU": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "cVz-lQs3Doc": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "cfEow2dVkOc": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "jzhBevuc7-k": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "0gO2QHOm36Y": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "mSwrPEIsq8M": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "RyrXrWz9x-E": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "vSzR5PZeVfw": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "fVMfEyio4no": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "BQQ67l8sRcw": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "dohtaCpnS-Q": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "lTNUWKUvx8g": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "jw39eIwYJes": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "z_We9zYAZ94": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "icpmZgpsRec": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "H_1WZN1Dnnk": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "0I06cdohIqs": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "UkeI3I3zdo4": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "FxUWQuIBZPc": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "C_flS1zJzIs": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "QRxs9PrRb8A": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "KXm5-KUu_7M": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "MdRYNMeT3cI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "short stories a1",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "WFcYF_pxLgA": {
+    "keep": true,
+    "cat": "Longevity",
+    "topic": "health and nutrition",
+    "q": 5,
+    "kind": "interview"
+  },
+  "AOKIzmOLt58": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "pronunciation and pronouns",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "gs2SZXlBAOo": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "verbs conjugation",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "ALI7C6Z_84A": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "nouns gender",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "OT417jXWGjE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "childhood memories input",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "H6OXCGfNmD0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "winter myths input",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "UFPKTPsHBKk": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "personal introduction input",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "-cXFTGvhBHM": {
+    "keep": false
+  },
+  "WSw3QRMl_1I": {
+    "keep": false
+  },
+  "hzEPWfX9HTQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "first verbs tprs",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "w4kyRQVQszs": {
+    "keep": false
+  },
+  "X00Q2voctXc": {
+    "keep": false
+  },
+  "aSep1iN-p9E": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "yuri gagarin story",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "W9vm5pzKLRs": {
+    "keep": false
+  },
+  "_x58lqphRLo": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "domovoy house spirit",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "_kVrn_wRL9w": {
+    "keep": false
+  },
+  "v1chKKVUmq0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "ivan the terrible",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "WVyb-CDBaBQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "russian dacha culture",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "NVRob6yKtlg": {
+    "keep": false
+  },
+  "lkhJuZ9pVkY": {
+    "keep": false
+  },
+  "Xdvn1T5Fe4c": {
+    "keep": false
+  },
+  "XJJaUkW2HGI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner game input",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "Ia8gAomiqHw": {
+    "keep": false
+  },
+  "kEGuI3kwSyc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "slow russian story",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "Zja11n8rDIg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "games for beginners",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "FbM-ew25YE0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "russian music podcast",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "SBWlOmOgXvU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "vegetables vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "BnxqQ6pXvco": {
+    "keep": false
+  },
+  "RiP5nghy6Qg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "russian balconies story",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "OQ9Tjcr8pjo": {
+    "keep": false
+  },
+  "XnQwt5LM4OQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "august in russia",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "KnGW-pBz9B4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "true crime story",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "y4_To-xVO7k": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "spacecraft buran history",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "XHGBfY-88Tc": {
+    "keep": false
+  },
+  "z5nj7q9LEhs": {
+    "keep": false
+  },
+  "DTW8ZPgnolo": {
+    "keep": false
+  },
+  "4nw9IDMn6-A": {
+    "keep": false
+  },
+  "FFwUpewUHQk": {
+    "keep": false
+  },
+  "v3mBLTHsAkM": {
+    "keep": false
+  },
+  "XjkGvceXceY": {
+    "keep": false
+  },
+  "jd-raQD7vII": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "russian pies culture",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "VaHUtghDw2k": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "peter the great",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "LwYumtha-iU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "golden age literature",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "ZHfGZhD1IWg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "communism history",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "HtVrWp4DgnM": {
+    "keep": false
+  },
+  "YTkDPX-BHis": {
+    "keep": false
+  },
+  "gyzML0IymTs": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "summer clothing input",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "Z-MoHmGKMW0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "catherine the great",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "kNshDRMWpgg": {
+    "keep": false
+  },
+  "2mFZYF_t6hg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "filter coffee vlog",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "LY9tXiJk6tA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "cooking fish cutlets",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "asHtwgA8LMc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian banya experience",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "CXyRvuGCnnI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "home New Year",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "_5bua4GlJiU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "World War II history",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "uMs07uvuXyc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Halloween song translation",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "ckMyI_UO6hY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Labubu toy craze",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "WFwy1VwAkAY": {
+    "keep": false
+  },
+  "diyKTTkQDWo": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Southeast Asia travel",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "fgj7I7KrOtg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "picking summer plums",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "PKzmJBSYfzY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Lion King discussion",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "YNVDVSnX5hY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "what is KGB",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "DcRyoia8-ZM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Soviet astronauts hymn",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "yfQux5snRpw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "favorite winter song",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "nln-H6_fdw0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "first man in space",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "XVDSyQBAv1Q": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Dmitry Bykov poem",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B2"
+  },
+  "5QDn-WuDWwk": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian space program",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "XfbyuvPR7Bw": {
+    "keep": false
+  },
+  "TpdzCxnmmH4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "what is Cold War",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "fqts8dfJdn4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Daniil Kharms poem",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "Z3dR3anbP3A": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "why love Russian",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "365LaGM5Qvc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Pyotr Ilyich Tchaikovsky",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "bR2Sflu4D0c": {
+    "keep": false
+  },
+  "y9H1bviyJBA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Samuil Marshak poem",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "ZUrI1cIkwhk": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian folk tales",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "rZVCwfYDx8s": {
+    "keep": false
+  },
+  "Hmjlxe-Ir5k": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "smallest Russian town",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "NPfd8Ba_8Fo": {
+    "keep": false
+  },
+  "Qi5cXiCpBnk": {
+    "keep": false
+  },
+  "D6wTuogebU8": {
+    "keep": true,
+    "cat": "Longevity",
+    "topic": "healthy aging exercise fat burn",
+    "q": 5,
+    "kind": "interview"
+  },
+  "ffgpqk5hZBE": {
+    "keep": true,
+    "cat": "Longevity",
+    "topic": "bone health and creatine",
+    "q": 5,
+    "kind": "interview"
+  },
+  "N3e4GiSyr9c": {
+    "keep": false
+  },
+  "XtaSIuqpBns": {
+    "keep": false
+  },
+  "Q4pZnM7LeSo": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner Russian course",
+    "q": 5,
+    "kind": "course",
+    "level": "A1"
+  },
+  "MOBGaVJH54A": {
+    "keep": false
+  },
+  "AlUMYm5YExA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "having breakfast conversation",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "wGcqFV_alDk": {
+    "keep": false
+  },
+  "3rcBCMlVxSc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "introduce yourself in Russian",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "7sFEx8Z4XQ8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "describe your day",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "uRSmuuXg7hI": {
+    "keep": false
+  },
+  "h6RIj8WvYXM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "speak like a local",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "Mb-ynUI4Me4": {
+    "keep": false
+  },
+  "NwUYHTEEke8": {
+    "keep": false
+  },
+  "vJZs4TZLCwc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "dialogue reaction phrases",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "M-3HEJpdx2I": {
+    "keep": false
+  },
+  "LVE0YirPS8I": {
+    "keep": false
+  },
+  "u5Ks53-THVE": {
+    "keep": false
+  },
+  "KopQglRZUFA": {
+    "keep": false
+  },
+  "TBI1dEe_X5E": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "talk about neighbourhood",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "G3fGvuFg7x4": {
+    "keep": false
+  },
+  "awYvLQ53n3M": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "places in Russia",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "mRNCLRo9JAM": {
+    "keep": false
+  },
+  "Rtm6_ayvBX0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian adjectives vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "Fjkw9vYDukg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian filler words",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "-NbTi2_5Gps": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "prepositional case grammar",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "NduDs59WZqU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "simple questions grammar",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "MzXkiK4ROhQ": {
+    "keep": false
+  },
+  "-mf38m0rRfE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "genitive case usage",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "ZyPPmqYu9nY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "common learner mistakes",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "ezja7-YQ72g": {
+    "keep": false
+  },
+  "y6SVjctaXJ4": {
+    "keep": false
+  },
+  "pNogULi28gs": {
+    "keep": false
+  },
+  "WSguH8tnTIo": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "days of week",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "oM8eHOONclY": {
+    "keep": false
+  },
+  "pp_FbwCzPZM": {
+    "keep": false
+  },
+  "mbzvM7CNJN0": {
+    "keep": false
+  },
+  "SnxPAiuNPbA": {
+    "keep": false
+  },
+  "nlrjxL_frmk": {
+    "keep": false
+  },
+  "Qzo6jWpgJ5E": {
+    "keep": false
+  },
+  "-VBHghC4oug": {
+    "keep": false
+  },
+  "pfLVqvgkTbU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "instrumental case grammar",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "ACn7xTNNRcc": {
+    "keep": false
+  },
+  "u6akTRg2ecw": {
+    "keep": false
+  },
+  "squ9XOfBKaY": {
+    "keep": false
+  },
+  "Fzvt4bgepks": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "car vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "O1JxQ9OyJRQ": {
+    "keep": false
+  },
+  "xGCuF-h-XVc": {
+    "keep": false
+  },
+  "4BJwmJavX64": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian verbs usage",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "lSCTGJbObOg": {
+    "keep": false
+  },
+  "p9XNf1EFz98": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "modern loan words",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "H_c_crxV9O8": {
+    "keep": false
+  },
+  "IU0Zy67ZLpU": {
+    "keep": false
+  },
+  "3U4D77IB-j8": {
+    "keep": false
+  },
+  "GkTrJxOHJS0": {
+    "keep": false
+  },
+  "ADTwFvHACE4": {
+    "keep": false
+  },
+  "0-BD5WJ_hBk": {
+    "keep": false
+  },
+  "xXGwa1sfTq0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "language learning tips",
+    "q": 4,
+    "kind": "lesson",
+    "level": "Mixed"
+  },
+  "a5bLHLqaNDg": {
+    "keep": false
+  },
+  "Lv39BhZJ2mg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "expressing emotions",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "zMKiZDU00jo": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "months vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "itFwx1CZM9I": {
+    "keep": false
+  },
+  "uXL7Pxjvz-E": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beach vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "wCzD2jitlEs": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "word gender grammar",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "FSYe9GQc9Ow": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian alphabet pronunciation",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "256FyJD5i9A": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "clothing vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "poSl-JU8ajs": {
+    "keep": false
+  },
+  "1JJ1o-eqTHY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "dacha culture vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "Qu2YmZvGjv8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "greetings and phrases",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "kYg1fKIzohQ": {
+    "keep": false
+  },
+  "YNZ67LZMgx0": {
+    "keep": false
+  },
+  "MbvtSNMwshI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "fashion vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "LQ9Psk_n1EQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "friendship vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "f4zd_M1jUzA": {
+    "keep": false
+  },
+  "ok09KmmxVWQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "grocery shopping phrases",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "ySjVi4uGp2c": {
+    "keep": false
+  },
+  "2TVJI1D21bk": {
+    "keep": false
+  },
+  "sTcIuHutXag": {
+    "keep": false
+  },
+  "ZQ6CEQn9SmQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "pronunciation sound Ы",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "l9TRRR8Z_QQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "shopping vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "UsaA3prpbWg": {
+    "keep": false
+  },
+  "DZPR3UVoHCU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "grocery shopping",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "SJ-ip-OicNQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "slow Russian listening",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "6IXtQx8SwBE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "winter activities",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "-XvydxPvcyI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "popular games",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "-oCBnP_MEQA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "verb идти usage",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "ghBGLrwBTk4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "foreign words",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "7kbI0d2_T5s": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "greetings and farewells",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "n-AfbcYQYeI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "reading habits",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "RYvSIVoFOQA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "hospitality vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "sw2V54gc-iQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "sports vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "CbZBD15Cwn0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian names",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "8-5-WaiMOJY": {
+    "keep": false
+  },
+  "i7SOvgZIhIM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "perfective imperfective verbs",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "jwvJ34KELYo": {
+    "keep": false
+  },
+  "-qbTumiWw98": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "travel phrases",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "3_fiyh0fXyM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "reading books",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "abgkVpMH1ZQ": {
+    "keep": false
+  },
+  "V1slfjrF6ZA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "reading rules",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "tkJ5aiWOkXs": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "small talk phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "LLNjftcLlLA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "burnout vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "vx6MLomGMNM": {
+    "keep": false
+  },
+  "bpAFSabRyJ8": {
+    "keep": false
+  },
+  "fNvsiRrKLj4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "meeting family phrases",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "M-RZ088Y0v0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "modern slang",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B2"
+  },
+  "or8terUVLIw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "можно and могу",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "PCElEOJ8UDw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "colors vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "dalB0YYQ1Lw": {
+    "keep": false
+  },
+  "3NYH-zyIfZY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian idioms",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "aMVWmYYjt3o": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "bag contents vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "1pQvYLggCWw": {
+    "keep": false
+  },
+  "GgCnpDg0jwc": {
+    "keep": false
+  },
+  "EASi0Djlgv4": {
+    "keep": false
+  },
+  "53GIoeOAam4": {
+    "keep": false
+  },
+  "WwtlgKatBPg": {
+    "keep": false
+  },
+  "6GqonOcxCQQ": {
+    "keep": false
+  },
+  "qIS6BCqR8bA": {
+    "keep": false
+  },
+  "n63PP-9Fj3I": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "special questions grammar",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "bzILjaOqN4U": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "cooking vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "P2O8HWoMEX0": {
+    "keep": false
+  },
+  "nunVkD5wd1c": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "music learning",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "hFWGPcA6r6s": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "medical culture vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "ahRV-a30jhE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "verb conjugation group 2",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "phNN7g8tavg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "pronunciation tongue twisters",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "IucCETSAaU8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "culture and vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "aLMIpk0Nkgw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "native expressions slang",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "AyRPqHcRCx8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "money and shopping",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "_4MNz6X6nzE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "telling time expressions",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "rDQ802sFP2Y": {
+    "keep": false
+  },
+  "9lhm8fd3yS0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "slow cooking vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "nPLoM-IAzXo": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "marketplace shopping vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "a71I8yNxLOM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "practice tips learning",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "VJhkIivWfTU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "superstitions vocabulary practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "Tc9Kz_LiCoQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "shopping tips vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "6idM4p8PLqE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "cultural views love",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "MWXvj4eDnt4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "holiday traditions vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "JRcV-A7r470": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "country life vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "64C3HxLr0cg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "numbers counting guide",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "07krcppZGxw": {
+    "keep": false
+  },
+  "qnfIZKnh7to": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "zodiac signs vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "uuFjnKmyckY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "informal everyday conversation",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "LRuXjFF8A9c": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "holiday listening practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "HzxZ2ovb3aM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "past tense grammar",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "PMJoQiDgxjQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "pets and animals",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "23PEkMd2svg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "animal idioms phrases",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "6cKTSj4a8bQ": {
+    "keep": false
+  },
+  "F1aBhlBLwsA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "verb conjugation group 1",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "lNqRiL_kF20": {
+    "keep": false
+  },
+  "aBQptpP5ZOI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "easter traditions culture",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "-yT45RqTsho": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner perspective intro",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "o_tKs9HXtU4": {
+    "keep": false
+  },
+  "38dpdR7Nq-0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "real life past tense",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "OVfSmehf_NI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "halloween vocabulary culture",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "7zu4uLK1tfg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner reading practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "hsfTkMhGClI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "office vocabulary listening",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "j8QwQBWc8sM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "movies and cinema",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "21zBGnmMFmQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "apartment moving podcast",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "8zuYw-DPTsM": {
+    "keep": false
+  },
+  "XTMNiYPHgkQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "proverbs body parts",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "iEyj0jKHQA8": {
+    "keep": false
+  },
+  "z4-Ra9EDmzo": {
+    "keep": false
+  },
+  "P4MsDQkzeKY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "youth slang podcast",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "7wnKHZNzEys": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "polite vs impolite speech",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "c-LYnJIMpK0": {
+    "keep": false
+  },
+  "t9YstQvhEso": {
+    "keep": false
+  },
+  "clNb2dy1ZEI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "basics compilation course",
+    "q": 4,
+    "kind": "course",
+    "level": "A1"
+  },
+  "QhhI0dyqbpE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "first beginner phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "XAt0cSaJk1k": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner phrase list",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "Swj8GIIivXs": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "mental toughness interview",
+    "q": 5,
+    "kind": "interview"
+  },
+  "e9faloUNgKM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "essential beginner phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "tYDMSM5dosE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "alphabet and pronunciation",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "SJ18HC9EyEE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "greetings vocabulary lesson",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "KSD0Zuyju4E": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "slow speech practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "G4ttgbMz-MY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "common beginner words",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "IPdAYo6j7ZA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "common phrases beginner",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "sSdZA2TciKs": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "learning advice guide",
+    "q": 3,
+    "kind": "explainer",
+    "level": "Mixed"
+  },
+  "er0UDwUV9tM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner reading practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "qWRhgqekGG4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "basic vocabulary series",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "khjdMKqwb4Y": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "sleep listening compilation",
+    "q": 2,
+    "kind": "compilation",
+    "level": "Mixed"
+  },
+  "73U-OqpaU48": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "questions and answers",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "eEz9kqbn2Vw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "structured daily lesson",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "e6lFvAQp0LE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "easy conversation practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "VLEsxi-z-wA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "conversation phrases A1",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "jBL1okgi1pw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "daily routine vlog",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "6_9yC1dJueE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "complete vocabulary levels",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "Rd-n1F38Ix8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner verbs list",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "iS_JtFB3hCI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "weekly vocabulary A1",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "2qNehUbHmqQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "colloquial expressions slang",
+    "q": 3,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "WTtkbaHklwY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "useful phrases beginner",
+    "q": 3,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "Wt13onywAWI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "thinking like native",
+    "q": 3,
+    "kind": "explainer",
+    "level": "B1"
+  },
+  "UD_oxhEy0Es": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "conversation practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "skgREAy6zzo": {
+    "keep": false
+  },
+  "vJ0Qzk4PtP8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "basic phrases absolute",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "aG6qsEAnyV0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "native conversation practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "_P_zOT5xoSg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "learning through movies",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "xy2krshrkN0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "learning through movies",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "whVdbOwGST0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "crash course A1",
+    "q": 5,
+    "kind": "course",
+    "level": "A1"
+  },
+  "ujCFOPfqJbQ": {
+    "keep": false
+  },
+  "VmdVwaZ9M7A": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "movie scene lesson",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "KiI_QwckpD0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "daily conversation phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "tXaakjk6QVg": {
+    "keep": false
+  },
+  "9AVRGZo1juQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner phrases lesson",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "MPHCoMeIUY8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "tv clip lesson",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "BK1bIswL-eg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "verb conjugation A1",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "8QoaTQaBdLw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "conversational phrases practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "GreFs5FalUI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "alphabet quiz test",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "lnD9fmmgv0U": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "language logic explainer",
+    "q": 4,
+    "kind": "explainer",
+    "level": "Mixed"
+  },
+  "0FFg214Hu2g": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "listening practice phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "GTAXUR5uslM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "learning through song",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "BuLqsQow90U": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "weekly vocabulary A1",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "P3ajTw1X5pU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "core phrases compilation",
+    "q": 3,
+    "kind": "compilation",
+    "level": "A1"
+  },
+  "QcdsHHPp2AA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner word test",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "FYYJ1kdCLPU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "culture listening practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "EtWzj-1FFV4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "conversation with subtitles",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "vPWd7fidDyk": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "slang conversational phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "HpMxE5iUpxM": {
+    "keep": false
+  },
+  "LgFzb-zpENs": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "phrases for beginners",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "rNdOsiuz_u8": {
+    "keep": false
+  },
+  "Pc4g3H_As5w": {
+    "keep": false
+  },
+  "StgvD6yZ034": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "common learner mistakes",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "n30XNTzUiCY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "alphabet and first words",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "ntZebzzBRw4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "easy listening practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "qyKW82J7UZk": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "vocabulary in context",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "K9i0DEn7vto": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "asking answering questions",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "JBxgbCdV0Xw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "learning through movies",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "-dFiOENeKLM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "verb conjugation detail",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "WOsS6up4lNU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "duolingo review tips",
+    "q": 3,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "kh9LmidMVaM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner vocabulary quiz",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "GyQgq3rKUmc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "intermediate dialogue practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "uQZEtXX57L8": {
+    "keep": false
+  },
+  "x937BseyPwY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "listening practice plans",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "bkp7gMrU71g": {
+    "keep": false
+  },
+  "JHsASTt9rPQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "small town dialogue",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "FF8xvDKCVtg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "stories for beginners",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "Fa880R-zaXc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "moscow vlog listening",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "0yvn80DsRRY": {
+    "keep": false
+  },
+  "YCXLJsJic5A": {
+    "keep": false
+  },
+  "n4WS96HXV9k": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner dialogue translation",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "9HZb-jZ9HYI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "common beginner mistakes",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "nNr0cT6294s": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "learning through songs",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "JWDgaHqK-Jo": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "house vocabulary words",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "8_QInJ2iZJM": {
+    "keep": false
+  },
+  "uvFblwaxWb4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "teacher travel vlog",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "O9J88hfcpfY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "reading children book",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "RKa0sHBHOw4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "common everyday phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "RQ93s2i6w78": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "foreigner travel experience",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "RGOKiH3TeXw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "noun gender rules",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "ZOHgXUjkwnQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "simple daily sentences",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "RuTEmLzPTJ8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "sherlock holmes listening",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "T1bdLWYNhdY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "how to introduce",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "MfycGdWCiyg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "vocabulary per week",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "dsm5NTKeN5U": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "basic vocabulary set",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "mcIu7rs2Zgs": {
+    "keep": false
+  },
+  "O0yL8urEpt4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "tourist survival phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "sxjqV1e_2SY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "parenting life podcast",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B2"
+  },
+  "vBYGIFjkHlk": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "summer house vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "FJKKfGmANF0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "common verb conjugations",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "be44_qJ-DjA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "giving compliments",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "8jAJb3a9rCU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "basic sentences beginner",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "dzp2r8I4WHQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "basic words test",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "I6TckLDCQGY": {
+    "keep": false
+  },
+  "WcDI7GgjQ_w": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "drinks comprehensible input",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "MTthiqoKop8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "conversations with guest",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "taLSnATGmCA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "first texts reading",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "XSieKWEooL4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "top useful verbs",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "Fg8FB9BAhXg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "banya culture vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "_-IinJHgtoU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner texts part",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "aULH1fqrNcw": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "learning through movies",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "PDmZfDreT_8": {
+    "keep": false
+  },
+  "wt5OYgllg38": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "parenting dialogue practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "GZ2uc-3pQbA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "podcasts discussion",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "RBCr2r6cNr4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "movies listening practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "c-NfdXUtVjU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "grocery shopping vocabulary",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "CnXu0hMgZUQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "prepositional cases trick",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "gHyTdY1W0Os": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "similar english words",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "3e6p16yuT-o": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "dostoevsky reading practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "h01zfqw5lIs": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "weekly vocabulary list",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "o7AlIKWhITs": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "vocabulary youtube channels",
+    "q": 3,
+    "kind": "explainer",
+    "level": "A2"
+  },
+  "7JPUhXISGV4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "movies listening practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "fso-GKnG1Cc": {
+    "keep": false
+  },
+  "OGwvi6pS2fM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "brazil food vlog",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "FzKqF_82VVM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "weekly vocabulary list",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "p1iVw7lAxnY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "emotions phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "bEvKs9ZSPXA": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner texts reading",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "sDwgUgXsUy8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "verbs of motion",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "6ckjVEJzzN8": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "future tense alternatives",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "kmW3HeqqeAU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "grammar book review",
+    "q": 3,
+    "kind": "explainer",
+    "level": "A1"
+  },
+  "Yzrk_0K_ozM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "using po prefix",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "wZIvW2FH4xI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "parenting dialogue practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "-XpUBQ0CjE4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "travel dialogue lessons",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "UUE-nrqGepM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "memes vocabulary learning",
+    "q": 3,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "MWxH94uxUI0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "small talk conversation",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "VPoBXSKmcZU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "ways to apologize",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "ywqkwZMNX4M": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "consumerism listening practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "wNeqMvZxoVY": {
+    "keep": false
+  },
+  "UEwZLOt3HvM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "brazil travel vlog",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "HQiza-ugb0o": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "slow beginner reader",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "_XJ_OpAY4ek": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "house vocabulary quiz",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "sNX_vsaxRWs": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "shopping dialogue practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "HfRRgJAVWWk": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "absolute beginner texts",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "iAplA7l1am0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "relocation story vlog",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "3ThbknCP9KY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "teacher reflective vlog",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "TMsx2_TwVRU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "travelogue listening practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "3dADYFBh2Ms": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "expressing opinion phrases",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "vB2100t6VdI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "interview practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "dl6O1WlC2SY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "german loan words",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "pDn95P8hhkc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "daily walk vlog",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "UrFlJ7Nogkc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "wildlife adventure story",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "rYiaMa8oKrY": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "weekly vocabulary list",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "mLyJJ7evWns": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "common slang words",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "1Ms_yFU3nW4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "graded readers review",
+    "q": 3,
+    "kind": "explainer",
+    "level": "A1"
+  },
+  "YtYkbKkJAs0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "relocation travel vlog",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "hLbxGxvcOsQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "chinatown shopping vocab",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "GHQ86dECYYg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "everyday life practice",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "TxEegIy85g0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "intermediate sentences practice",
+    "q": 4,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "ThdV82vZGdI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "beginner verb sentences",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "3lgvdIP6Fqg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "love phrases vocabulary",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "1veuBRVug8w": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "conversational phrases daily",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "wPC5NxLRw4A": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "london trip vlog",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "JU2iRQzHiEg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "intermediate short story",
+    "q": 5,
+    "kind": "lesson",
+    "level": "B1"
+  },
+  "ztMKLni-nN0": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "simple sentences listening",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "pl:PL536071A98B13F393": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "essential vocabulary and grammar",
+    "q": 4
+  },
+  "pl:PL80230A8D050AC533": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "vocabulary video series",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENFWG1tqUih1HSaVyORKH3lX": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "B1",
+    "topic": "short stories reading",
+    "q": 4
+  },
+  "pl:PL7zBwc9LDG-awRswC7_3pEfhLIcQcf5WS": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "russian for beginners",
+    "q": 5
+  },
+  "pl:PL9OVcuPQUHuOIezWT4HvnvMyofiByxSMG": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "russian verbs beginners",
+    "q": 4
+  },
+  "pl:PLlly00ErnI983Emj-vhJn4BGI1cv6gsNX": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "russian reading practice",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENFgxwrhgaJSudx2g7f__34P": {
+    "keep": false
+  },
+  "pl:PLJ5ltfEfYENEES5qlzN4aJMETwBtwLr7y": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "russian grammar lessons",
+    "q": 4
+  },
+  "pl:PLlly00ErnI9-XyFtOt-m0ci7ISD1syf6u": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "vocabulary and phrases",
+    "q": 4
+  },
+  "pl:PL43086758EC847FEF": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "vocabulary quizzes",
+    "q": 4
+  },
+  "pl:PL9OVcuPQUHuMczrBLcxZPbbSZ7LAfeIBi": {
+    "keep": false
+  },
+  "pl:PLlly00ErnI9-noWop8wq0EqsdHCd1hVb0": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "dialogues translation practice",
+    "q": 4
+  },
+  "pl:PLNE06qdwcUAw": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "verb conjugations",
+    "q": 4
+  },
+  "pl:PLJ9HaJ0LGmvpsph2olfvIftJ4GpLa5qhu": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "full language course",
+    "q": 5
+  },
+  "pl:PLJ9HaJ0LGmvqjInGDOPcb21csqkCh5yNC": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "vocabulary building",
+    "q": 4
+  },
+  "pl:PLlly00ErnI9_Qlw9NEkt2CHG1MW0jqVdA": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "conversational russian slang",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENEUsL4wImA77EDp2bhj3sCh": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "complete beginner lessons",
+    "q": 5
+  },
+  "pl:PLJ9HaJ0LGmvp-Bth8h_MLGDVp76dF9lJx": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "vocabulary building",
+    "q": 4
+  },
+  "pl:PLlly00ErnI98bt3VsDHxoSxzxuVZAI5dH": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "stories slow russian",
+    "q": 4
+  },
+  "pl:PLlly00ErnI99GqcH91RHeNyWMbmO2lI5g": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "B1",
+    "topic": "parallel texts reading",
+    "q": 4
+  },
+  "pl:PLlly00ErnI9-rM0SwAt3MS8I7zq4GF__S": {
+    "keep": false
+  },
+  "pl:PLJ9HaJ0LGmvoTEw0ViDvel3YjnMMUIRT2": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "beginner lessons series",
+    "q": 4
+  },
+  "pl:PLlly00ErnI9966ej2Zh_Uxj00eDAPExuQ": {
+    "keep": false
+  },
+  "pl:PL_knbQpx9pBenr3mbVLVl62-yEAxOK6LL": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "holiday vocabulary words",
+    "q": 3
+  },
+  "pl:PL9OVcuPQUHuPM9O5uFPGZqNY1hO_uNYX_": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "dialogues for beginners",
+    "q": 4
+  },
+  "pl:PL7zBwc9LDG-Y6U4VsGzySp0IeEZlhFfqD": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "graded life stories",
+    "q": 4
+  },
+  "pl:PL7zBwc9LDG-a9XWyUyx34njZdlqWHIbsS": {
+    "keep": false
+  },
+  "pl:PL_knbQpx9pBcwWYDsA1bmkwZ5bMfQ0b2O": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "conversational phrases",
+    "q": 4
+  },
+  "pl:PL7zBwc9LDG-Z0Unt990wRKhhBQGGP_3Uv": {
+    "keep": false
+  },
+  "pl:PLlly00ErnI98Hp_9nefDSlx9c3z5QPfTm": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "verb conjugation rules",
+    "q": 4
+  },
+  "pl:PL_knbQpx9pBdCTlRJycs_OV3IqWBOepVT": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Alphabet made easy",
+    "q": 4
+  },
+  "pl:PLFAD525779A02CC08": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Russian in three minutes",
+    "q": 4
+  },
+  "pl:PL7zBwc9LDG-Ym7JrajZ0ZM4CF4jQkIoJc": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Russian grammar basics",
+    "q": 5
+  },
+  "pl:PL7zBwc9LDG-ZdEB6qfOVU4oDzH8Qa1JLy": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Everyday vocabulary",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENEOUpxLNwsXSDpfn214BTVg": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "Russian dictations",
+    "q": 4
+  },
+  "pl:PLNHnL8hclQYtEblN44TWeeBI6E5mRwTSO": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "Russian book club",
+    "q": 5
+  },
+  "pl:PL_knbQpx9pBeFUA9ckywAp6P50pllErKA": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "B2",
+    "topic": "Advanced reading practice",
+    "q": 4
+  },
+  "pl:PL_knbQpx9pBdbkFP485kJCi7oo8gk4L_w": {
+    "keep": false
+  },
+  "pl:PL9OVcuPQUHuP2iTKtLy-HjCG5SJFB6jtg": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Super easy reading",
+    "q": 4
+  },
+  "pl:PLJ9HaJ0LGmvoERA6GibDuwboMeEICYy24": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "Learn Russian slang",
+    "q": 4
+  },
+  "pl:PLJ9HaJ0LGmvrCzJ9n4CBCgx_B8N29s8oe": {
+    "keep": false
+  },
+  "pl:PLlly00ErnI9_PrEagVU8I__dfZvJt6M_P": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "Learn with movies",
+    "q": 4
+  },
+  "pl:PL_knbQpx9pBceLP-NzuSwSeWaxGcjrjNn": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "B1",
+    "topic": "Intermediate reading practice",
+    "q": 4
+  },
+  "pl:PL_knbQpx9pBcNyFWf_K4skfOMsJVZgBXQ": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "Reading practice beginners",
+    "q": 4
+  },
+  "pl:PL_knbQpx9pBf2C34yvopD6cO2juDorTIR": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Absolute beginner reading",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENFRm0pWaK44s7YoB18SsIDH": {
+    "keep": false
+  },
+  "pl:PLlly00ErnI99IR4QfCwpBsUV5EnBfO3Hl": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "B1",
+    "topic": "News in slow Russian",
+    "q": 5
+  },
+  "pl:PL_knbQpx9pBduuGDyUPHDlM7GESPpky5O": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Introduction to Russian",
+    "q": 4
+  },
+  "pl:PL_knbQpx9pBe-1OxYgaFV5cdSy95THCcY": {
+    "keep": false
+  },
+  "pl:PL_knbQpx9pBe88xGyxwaysx60xMY4Dvf1": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Russian pronunciation",
+    "q": 4
+  },
+  "pl:PL9OVcuPQUHuMGQsfWvnqDdFtqAlc39D_P": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Beginner start here",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENGQ0d7ANwh8y37ah5bzJ7yy": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "Russian through poems",
+    "q": 4
+  },
+  "pl:PLlly00ErnI99pygLDlBmbXaLmYMN-jKMZ": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "B1",
+    "topic": "Speeches with subtitles",
+    "q": 4
+  },
+  "pl:PL61E27B4D75DD9CEF": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Travel survival phrases",
+    "q": 4
+  },
+  "pl:PL9OVcuPQUHuMSWjwLekA7r_x84-atvM8B": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Conversations for beginners",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENHHF02rcZCXjA3K7LkbfZC9": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "TORFL exam prep",
+    "q": 5
+  },
+  "pl:PLlly00ErnI9__aaFUi7ycmoevSCX_KMO0": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "Graded readers slow audio",
+    "q": 5
+  },
+  "pl:PLJ9HaJ0LGmvo92qvoONsbrOfkQZYEveZD": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "Understanding cases",
+    "q": 5
+  },
+  "pl:PLJ5ltfEfYENHPSqw-3-Vtw_o3drHNhPKx": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "TORFL A1 exam sample",
+    "q": 5
+  },
+  "pl:PLlly00ErnI98vZ2Pr1v6j9Je4nrmUlYap": {
+    "keep": false
+  },
+  "pl:PL9OVcuPQUHuNpmzjv3s-AkgemSP8yD7JD": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Russian Alphabet",
+    "q": 4
+  },
+  "pl:PL7zBwc9LDG-ayoKtFphv7ygOuHN3f6fIe": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "B1",
+    "topic": "Intermediate Listening Podcast",
+    "q": 5
+  },
+  "pl:PL7zBwc9LDG-YzBDQbRcw8ZuQl0C6HaS4p": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "Reading Practice Stories",
+    "q": 4
+  },
+  "pl:PLlly00ErnI98Ueg7Q-XyVFPCI5AaniRN2": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "Bilingual Books",
+    "q": 4
+  },
+  "pl:PLNHnL8hclQYvO9YCCyNhABonlVgeweHz4": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "Verbs of Motion",
+    "q": 5
+  },
+  "pl:PL9OVcuPQUHuNpKzG-UeNuPTwYN8CH6nLL": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Easy Beginner Phrases",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENGAWsxAqZUVz1fNW_gfORNE": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "Listening Comprehension",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENGZq0zY7kslQj3RI7UC_aH6": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Easy Beginner Stories",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENH_CZN70Gucj7UasAXCnLZ1": {
+    "keep": false
+  },
+  "pl:PLlly00ErnI9_3Krbn9HmKroEIyzOn7bgU": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A2",
+    "topic": "Slow Russian Texts",
+    "q": 4
+  },
+  "pl:PLlly00ErnI9_gdJdnirE7WDvyTqhR6SBa": {
+    "keep": false
+  },
+  "pl:PLNHnL8hclQYt02P9KT0vjDY4CznIjD54K": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "B1",
+    "topic": "Verbs of Motion",
+    "q": 5
+  },
+  "pl:PL9OVcuPQUHuMSFsgYVUeWmTpGg40F46uk": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "A1",
+    "topic": "Speaking Practice Beginners",
+    "q": 4
+  },
+  "pl:PLJ5ltfEfYENEYf2X3AyeuIWpMK03hXHx4": {
+    "keep": false
+  },
+  "pl:PLlly00ErnI98M7Cb_WZI9iF2DOkmW_5gY": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "Pronunciation Rules",
+    "q": 4
+  },
+  "pl:PLLeL3RO6WtnVoo6ULaGnYdq78TOXQgZG-": {
+    "keep": false
+  },
+  "pl:PLLeL3RO6WtnVjmLxr45HFxKBc9LHPQfC0": {
+    "keep": false
+  },
+  "pl:PLLeL3RO6WtnVysB2amdY2F4UyZQ4U1wum": {
+    "keep": false
+  },
+  "pl:PLLeL3RO6WtnXk1thAzSEAdMlSqj2smgkN": {
+    "keep": false
+  },
+  "pl:PLLeL3RO6WtnXITDEbNXIScUrx23ouaZ4P": {
+    "keep": false
+  },
+  "pl:PLLeL3RO6WtnX5RZEtg6PExYF2Z47O5GEj": {
+    "keep": false
+  },
+  "pl:PLLeL3RO6WtnWPlD8QoGqjifwAwy2wcwYo": {
+    "keep": false
+  },
+  "pl:PLLeL3RO6WtnVvPooEgx3mdSJ9iu-dfit7": {
+    "keep": false
+  },
+  "pl:PLLeL3RO6WtnUT9RcXYI0ry5-Yw1JK6FV0": {
+    "keep": false
+  },
+  "pl:PLLeL3RO6WtnWnEuWD1UCh7SE6s_ghOhP6": {
+    "keep": false
+  },
+  "arxiv:2611.26184": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that every invariant curve arising from a semiconjugacy of a non-exceptional polynomial of degree at least two is contained in a generalized circle.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.21799": {
+    "keep": false
+  },
+  "arxiv:2611.26151": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that the set of invertible Koopman operators is dense in the space of bistochastic operators in the polynomial weak topology.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.18113": {
+    "keep": false
+  },
+  "arxiv:2611.26149": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We derive a symmetric prime-power model for the generating function of secular coefficients of Riemann-zero windows.",
+    "kind": "new method",
+    "level": "expert"
+  },
+  "arxiv:2611.25599": {
+    "keep": false
+  },
+  "arxiv:2611.26130": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We solve the extremal graph problem for maximum signless Laplacian spectral radius across the entire range of edge connectivity.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.24644": {
+    "keep": false
+  },
+  "arxiv:2611.26115": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that every supersingular K3 surface of Artin invariant at most nine is unirational, confirming a long-standing question.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.20781": {
+    "keep": false
+  },
+  "arxiv:2611.26113": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove the existence of at least N distinct positive solutions for Minkowski-curvature Neumann problems with a two-step sign-changing weight.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.23080": {
+    "keep": false
+  },
+  "arxiv:2611.25996": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that any rational map with at most three critical values has no Herman rings.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.22103": {
+    "keep": true,
+    "cat": "Proofs",
+    "summary": "We present MathEye, a framework that converts imperfect LLM-generated proof scripts into fully verified Lean proofs using angelic execution.",
+    "kind": "new method",
+    "level": "advanced"
+  },
+  "arxiv:2611.25974": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We establish inequalities between numerical invariants and ideal containments, and resolve the Uniform Symbolic Topology Problem.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.25961": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove optimal long-time derivative bounds for the semigroup generated by the underdamped Langevin operator in $L^2(\\mu)$ spaces under a weighted relative Hessian bound.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.25886": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that finite groups with a fixed-point-free automorphism satisfying an irreducible identity are nilpotent of bounded class, extending solutions to the Frobenius conjecture and restricted Burnside problem.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.25844": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove a bulk universality limit for total-degree polynomial spaces on symmetric convex bodies, showing convergence of the rescaled reproducing kernel to the Fourier integral over a local spectral body.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.25833": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that the boundary-to-distribution map for Brownian motion first-passage time is infinitely differentiable along the Cameron-Martin space and derive its Taylor expansion with explicit error bounds.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.21084": {
+    "keep": true,
+    "cat": "Proofs",
+    "summary": "We present CompCert4Lean, a large-scale port of CompCert's verified compiler core to Lean, successfully discharging all proof obligations without project-specific axioms.",
+    "kind": "formal proof",
+    "level": "advanced"
+  },
+  "arxiv:2611.25794": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We establish an asymptotic counting formula for the number of integers $n \\le x$ where the greatest common divisor of $n$ and a binomial coefficient equals a fixed integer $d \\ge 2$.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.25784": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We establish quantitative approximations and Bernstein-type concentration inequalities for the empirical measures of finite-state mean-field particle systems.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.25690": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We introduce determinant Massey products for commutative dg algebras, relate them to classical and matric Massey products, and provide counterexamples in characteristic 2.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.19940": {
+    "keep": true,
+    "cat": "Proofs",
+    "summary": "We present a hypersequent calculus for cyclic involutive residuated lattices and prove strong standard completeness for arbitrary theories in a countable propositional language.",
+    "kind": "formal proof",
+    "level": "expert"
+  },
+  "Htg3HCgrJK4": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "YRGejckRNpQ": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "pZX8ikmWvEU": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "zz4YVJ4aRfg": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "gMyosH19G24": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "RTgJSQtvo88": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "ICsO-EHI_vM": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "J2oqi41dCNc": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "UyneMnERmnI": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "3pRiY2zHt8c": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "OqlPU1CKEpI": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "5DtWqzalEnc": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "YXl1evV_spo": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "n_MVhE63ZQQ": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "Z3OpxT65fKw": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "fvO8e-2y37k": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "OJCgQUT1aic": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "VhbpSc6pKRQ": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "wDUMwzWVGPY": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "fh2dBmLN-ZM": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "qMs145DJyb0": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "evQAzGaW1JU": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "QnloZ45PVxQ": {
+    "keep": true,
+    "sum_fail": 1
   }
 }

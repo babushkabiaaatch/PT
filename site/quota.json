@@ -1,6 +1,6 @@
 {
   "day": "2026-11-21",
-  "used": 2589,
+  "used": 3070,
   "done": [
     "Longevity|strength training healthy aging|medium",
     "Longevity|metabolic health insulin resistance|medium",
@@ -24,6 +24,9 @@
     "Russian|Russian comprehensible input|mid",
     "Goggins|David Goggins speech|fresh",
     "Longevity|metabolic health insulin resistance|fresh",
-    "Russian|learn Russian for beginners A1|top"
+    "Russian|learn Russian for beginners A1|top",
+    "Goggins|David Goggins speech|top",
+    "Longevity|metabolic health insulin resistance|top",
+    "Russian|learn Russian for beginners A1|long"
   ]
 }
