@@ -321,7 +321,7 @@ def get_details(lib, video_ids):
     """Title, channel, length, views, likes and description for each video (50 per request, 1 unit each)."""
     details, answered = [], True
     for start in range(0, len(video_ids), 50):
-        data = yt_get(lib, "videos", {"part": "snippet,contentDetails,statistics",
+        data = yt_get(lib, "videos", {"part": "snippet,contentDetails,statistics,status",
                                       "id": ",".join(video_ids[start:start + 50])})
         if data is None:
             answered = False
@@ -336,6 +336,32 @@ def duration_to_seconds(iso):
         return 0
     hours, minutes, seconds = (int(x or 0) for x in m.groups())
     return hours * 3600 + minutes * 60 + seconds
+
+
+BLOCK_REGIONS = {"IN", "GB", "US"}   # regions your viewers are in; a video blocked there cannot play
+
+
+def playable(item):
+    """True only if the video can really play inside an embedded player.
+    These are the videos that make YouTube throw the 'Sign in' / 'Video unavailable' window:
+    embedding switched off, age-restricted, private/unprocessed, or region-blocked."""
+    st = item.get("status") or {}
+    cd = item.get("contentDetails") or {}
+    if st.get("embeddable") is False:
+        return False
+    if st.get("privacyStatus") not in (None, "public", "unlisted"):
+        return False
+    if st.get("uploadStatus") not in (None, "processed"):
+        return False
+    if (cd.get("contentRating") or {}).get("ytRating") == "ytAgeRestricted":
+        return False
+    rr = cd.get("regionRestriction") or {}
+    if BLOCK_REGIONS & set(rr.get("blocked") or []):
+        return False
+    allowed = rr.get("allowed")
+    if allowed is not None and not (BLOCK_REGIONS <= set(allowed)):
+        return False
+    return True
 
 
 def meta_from_item(item):
@@ -1129,7 +1155,7 @@ def stage_videos(lib, found):
     except QuotaExceeded:
         return []
     seen = set()
-    candidates, odd = [], 0
+    candidates, odd, unplayable = [], 0, 0
     fresh_cutoff = (TODAY - datetime.timedelta(days=FRESH_DAYS)).isoformat()
     for item in details:
         try:
@@ -1137,6 +1163,15 @@ def stage_videos(lib, found):
             seen.add(vid)
             meta = meta_from_item(item)
             DESCRIPTIONS[vid] = item["snippet"].get("description", "")
+            if not playable(item):                                 # would show YouTube's "Sign in" popup
+                if vid in lib.videos:
+                    print(f"  Removing unplayable-in-embed video {vid}: {meta['title'][:60]}")
+                    unplayable += 1
+                lib.videos.pop(vid, None)
+                lib.summaries.pop(vid, None)
+                lib.queue.pop(vid, None)
+                lib.labels[vid] = {"keep": False, "why": "not embeddable"}
+                continue
             if vid in lib.videos:                                  # already in the site: refresh numbers, chapters
                 rec = lib.videos[vid]
                 rec.update({k: meta[k] for k in ("title", "channel", "views", "likes") if meta.get(k) is not None})
@@ -1168,6 +1203,8 @@ def stage_videos(lib, found):
             odd += 1
     if odd:
         print(f"  (skipped {odd} videos with missing details)")
+    if unplayable:
+        print(f"  Removed {unplayable} videos that cannot be embedded (age-restricted, embedding off, or blocked).")
     if answered:                                                   # videos that disappeared (private or deleted)
         for vid in list(lib.videos):
             if vid not in seen:
