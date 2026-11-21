@@ -146,7 +146,13 @@ function render() {
   grid.innerHTML = "";
 
   const list = research ? renderPapers(q) : renderVideos(q, sortEl.value);
-  document.getElementById("empty").style.display = list ? "none" : "block";
+  const empty = document.getElementById("empty");
+  empty.style.display = list ? "none" : "block";
+  if (!list) {
+    empty.textContent = (videos.length || papers.length)
+      ? "Nothing in this section yet. The daily update will fill it, or try a different search."
+      : "Could not load the data files. Did you run pipeline.py first? (and open this page via python -m http.server)";
+  }
 }
 
 function renderVideos(q, sort) {
