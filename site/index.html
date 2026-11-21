@@ -7,6 +7,7 @@
 <meta name="description" content="Goggins, longevity and learn-Russian videos, ranked so only the best come first. Read a summary instead of watching.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0b0b0d">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
@@ -544,6 +545,7 @@ function loadPlayer(item, t) {
   const iframe = document.createElement("iframe");
   iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
   iframe.allowFullscreen = true;
+  iframe.referrerPolicy = "strict-origin-when-cross-origin";   // YouTube needs a referrer or it shows an error / sign-in screen
   iframe.title = item.title;
   iframe.src = item.count !== undefined && item.seconds === undefined
     ? `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(item.id)}&autoplay=1&rel=0&playsinline=1`
