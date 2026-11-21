@@ -124,10 +124,49 @@ LONGEVITY_RE = re.compile(
     r"supplement|inflammation|mitochondri|autophagy|rapamycin|blue zone|biological age|cardio|"
     r"hormone|testosterone|menopause|gut|microbio|cancer|heart", re.I)
 FRESH_DAYS = 45            # "new" videos = published in the last 45 days
-NEW_PAPER_DAYS = 60        # papers = first published in the last 60 days
+NEW_PAPER_DAYS = 120       # papers = first published in the last 60 days
 MIN_SECONDS = 240          # skip anything shorter than 4 minutes (kills Shorts)
 MAX_FOR_GEMINI = 300       # top-viewed videos sent to Gemini (ALL fresh ones are added on top)
 MAX_PAPERS_FOR_GEMINI = 120
+
+# ---- Only papers from top journals (no preprints) ------------------------
+# Add or remove names here any time. Capital letters and "The" don't matter.
+TOP_JOURNALS = [
+    "Nature", "Science", "Cell", "The Lancet", "Lancet", "New England Journal of Medicine", "JAMA", "BMJ",
+    "Nature Medicine", "Nature Aging", "Nature Metabolism", "Nature Human Behaviour", "Nature Neuroscience",
+    "Cell Metabolism", "Cell Reports Medicine", "Cell Stem Cell", "Aging Cell",
+    "Science Translational Medicine", "Science Advances",
+    "PNAS", "Proceedings of the National Academy of Sciences of the United States of America",
+    "PLOS Medicine", "Annals of Internal Medicine", "Circulation", "European Heart Journal",
+    "Journal of the American College of Cardiology", "Diabetes Care",
+    "British Journal of Sports Medicine", "Sports Medicine",
+    "Medicine and Science in Sports and Exercise", "Medicine Science in Sports Exercise",
+    "Psychological Science", "Psychological Bulletin", "Journal of Personality and Social Psychology",
+    "Journal of Sport and Exercise Psychology",
+    "JAMA Network Open", "JAMA Internal Medicine", "JAMA Cardiology", "Lancet Healthy Longevity",
+    "Nature Reviews Cardiology", "Nature Reviews Endocrinology",
+]
+TOP_PREFIXES = ["nature reviews ", "jama ", "lancet ", "journals of gerontology series a"]  # whole families
+
+
+def _clean_journal(name):
+    name = re.sub(r"\([^)]*\)", " ", (name or "").lower())     # drop "(London, England)"
+    name = re.sub(r"[^a-z0-9]+", " ", name).strip()
+    return re.sub(r"^the ", "", name)
+
+
+_TOP_SET = {_clean_journal(j) for j in TOP_JOURNALS}
+# Search ONLY these journals at the source, so the 100 results we get are all good ones.
+JOURNALS_EPMC = " OR ".join(f'JOURNAL:"{j}"' for j in TOP_JOURNALS)
+JOURNALS_PUBMED = " OR ".join(f'"{j}"[Journal]' for j in TOP_JOURNALS)
+
+
+def is_top_journal(journal, preprint=False):
+    """True only for peer-reviewed papers from the journals above."""
+    if preprint:
+        return False
+    j = _clean_journal(journal)
+    return j in _TOP_SET or any(j.startswith(p) for p in TOP_PREFIXES)
 VIDEO_BATCH = 40           # videos judged per Gemini request
 PAPER_BATCH = 20           # papers judged per Gemini request
 PAUSE_BETWEEN_CALLS = 13   # seconds between Gemini calls (free tier = ~5 per minute)
@@ -394,10 +433,10 @@ def _date_window():
 def fetch_europe_pmc(papers):
     since, until = _date_window()
     for category, terms in PAPER_SEARCHES.items():
-        query = f"({terms}) AND (FIRST_PDATE:[{since} TO {until}]) AND (HAS_ABSTRACT:y)"
+        query = f"({terms}) AND ({JOURNALS_EPMC}) AND (SRC:MED) AND (FIRST_PDATE:[{since} TO {until}]) AND (HAS_ABSTRACT:y)"
         try:
             response = requests.get("https://www.ebi.ac.uk/europepmc/webservices/rest/search", params={
-                "query": query, "format": "json", "resultType": "core", "pageSize": 100,
+                "query": query, "format": "json", "resultType": "core", "pageSize": 200,
             }, timeout=45)
             response.raise_for_status()
             for item in response.json().get("resultList", {}).get("result", []):
@@ -418,8 +457,8 @@ def fetch_pubmed(papers):
     since, until = _date_window()
     for category, terms in PAPER_SEARCHES.items():
         try:
-            q = f"({terms}) AND ({since}[Date - Publication] : {until}[Date - Publication])"
-            params = {"db":"pubmed", "term":q, "retmode":"json", "retmax":50, "sort":"date"}
+            q = f"({terms}) AND ({JOURNALS_PUBMED}) AND ({since}[Date - Publication] : {until}[Date - Publication])"
+            params = {"db":"pubmed", "term":q, "retmode":"json", "retmax":100, "sort":"date"}
             if os.environ.get("NCBI_API_KEY"): params["api_key"] = os.environ["NCBI_API_KEY"]
             search = requests.get("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi", params=params, timeout=40)
             search.raise_for_status()
@@ -575,10 +614,6 @@ def fetch_papers():
     providers = [
         ("Europe PMC", lambda: fetch_europe_pmc(papers)),
         ("PubMed", lambda: fetch_pubmed(papers)),
-        ("bioRxiv", lambda: fetch_biorxiv_server(papers, "biorxiv")),
-        ("medRxiv", lambda: fetch_biorxiv_server(papers, "medrxiv")),
-        ("arXiv", lambda: fetch_arxiv(papers)),
-        ("Crossref", lambda: fetch_crossref(papers)),
         ("Springer Nature", lambda: fetch_springer_nature(papers)),
     ]
     for name, fetcher in providers:
@@ -933,6 +968,7 @@ def main():
     newly_kept_papers = []
     try:
         paper_candidates = fetch_papers()
+        paper_candidates = [p for p in paper_candidates if is_top_journal(p.get("journal", ""), p.get("preprint", False))]
         paper_candidates_count = len(paper_candidates)
         # Cap total Gemini work while retaining a fair split between paper themes.
         paper_candidates.sort(key=lambda p: p.get("date", ""), reverse=True)
@@ -963,6 +999,7 @@ def main():
         print(f"Research aggregation failed; existing papers will be retained: {exc}")
 
     papers = merge_by_id(existing_papers, newly_kept_papers)
+    papers = [p for p in papers if is_top_journal(p.get("journal", ""), p.get("preprint", False))]
     papers.sort(key=lambda paper: paper.get("date", ""), reverse=True)
     write_json_atomic(papers_path, papers)
     save_labels(labels)
