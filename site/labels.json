@@ -658,5 +658,182 @@
   },
   "paper:10.67547/fanistiqbollari.2026.1161": {
     "keep": false
+  },
+  "paper:10.61784/wjes3217": {
+    "keep": false
+  },
+  "paper:10.21203/rs.3.rs-10687039/v1": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "This study explores the relationships among personality traits, gender roles, goal orientations, and psychological resilience in adolescent athletes using network analysis and modeling.",
+    "evidence": "human study"
+  },
+  "paper:10.21203/rs.3.rs-11144483/v1": {
+    "keep": false
+  },
+  "paper:10.21203/rs.3.rs-10823049/v1": {
+    "keep": false
+  },
+  "paper:10.1111/jog.70550": {
+    "keep": false
+  },
+  "paper:10.1002/ejsc.70280": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "This study investigated whether rating of perceived exertion is superior to maximal aerobic speed for maximizing time spent at or above 90% of maximal oxygen uptake during high-intensity interval training.",
+    "evidence": "human study"
+  },
+  "paper:10.3390/nu18213639": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "This study examined whether caffeinated gum increases self-selected cycling output at regulated ratings of perceived exertion in well-trained male athletes.",
+    "evidence": "human study"
+  },
+  "paper:10.58806/ijsshmr.2026.v5i10n18": {
+    "keep": false
+  },
+  "paper:10.1177/01939459261489678": {
+    "keep": false
+  },
+  "paper:10.3390/nu18213608": {
+    "keep": false
+  },
+  "paper:10.1123/ijspp.2026-0157": {
+    "keep": false
+  },
+  "paper:10.3389/fpsyg.2026.1922313": {
+    "keep": false
+  },
+  "paper:10.1016/j.pedn.2026.10.034": {
+    "keep": false
+  },
+  "paper:10.1371/journal.pone.0360966": {
+    "keep": false
+  },
+  "paper:10.21203/rs.3.rs-10704416/v1": {
+    "keep": false
+  },
+  "paper:arxiv:2610.36692v1": {
+    "keep": false
+  },
+  "paper:10.1108/jpmh-07-2026-0172": {
+    "keep": false
+  },
+  "paper:10.1371/journal.pone.0360804": {
+    "keep": false
+  },
+  "paper:10.58830/ozgur.pub1466.c6441": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "Emotional intelligence and mental toughness are highlighted as prominent concepts in understanding athletes' psychological functioning and performance processes under competitive pressure.",
+    "evidence": "review"
+  },
+  "paper:10.58830/ozgur.pub1392.c6439": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "Emotional intelligence and mental toughness serve as important psychological variables that play a role in athletes' processes of coping with competitive pressure, regulating emotions, and maintaining attention.",
+    "evidence": "review"
+  },
+  "paper:10.7454/proust.v9i2.1276": {
+    "keep": false
+  },
+  "paper:10.1007/s11845-026-04692-6": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "A pilot study evaluated a brief performance psychology intervention for surgical trainees, finding potential to impact performance anxiety and mental toughness.",
+    "evidence": "human study"
+  },
+  "paper:10.21203/rs.3.rs-11309705/v1": {
+    "keep": false
+  },
+  "paper:10.1016/j.ejon.2026.103355": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "A randomized controlled trial found that a 10-week online empowerment program for cancer survivors aimed to reduce intrusive rumination and fatigue while enhancing resilience.",
+    "evidence": "human study"
+  },
+  "paper:10.21203/rs.3.rs-10090548/v1": {
+    "keep": false
+  },
+  "paper:10.1371/journal.pone.0361222": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "A study of college athletes examined how perceived social support is associated with academic burnout through the mediating roles of mental toughness and athlete burnout.",
+    "evidence": "human study"
+  },
+  "paper:10.3389/fpsyg.2026.1934680": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "A survey of track and field athletes explored how self-management relates to athletic performance via psychological resilience and competitive spirit.",
+    "evidence": "human study"
+  },
+  "paper:10.3390/healthcare14213570": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "A study on operating room nurses examined associations between presenteeism, psychological resilience, and perioperative competence.",
+    "evidence": "human study"
+  },
+  "paper:10.3389/fpubh.2026.1973096": {
+    "keep": true,
+    "cat": "Longevity",
+    "summary": "A study investigated the relationship between the number of chronic conditions and depressive symptoms in older adults, focusing on psychological resilience and sleep quality.",
+    "evidence": "human study"
+  },
+  "paper:10.21203/rs.3.rs-10823584/v1": {
+    "keep": false
+  },
+  "paper:10.3389/fspor.2026.1925319": {
+    "keep": true,
+    "cat": "Longevity",
+    "summary": "An exploratory pilot study monitored physiological, hematological, and psychological responses in elite rhythmic gymnasts during an 8-week pre-competition period.",
+    "evidence": "human study"
+  },
+  "paper:10.3389/fspor.2026.1940762": {
+    "keep": true,
+    "cat": "Longevity",
+    "summary": "A review highlights how physical activity, diet, and gut microbiota interact to influence gastrointestinal health, immune regulation, and metabolic homeostasis.",
+    "evidence": "review"
+  },
+  "paper:10.1123/ijspp.2026-0042": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "An observational study quantified the relationship between perceived mental fatigue and training load metrics in semiprofessional male basketball players.",
+    "evidence": "human study"
+  },
+  "paper:10.3390/nu18203434": {
+    "keep": true,
+    "cat": "Longevity",
+    "summary": "A systematic review and meta-analysis estimated the effects of caffeine-taurine co-supplementation versus placebo on exercise performance.",
+    "evidence": "review"
+  },
+  "paper:10.3389/fpubh.2026.1854584": {
+    "keep": true,
+    "cat": "Longevity",
+    "summary": "A cross-sectional study explored associations between psychological resilience and quality of life in middle-aged and older inpatients with chronic diseases.",
+    "evidence": "human study"
+  },
+  "paper:10.31234/osf.io/ewn5m_v1": {
+    "keep": false
+  },
+  "paper:10.1519/jsc.0000000000005684": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "A study examined core muscle activation across 10 plank variations and identified which muscles predict rating of perceived exertion in active adults.",
+    "evidence": "human study"
+  },
+  "paper:10.2196/92345": {
+    "keep": true,
+    "cat": "Longevity",
+    "summary": "A pilot study examined acute physiological responses, exercise intensity, and perceived exertion during active video game gameplay in adults with chronic diseases.",
+    "evidence": "human study"
+  },
+  "paper:10.1177/15563316261491728": {
+    "keep": false
+  },
+  "paper:10.1177/13591053261490846": {
+    "keep": true,
+    "cat": "Toughness",
+    "summary": "A study in women with gynecologic cancer examined how spiritual well-being and perceived social support associate with psychological resilience.",
+    "evidence": "human study"
   }
 }
