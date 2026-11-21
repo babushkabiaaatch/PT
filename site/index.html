@@ -46,6 +46,10 @@
   .tag { font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; color:#000; }
   .tag.Longevity { background:var(--long); }
   .tag.Toughness { background:var(--tough); }
+  .tag.Math { background:#64d2ff; }
+  .tag.AI { background:#bf5af2; color:#fff; }
+  .tag.Proofs { background:#ffd60a; }
+  .paper .links { display:flex; gap:16px; flex-wrap:wrap; }
   .tag.chip { background:#2a2a31; color:var(--text); font-weight:600; }
   .tag.warn { background:#3a2f12; color:#ffd479; font-weight:600; }
   .tag.new { background:#fff; color:#000; position:static; }
@@ -74,7 +78,7 @@
   <button class="tab active" data-cat="All">All</button>
   <button class="tab" data-cat="Goggins">Goggins</button>
   <button class="tab" data-cat="Longevity">Longevity</button>
-  <button class="tab" data-cat="Research">Research</button>
+  <button class="tab" data-cat="Research">Math &amp; AI</button>
   <input id="search" placeholder="Search...">
   <select id="sort">
     <option value="newest">Newest</option>
@@ -85,9 +89,9 @@
   <button id="hideWatched">Hide watched</button>
 </div>
 
-<div id="note">Summaries are written by AI from each paper's abstract and can be wrong. Open the paper before you trust it. Preprints are not peer reviewed. This is reading material, not medical advice.</div>
+<div id="note">Open-access math and AI papers from arXiv, picked for substance. arXiv papers are preprints, so they are not peer reviewed (a venue badge means the authors say it was accepted there). Summaries are written by AI from each abstract and can be wrong, so read the paper itself.</div>
 <div id="grid"></div>
-<div id="empty">Nothing to show. Did you run pipeline.py first? (and open this page via python -m http.server)</div>
+<div id="empty">Nothing in this section yet. The daily update will fill it, or try a different search.</div>
 
 <div id="modal">
   <iframe id="player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
@@ -146,13 +150,7 @@ function render() {
   grid.innerHTML = "";
 
   const list = research ? renderPapers(q) : renderVideos(q, sortEl.value);
-  const empty = document.getElementById("empty");
-  empty.style.display = list ? "none" : "block";
-  if (!list) {
-    empty.textContent = (videos.length || papers.length)
-      ? "Nothing in this section yet. The daily update will fill it, or try a different search."
-      : "Could not load the data files. Did you run pipeline.py first? (and open this page via python -m http.server)";
-  }
+  document.getElementById("empty").style.display = list ? "none" : "block";
 }
 
 function renderVideos(q, sort) {
@@ -206,19 +204,27 @@ function renderPapers(q) {
       <h3></h3>
       <div class="meta"></div>
       <p class="sum"></p>
-      <a target="_blank" rel="noopener">Read paper ↗</a>`;
+      <div class="links"></div>`;
     const tags = el.querySelector(".tags");
     const addTag = (text, cls) => { const t = document.createElement("span"); t.className = "tag " + cls; t.textContent = text; tags.appendChild(t); };
     addTag(p.category, p.category);
-    if (p.evidence) addTag(p.evidence, "chip");
-    if (p.preprint) addTag("Preprint (not peer reviewed)", "warn");
+    if (p.kind) addTag(p.kind, "chip");
+    if (p.level) addTag(p.level, "chip");
     if (isNew(p.date)) addTag("NEW", "new");
 
     el.querySelector("h3").textContent = p.title;
     el.querySelector(".meta").textContent = [p.journal, p.authors, p.date].filter(Boolean).join(" · ");
     el.querySelector(".sum").textContent = "AI summary: " + p.summary;
-    const link = el.querySelector("a");
-    if (/^https:\/\//.test(p.url)) link.href = p.url; else link.remove();
+    const links = el.querySelector(".links");
+    const addLink = (text, url) => {
+      if (!/^https:\/\//.test(url || "")) return;          // only ever link to https pages
+      const a = document.createElement("a");
+      a.textContent = text; a.href = url; a.target = "_blank"; a.rel = "noopener";
+      links.appendChild(a);
+    };
+    addLink("Abstract ↗", p.url);
+    addLink("PDF ↗", p.pdf);
+    addLink("Code ↗", p.code);
     grid.appendChild(el);
   }
   return list.length;
@@ -260,7 +266,7 @@ function fmtUpdated(iso) {
   return Math.floor(m / 1440) + "d ago";
 }
 // "Updated 3h ago" line (optional: the site works without status.json)
-fetch("status.json", { cache: "no-store" }).then(r => r.json()).then(s => {
+fetch("status.json").then(r => r.json()).then(s => {
   document.getElementById("status").textContent =
     `Stay hard. Live long. · Updated ${fmtUpdated(s.updated)} · ${s.new_videos} new videos · ${s.papers} papers`;
 }).catch(() => {});
@@ -270,8 +276,8 @@ if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catc
 
 // Load both data files. Papers are optional: the site still works without papers.json.
 Promise.all([
-  fetch("videos.json", { cache: "no-store" }).then(r => r.json()).catch(() => []),
-  fetch("papers.json", { cache: "no-store" }).then(r => r.json()).catch(() => []),
+  fetch("videos.json").then(r => r.json()).catch(() => []),
+  fetch("papers.json").then(r => r.json()).catch(() => []),
 ]).then(([v, p]) => { videos = v; papers = p; render(); });
 </script>
 </body>
