@@ -13,7 +13,8 @@ So this version:
   3. Asks Gemini to judge videos and papers in big batches, with a hard cap on requests
   4. Remembers everything in labels.json, so the site only ever GROWS. A run that hits a limit
      never makes the site smaller; the next run carries on where this one stopped.
-  5. Research papers: only from a list of top journals, and no preprints.
+  5. Research tab: open-access MATH and AI papers from arXiv, ranked by quality signals and
+     filtered by Gemini down to the substantive ones.
 
 Run it any time:   py pipeline.py        You need:   pip install requests
 """
@@ -23,6 +24,7 @@ import json
 import time
 import datetime
 import requests
+import xml.etree.ElementTree as ET
 
 try:
     from keys import YOUTUBE_KEY, GEMINI_KEY      # on your laptop, keys live in keys.py
@@ -70,40 +72,34 @@ MIN_SECONDS = 240                # skip anything shorter than 4 minutes (kills S
 
 # --- Gemini (free tier is limited, so we cap requests per run) ---
 MAX_GEMINI_CALLS = 14            # total requests per run (videos + papers)
-PAPER_CALLS_RESERVED = 3         # always keep this many for papers
+PAPER_CALLS_RESERVED = 4         # always keep this many for papers
 VIDEO_BATCH = 50                 # videos judged per request
 PAPER_BATCH = 15                 # papers judged per request
 PAUSE_BETWEEN_CALLS = 13         # seconds between requests (free tier = ~5 per minute)
 
-# --- Research papers ---
-NEW_PAPER_DAYS = 90              # look at papers first published in the last 90 days
-PAPER_KEEP_DAYS = 365            # show papers up to a year old
-PAPER_SEARCHES = {
-    "Longevity": 'longevity OR healthspan OR geroscience OR "biological age" OR "lifespan extension" '
-                 'OR "epigenetic clock" OR "cellular senescence"',
-    "Toughness": '"mental toughness" OR "psychological resilience" OR "ultra-endurance" '
-                 'OR "perceived exertion" OR "grit"',
+# --- Research: open-access math + AI papers from arXiv (free, no key) ---
+PAPER_KEEP_DAYS = 120            # show papers up to 120 days old
+FIRST_RUN_MULTIPLIER = 4         # the very first run looks back 4x further, to fill the tab quicker
+ARXIV_PAUSE = 3                  # arXiv asks for 3 seconds between requests
+# feed name -> (arXiv search, days to look back, max papers to fetch)
+PAPER_FEEDS = {
+    "Math": ("cat:math.NT OR cat:math.CO OR cat:math.LO OR cat:math.PR OR cat:math.AG OR cat:math.GR "
+             "OR cat:math.CA OR cat:math.DS OR cat:math.AT OR cat:math.RT", 2, 200),
+    "AI": ("cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:stat.ML", 1, 200),
+    "Proofs": ('(cat:cs.LO OR cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:math.LO) AND '
+               '(abs:"theorem proving" OR abs:"formal proof" OR abs:Lean OR abs:autoformalization '
+               'OR abs:"proof assistant" OR abs:"formal verification" OR abs:"mathematical reasoning")', 14, 100),
 }
-# Only papers from these journals are shown. Add or remove names as you like.
-# (Names follow the PubMed style. The run log lists skipped journals so you can add ones you want.)
-TOP_JOURNALS = [
-    # big general science and medicine
-    "Nature", "Science (New York, N.Y.)", "Science", "Cell", "Lancet (London, England)", "The Lancet",
-    "The New England journal of medicine", "JAMA", "BMJ (Clinical research ed.)", "BMJ",
-    "Nature medicine", "Proceedings of the National Academy of Sciences of the United States of America",
-    "Annals of internal medicine", "JAMA internal medicine",
-    # ageing and metabolism
-    "Nature aging", "Aging cell", "GeroScience", "The Lancet. Healthy longevity", "Cell metabolism",
-    "Nature metabolism", "Ageing research reviews",
-    "The journals of gerontology. Series A, Biological sciences and medical sciences",
-    # heart and fitness
-    "Circulation", "European heart journal", "Journal of the American College of Cardiology",
-    "British journal of sports medicine", "Sports medicine (Auckland, N.Z.)",
-    "Medicine and science in sports and exercise",
-    # mental toughness and psychology
-    "Psychological science", "Psychological bulletin", "Nature human behaviour",
-    "Journal of personality and social psychology",
-]
+# Papers the authors say are accepted at, or published in, these get a badge and a ranking boost.
+GOOD_VENUES = ["NeurIPS", "ICML", "ICLR", "ACL", "EMNLP", "NAACL", "CVPR", "AAAI", "COLT", "STOC", "FOCS",
+               "SODA", "LICS", "ITP", "CAV", "JACM", "Annals of Mathematics", "Inventiones", "Acta Mathematica",
+               "Journal of the American Mathematical Society", "Duke Mathematical Journal",
+               "Forum of Mathematics", "Compositio", "Advances in Mathematics"]
+# Words in a title/abstract that hint at substance. Used only to decide what Gemini looks at first.
+SIGNALS = {"we prove": 3, "we resolve": 4, "we settle": 4, "we disprove": 4, "counterexample": 3,
+           "conjecture": 2, "open problem": 3, "new proof": 3, "first proof": 4, "theorem": 2,
+           "formalized": 3, "formalised": 3, "lean 4": 3, "machine-checked": 3, "state-of-the-art": 1,
+           "scaling law": 2, "mathematical reasoning": 2, "we show that": 1}
 
 TODAY = datetime.date.today()
 STATE = {"yt_blocked": False}
@@ -111,15 +107,6 @@ STATE = {"yt_blocked": False}
 
 class QuotaExceeded(Exception):
     pass
-
-
-def norm_journal(name):
-    """'The Lancet. Healthy longevity' -> 'lancet healthy longevity' (so spelling quirks still match)."""
-    n = re.sub(r"[^a-z0-9]+", " ", (name or "").lower()).strip()
-    return re.sub(r"^the ", "", n)
-
-
-JOURNAL_SET = {norm_journal(j) for j in TOP_JOURNALS}
 
 
 # ---------------------------------------------------------------
@@ -224,7 +211,7 @@ def build_search_plan():
     Goggins and Longevity take turns so that neither one gets starved if the budget runs out."""
     g, l = GOGGINS_SEARCHES, LONGEVITY_SEARCHES
     shift = TODAY.toordinal()
-    rot = lambda xs: xs[shift % len(xs):] + xs[:shift % len(xs)]    # a different starting point each day
+    rot = lambda xs: xs[shift % len(xs):] + xs[:shift % len(xs)] if xs else xs   # a different start each day
     plan = []
     for fresh in (True, False):
         gg, ll = (g, l) if fresh else (rot(g), rot(l))
@@ -237,61 +224,103 @@ def build_search_plan():
 
 
 # ---------------------------------------------------------------
-# 3. RESEARCH PAPER HELPERS  (Europe PMC: free, no key, no preprints)
+# 3. RESEARCH PAPER HELPERS  (arXiv: free, open access, no key)
 # ---------------------------------------------------------------
 
-def strip_tags(text):
-    return re.sub(r"<[^>]+>", "", text or "").strip()
+ARXIV_API = "https://export.arxiv.org/api/query"
+NS = {"a": "http://www.w3.org/2005/Atom", "x": "http://arxiv.org/schemas/atom"}
 
 
-def fetch_papers():
-    """Recent papers from top journals only. Returns a list, newest first."""
-    since = (TODAY - datetime.timedelta(days=NEW_PAPER_DAYS)).isoformat()
-    journal_clause = " OR ".join(f'JOURNAL:"{j}"' for j in TOP_JOURNALS)
-    papers, skipped = {}, {}
-    for category, terms in PAPER_SEARCHES.items():
-        print("Searching papers:", category)
-        # SRC:MED = peer-reviewed journals indexed by PubMed (this leaves out preprints)
-        base = f"({terms}) AND SRC:MED AND (FIRST_PDATE:[{since} TO {TODAY.isoformat()}]) AND HAS_ABSTRACT:y"
-        results = []
-        for query in (base + f" AND ({journal_clause})", base):     # second one is a fallback
-            try:
-                data = requests.get("https://www.ebi.ac.uk/europepmc/webservices/rest/search", params={
-                    "query": query, "format": "json", "resultType": "core", "pageSize": 100,
-                }, timeout=60).json()
-            except Exception as e:
-                print("  Paper search problem:", e)
-                continue
-            results = data.get("resultList", {}).get("result", [])
-            if results:
+def find_venue(comment, journal_ref):
+    """Only trust a venue if the authors say the paper was accepted/published there."""
+    text = f"{comment} {journal_ref}"
+    if not (journal_ref or re.search(r"accepted|to appear|appears|published|oral|spotlight|camera", comment, re.I)):
+        return ""
+    for v in GOOD_VENUES:
+        if re.search(r"\b" + re.escape(v) + r"\b", text):
+            return v
+    return ""
+
+
+def paper_score(p):
+    """A rough 'worth reading first' score. It only decides the order Gemini looks in."""
+    text = (p["title"] + " " + p["abstract"]).lower()
+    score = 5 if p["venue"] else 0
+    score += sum(pts for word, pts in SIGNALS.items() if word in text)
+    score += 2 if p["code"] else 0
+    return score
+
+
+def fetch_arxiv(feed, query, days, max_results):
+    """Newest papers of one feed. Returns a list of paper dicts."""
+    now = datetime.datetime.now(datetime.timezone.utc)
+    start = (now - datetime.timedelta(days=days)).strftime("%Y%m%d0000")
+    params = {"search_query": f"({query}) AND submittedDate:[{start} TO {now.strftime('%Y%m%d2359')}]",
+              "sortBy": "submittedDate", "sortOrder": "descending", "start": 0, "max_results": max_results}
+    content = None
+    for attempt in range(2):
+        try:
+            r = requests.get(ARXIV_API, params=params, timeout=90)
+            if r.status_code == 200:
+                content = r.content
                 break
-        for x in results:
-            journal = x.get("journalTitle") or ""
-            if x.get("source") == "PPR" or not x.get("title"):
+            print(f"  arXiv said {r.status_code}. Trying again...")
+        except Exception as e:
+            print("  arXiv problem:", e)
+        time.sleep(5)
+    if content is None:
+        return []
+    try:
+        root = ET.fromstring(content)
+    except ET.ParseError:
+        return []
+
+    papers = []
+    for e in root.findall("a:entry", NS):
+        try:
+            raw_id = e.findtext("a:id", "", NS)
+            if "/abs/" not in raw_id:          # arXiv sends an 'error' entry when something is wrong
                 continue
-            if norm_journal(journal) not in JOURNAL_SET:
-                skipped[journal] = skipped.get(journal, 0) + 1
-                continue
-            pid = f"paper:{x.get('source', '')}:{x.get('id', '')}"
-            if pid in papers:
-                continue
-            doi = x.get("doi")
-            url = f"https://doi.org/{doi}" if doi else f"https://europepmc.org/article/{x.get('source')}/{x.get('id')}"
-            authors = [a.strip() for a in (x.get("authorString") or "").rstrip(".").split(",") if a.strip()]
-            title = strip_tags(x["title"])
-            date = x.get("firstPublicationDate") or str(x.get("pubYear", ""))
-            papers[pid] = {
-                "id": pid, "title": title, "journal": journal, "date": date,
-                "abstract": strip_tags(x.get("abstractText")),
-                "meta": {"title": title, "journal": journal, "date": date, "url": url,
-                         "authors": ", ".join(authors[:3]) + (" et al." if len(authors) > 3 else "")},
+            arxiv_id = re.sub(r"v\d+$", "", raw_id.split("/abs/")[1])
+            title = " ".join(e.findtext("a:title", "", NS).split())
+            abstract = " ".join(e.findtext("a:summary", "", NS).split())
+            comment = " ".join(e.findtext("x:comment", "", NS).split())
+            journal_ref = " ".join(e.findtext("x:journal_ref", "", NS).split())
+            primary = (e.find("x:primary_category", NS).get("term") if e.find("x:primary_category", NS) is not None else "")
+            authors = [" ".join(a.findtext("a:name", "", NS).split()) for a in e.findall("a:author", NS)]
+            code = re.search(r"https?://(?:www\.)?(?:github\.com|gitlab\.com)/[^\s,;)\]}>\"']+",
+                             comment + " " + abstract)
+            venue = find_venue(comment, journal_ref)
+            p = {
+                "id": f"arxiv:{arxiv_id}", "feed": feed, "title": title, "abstract": abstract,
+                "primary": primary, "venue": venue, "code": code.group(0).rstrip(".") if code else "",
             }
-    result = sorted(papers.values(), key=lambda p: p["date"], reverse=True)
-    print(f"  {len(result)} papers from top journals.")
-    if skipped:
-        top = sorted(skipped, key=lambda j: -skipped[j])[:5]
-        print(f"  Skipped {sum(skipped.values())} from other journals (e.g. {'; '.join(top)}).")
-    return result
+            p["score"] = paper_score(p)
+            p["meta"] = {
+                "title": title,
+                "authors": ", ".join(authors[:3]) + (" et al." if len(authors) > 3 else ""),
+                "journal": "arXiv " + primary + (f" · {venue}" if venue else ""),
+                "date": e.findtext("a:published", "", NS)[:10],
+                "url": f"https://arxiv.org/abs/{arxiv_id}",
+                "pdf": f"https://arxiv.org/pdf/{arxiv_id}",
+                "code": p["code"],
+            }
+            papers.append(p)
+        except (AttributeError, IndexError, ValueError):
+            continue
+    print(f"  {len(papers)} papers fetched.")
+    return papers
+
+
+def rank_for_judging(by_feed):
+    """Best-scoring first, with the feeds taking turns so Math, AI and Proofs all get looked at."""
+    lists = [sorted(v, key=lambda p: -p["score"]) for v in by_feed.values()]
+    out = []
+    for i in range(max((len(l) for l in lists), default=0)):
+        for l in lists:
+            if i < len(l):
+                out.append(l[i])
+    return out
 
 
 # ---------------------------------------------------------------
@@ -311,18 +340,21 @@ Return ONLY a JSON array, one object per video, like this:
 Videos:
 """
 
-PAPER_PROMPT = """You are curating a research section for a personal site about (1) living longer and
-healthier (longevity, aging biology, healthspan) and (2) mental toughness and endurance.
-All papers below come from respected journals. For each numbered paper decide whether to KEEP it: keep
-papers clearly about those themes that would interest a curious, non-expert reader. Reject papers that
-are off-topic or only mention the theme in passing.
+PAPER_PROMPT = """You are curating a research section for a reader who wants HIGH-LEVEL work in mathematics
+(proofs, number theory, combinatorics, logic, ...) and AI (reasoning, theory, formal theorem proving,
+major advances). All papers below are open-access arXiv preprints, so quality varies a lot.
+KEEP only papers that look substantive and significant: new theorems or proofs, resolved or advanced
+conjectures, rigorous theory, formalized or machine-checked proofs (Lean etc.), important new methods,
+strong results from credible work. REJECT incremental tweaks, narrow applications, hype, vague or
+low-information abstracts.
 For kept papers also write:
-- "summary": ONE plain-English sentence (max 30 words) using ONLY what the abstract says. Never add
-  claims, numbers, or advice that are not in the abstract.
-- "evidence": one of "human study", "review", "animal study", "cell study", "other".
+- "cat": "Math", "AI" or "Proofs" ("Proofs" = formal, machine-checked proofs or AI theorem proving)
+- "summary": ONE plain-English sentence (max 35 words) using ONLY what the abstract says. No hype,
+  and never add claims that are not in the abstract.
+- "kind": one of "new theorem", "new proof", "survey", "new method", "theory", "benchmark", "formal proof", "other"
+- "level": "advanced" or "expert"
 Return ONLY a JSON array, one object per paper, like this:
-[{"i": 0, "keep": true, "cat": "Longevity", "summary": "...", "evidence": "human study"}]
-"cat" must be "Longevity" or "Toughness".
+[{"i": 0, "keep": true, "cat": "Math", "summary": "...", "kind": "new theorem", "level": "expert"}]
 
 Papers:
 """
@@ -371,14 +403,15 @@ def judge_videos(batch):
 
 
 def judge_papers(batch):
-    lines = [f"[{i}] {p['title']} | {p['journal']} | {p['abstract'][:700]}" for i, p in enumerate(batch)]
+    lines = [f"[{i}] ({p['feed']}) {p['title']} | {p['primary']} | {p['abstract'][:600]}"
+             for i, p in enumerate(batch)]
     verdicts = {x["i"]: x for x in call_gemini(PAPER_PROMPT + "\n".join(lines))}
     labels = []
     for i in range(len(batch)):
         x = verdicts.get(i)
-        if x and x.get("keep") and x.get("cat") in ("Longevity", "Toughness") and x.get("summary"):
+        if x and x.get("keep") and x.get("cat") in ("Math", "AI", "Proofs") and x.get("summary"):
             labels.append({"keep": True, "cat": x["cat"], "summary": x["summary"],
-                           "evidence": x.get("evidence", "other")})
+                           "kind": x.get("kind", "other"), "level": x.get("level", "advanced")})
         else:
             labels.append({"keep": False})
     return labels
@@ -562,16 +595,26 @@ def main():
     gemini_ok, calls = judge_all(todo, labels, judge_videos, VIDEO_BATCH,
                                  max_calls=MAX_GEMINI_CALLS - PAPER_CALLS_RESERVED)
 
-    # --- Papers ---
+    # --- Papers (arXiv) ---
     print()
-    todo_p = []
-    for p in fetch_papers():
-        label = labels.get(p["id"])
-        if label is None:
-            todo_p.append(p)
-        elif label.get("keep"):
-            remember(labels, p, label)
-    print(f"{len(todo_p)} new papers need Gemini's verdict.")
+    first_run = not any(k.startswith("arxiv:") for k in labels)
+    by_feed, seen = {}, set()
+    for feed, (query, days, max_results) in PAPER_FEEDS.items():
+        print(f"Searching arXiv: {feed}")
+        got = fetch_arxiv(feed, query, days * (FIRST_RUN_MULTIPLIER if first_run else 1), max_results)
+        by_feed[feed] = []
+        for p in got:
+            if p["id"] in seen:
+                continue
+            seen.add(p["id"])
+            label = labels.get(p["id"])
+            if label is None:
+                by_feed[feed].append(p)
+            elif label.get("keep"):
+                remember(labels, p, label)          # refresh details
+        time.sleep(ARXIV_PAUSE)
+    todo_p = rank_for_judging(by_feed)
+    print(f"{len(todo_p)} new papers could be judged (best-looking first).")
     if todo_p and gemini_ok:
         judge_all(todo_p, labels, judge_papers, PAPER_BATCH, max_calls=MAX_GEMINI_CALLS - calls)
     elif todo_p:
@@ -584,12 +627,15 @@ def main():
     for key, lab in labels.items():
         if key.startswith("_") or not lab.get("keep") or "title" not in lab:
             continue
-        if key.startswith("paper:"):
-            if norm_journal(lab.get("journal")) in JOURNAL_SET and lab.get("date", "") >= paper_cutoff:
+        if key.startswith("arxiv:"):
+            if lab.get("date", "") >= paper_cutoff:
                 papers.append({"id": key, "title": lab["title"], "authors": lab.get("authors", ""),
-                               "journal": lab["journal"], "date": lab["date"], "url": lab["url"],
+                               "journal": lab.get("journal", "arXiv"), "date": lab["date"], "url": lab["url"],
+                               "pdf": lab.get("pdf", ""), "code": lab.get("code", ""),
                                "category": lab["cat"], "summary": lab["summary"],
-                               "evidence": lab.get("evidence", "other")})
+                               "kind": lab.get("kind", ""), "level": lab.get("level", "")})
+        elif ":" in key or "channel" not in lab:
+            continue                       # leftovers from older versions
         else:
             videos.append({"id": key, "title": lab["title"], "channel": lab["channel"],
                            "seconds": lab["seconds"], "views": lab["views"], "published": lab["published"],
