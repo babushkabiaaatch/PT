@@ -41,7 +41,8 @@ GEMINI_MODEL = "gemini-3.5-flash-lite"
 # --- YouTube: channels (cheap) ---
 # Handles look like @name (the part after youtube.com/ in the channel's link).
 # If a handle is wrong, the script just says "Couldn't find channel" and moves on.
-GOGGINS_CHANNELS = ["@davidgoggins"]                  # everything here is kept automatically
+GOGGINS_CHANNELS = []   # Goggins videos come from the searches below. Only add a handle here if you are
+                        # sure it is a channel where EVERY video is Goggins (they are kept automatically).
 LONGEVITY_CHANNELS = ["@PeterAttiaMD", "@hubermanlab", "@FoundMyFitness"]   # Gemini picks the relevant videos
 
 # --- YouTube: searches (expensive: 1 search = 1 of your ~100 per day) ---
@@ -516,24 +517,33 @@ def main():
         details = []
     print(f"\n{len(found)} videos found this run.")
     candidates = []
+    odd = 0
     for item in details:
-        src = found[item["id"]]
-        seconds = duration_to_seconds(item["contentDetails"]["duration"])
-        if seconds < MIN_SECONDS:
-            continue
-        guess = guess_category(item, src["cat"]) if src["kind"] == "search" else src["cat"]
-        if guess is None:
-            continue
-        candidates.append({
-            "id": item["id"], "title": item["snippet"]["title"],
-            "channel": item["snippet"]["channelTitle"],
-            "description": item["snippet"].get("description", ""),
-            "published": item["snippet"]["publishedAt"][:10],
-            "auto": src["kind"] == "goggins_channel",
-            "meta": {"title": item["snippet"]["title"], "channel": item["snippet"]["channelTitle"],
-                     "seconds": seconds, "views": int(item["statistics"].get("viewCount", 0)),
-                     "published": item["snippet"]["publishedAt"][:10]},
-        })
+        try:
+            src = found[item["id"]]
+            # Live streams and premieres can be missing a length or statistics, so use .get()
+            seconds = duration_to_seconds((item.get("contentDetails") or {}).get("duration"))
+            if seconds < MIN_SECONDS:
+                continue
+            guess = guess_category(item, src["cat"]) if src["kind"] == "search" else src["cat"]
+            if guess is None:
+                continue
+            snippet = item["snippet"]
+            candidates.append({
+                "id": item["id"], "title": snippet["title"],
+                "channel": snippet["channelTitle"],
+                "description": snippet.get("description", ""),
+                "published": snippet["publishedAt"][:10],
+                "auto": src["kind"] == "goggins_channel",
+                "meta": {"title": snippet["title"], "channel": snippet["channelTitle"],
+                         "seconds": seconds,
+                         "views": int((item.get("statistics") or {}).get("viewCount", 0)),
+                         "published": snippet["publishedAt"][:10]},
+            })
+        except (KeyError, ValueError, TypeError):
+            odd += 1          # one strange video should never stop the whole run
+    if odd:
+        print(f"  (skipped {odd} videos with missing details)")
 
     todo = []
     for v in candidates:
