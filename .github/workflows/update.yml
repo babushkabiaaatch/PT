@@ -3,16 +3,22 @@ name: Update GogginsTube
 
 on:
   schedule:
-    - cron: "0 3 * * *"    # every day at 03:00 UTC. Change the numbers to change the time.
-  workflow_dispatch:        # gives you a "Run workflow" button for running it by hand
+    # 09:30 UTC = AFTER YouTube's quota resets (midnight Pacific = 08:00 UTC in winter, 07:00 in summer).
+    # The old 03:00 UTC time ran BEFORE the reset, so it used up yesterday's already-empty quota.
+    - cron: "30 9 * * *"
+  workflow_dispatch:        # the "Run workflow" button
 
 permissions:
-  contents: write           # lets the job save the new videos back into your repo
+  contents: write
+
+concurrency:
+  group: gogginstube-update   # never two runs at the same time
+  cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -22,15 +28,19 @@ jobs:
 
       - run: pip install requests
 
+      - name: Check the code has no typos
+        run: python -m py_compile pipeline.py
+
       - name: Fetch new videos and papers
         run: python pipeline.py
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
 
       - name: Save results
         run: |
           git config user.name "gogginstube-bot"
           git config user.email "gogginstube-bot@users.noreply.github.com"
           git add site/
-          git diff --staged --quiet || (git commit -m "Update videos and papers" && git push)
+          git diff --staged --quiet || (git commit -m "Update videos and papers" && git pull --rebase && git push)
