@@ -1,16 +1,16 @@
 {
-  "updated": "2026-11-21T07:09:31+00:00",
+  "updated": "2026-11-21T08:22:49+00:00",
   "videos": 51,
   "new_videos": 2,
-  "papers": 149,
-  "video_candidates": 0,
-  "paper_candidates": 352,
+  "papers": 0,
+  "video_candidates": 506,
+  "paper_candidates": 104,
   "gemini_ok": true,
-  "youtube_quota_exhausted": true,
+  "youtube_quota_exhausted": false,
   "video_categories": {
     "Goggins": 51,
     "Longevity": 0
   },
-  "youtube_units_used_today": 43,
-  "youtube_quota_day": "2026-11-20"
+  "youtube_units_used_today": 1022,
+  "youtube_quota_day": "2026-11-21"
 }
