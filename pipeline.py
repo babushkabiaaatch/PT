@@ -19,6 +19,7 @@ import re
 import json
 import time
 import datetime
+from itertools import zip_longest
 import requests
 import xml.etree.ElementTree as ET
 
@@ -44,6 +45,11 @@ VIDEO_SEARCHES = {
         "David Goggins speech",
         "David Goggins Can't Hurt Me",
         "David Goggins workout",
+        "David Goggins Joe Rogan",
+        "David Goggins Impact Theory",
+        "David Goggins Navy SEAL Hell Week",
+        "David Goggins Never Finished",
+        "David Goggins Rich Roll",
     ],
     "Longevity": [
         "longevity science explained",
@@ -81,7 +87,42 @@ PAPER_SEARCHES = {
                  'OR "perceived exertion" OR "grit"',
 }
 
-PAGES_PER_SEARCH = 1       # one all-time page per query, plus one fresh page; controls YouTube quota
+PAGES_PER_SEARCH = 1       # (old setting, no longer used)
+
+# ---- YouTube quota plan --------------------------------------------------
+# YouTube gives your key 10,000 "units" per day (resets at midnight Pacific time).
+#   one search        = 100 units  (expensive: only 100 searches a day!)
+#   channel / playlist / video lookups = 1 unit (cheap)
+# So we find most videos through CHANNELS (cheap) and only do a few searches per run.
+DAILY_QUOTA = 10000
+QUOTA_RESERVE = 1500       # never spend the last 1,500 units (keeps room for your own testing)
+SEARCHES_PER_RUN = 8       # all-time searches per run (8 x 100 = 800 units). They rotate daily.
+BACKFILL_PAGES = 8         # first time we see a channel: read its newest 8 x 50 = 400 videos
+DAILY_PAGES = 1            # afterwards: only the newest 50 per channel (1 unit)
+MAX_NEW_PER_CATEGORY = 120 # new videos sent to Gemini per category per run (rest waits for tomorrow)
+
+# Channels to read directly.  "all": True = every video counts as a candidate (focused channel).
+# "all": False = only videos whose title/description mention a longevity word (general channel).
+# If a handle can't be found, the log says so and it is skipped: fix the spelling or delete the line.
+CHANNELS = {
+    "Goggins": [
+        {"handle": "@davidgoggins", "all": True},
+    ],
+    "Longevity": [
+        {"handle": "@PeterAttiaMD", "all": True},
+        {"handle": "@FoundMyFitness", "all": True},
+        {"handle": "@hubermanlab", "all": False},
+        {"handle": "@bryanjohnson", "all": False},
+        {"handle": "@NutritionFacts", "all": False},
+        {"handle": "@SiimLand", "all": False},
+    ],
+}
+
+LONGEVITY_RE = re.compile(
+    r"longevity|healthspan|lifespan|aging|ageing|vo2|zone 2|sleep|fasting|metabolic|insulin|"
+    r"muscle|strength|exercise|nutrition|protein|cholesterol|apob|glucose|alzheimer|dementia|"
+    r"supplement|inflammation|mitochondri|autophagy|rapamycin|blue zone|biological age|cardio|"
+    r"hormone|testosterone|menopause|gut|microbio|cancer|heart", re.I)
 FRESH_DAYS = 45            # "new" videos = published in the last 45 days
 NEW_PAPER_DAYS = 60        # papers = first published in the last 60 days
 MIN_SECONDS = 240          # skip anything shorter than 4 minutes (kills Shorts)
@@ -115,125 +156,170 @@ def check_keys():
 
 
 # ---------------------------------------------------------------
-# 3. YOUTUBE HELPERS
+# 3. YOUTUBE HELPERS  (quota-aware: remembers what it spent today)
 # ---------------------------------------------------------------
 
+QUOTA_PATH = os.path.join(OUT_DIR, "quota.json")
+CHANNELS_PATH = os.path.join(OUT_DIR, "channels.json")
+QUOTA = {"day": "", "used": 0, "done": []}
 
-def search_youtube(query, fresh=False):
-    """Search YouTube, handling exhausted API quota gracefully."""
 
+def pacific_day():
+    """YouTube's quota day changes at midnight Pacific time."""
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.datetime.now(ZoneInfo("America/Los_Angeles")).date().isoformat()
+    except Exception:  # Windows without tzdata: close enough
+        return (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=8)).date().isoformat()
+
+
+def load_quota():
+    """Load today's spending from quota.json so repeated runs don't burn the quota twice."""
+    global QUOTA
+    day = pacific_day()
+    data = {}
+    try:
+        with open(QUOTA_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, ValueError):
+        pass
+    if isinstance(data, dict) and data.get("day") == day:
+        QUOTA = {"day": day, "used": int(data.get("used", 0)), "done": list(data.get("done", []))}
+    else:
+        QUOTA = {"day": day, "used": 0, "done": []}
+    print(f"YouTube quota today ({day}): about {QUOTA['used']} of {DAILY_QUOTA} units already used.")
+
+
+def save_quota():
+    write_json_atomic(QUOTA_PATH, QUOTA)
+
+
+def can_spend(units):
+    return QUOTA["used"] + units <= DAILY_QUOTA - QUOTA_RESERVE
+
+
+def youtube_get(endpoint, params, cost):
+    """Call the YouTube API. Returns the data, or None if skipped/out of quota.
+    Raises RuntimeError for real problems (bad key, API not enabled...)."""
     global YOUTUBE_QUOTA_EXHAUSTED
-
     if YOUTUBE_QUOTA_EXHAUSTED:
-        print(f"Skipping YouTube search: quota exhausted ({query})")
+        return None
+    if not can_spend(cost):
+        print("  Stopping YouTube calls: today's safe quota budget is used up.")
+        return None
+    response = requests.get(
+        f"https://www.googleapis.com/youtube/v3/{endpoint}",
+        params={**params, "key": YOUTUBE_KEY}, timeout=45)
+    try:
+        data = response.json()
+    except ValueError:
+        raise RuntimeError(f"YouTube returned invalid JSON (HTTP {response.status_code}).")
+    if response.status_code != 200 or "error" in data:
+        error = data.get("error", {})
+        message = error.get("message", response.text[:500])
+        reasons = {item.get("reason", "") for item in error.get("errors", [])}
+        if reasons & {"quotaExceeded", "dailyLimitExceeded"}:
+            YOUTUBE_QUOTA_EXHAUSTED = True
+            QUOTA["used"] = DAILY_QUOTA          # remember: nothing more today
+            save_quota()
+            print("WARNING: YouTube daily quota is used up. It resets at midnight Pacific time.")
+            return None
+        if response.status_code == 429 or "rateLimitExceeded" in reasons:
+            YOUTUBE_QUOTA_EXHAUSTED = True       # too fast right now; stop for this run only
+            print("WARNING: YouTube says slow down. Stopping YouTube calls for this run.")
+            return None
+        raise RuntimeError(f"YouTube {endpoint} failed (HTTP {response.status_code}): {message}")
+    QUOTA["used"] += cost
+    save_quota()
+    return data
+
+
+def load_json_dict(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def resolve_channel(handle, state):
+    """Turn '@handle' into the channel's 'uploads' playlist id (1 unit, then remembered)."""
+    entry = state.get(handle)
+    if entry and entry.get("uploads"):
+        return entry
+    data = youtube_get("channels", {"part": "contentDetails", "forHandle": handle}, 1)
+    if not data:
+        return None
+    items = data.get("items") or []
+    if not items:
+        print(f"  Could not find channel {handle}. Check the spelling in CHANNELS.")
+        return None
+    entry = {"uploads": items[0]["contentDetails"]["relatedPlaylists"]["uploads"], "backfilled": False}
+    state[handle] = entry
+    return entry
+
+
+def channel_video_ids(handle, state):
+    """Newest videos of a channel. 1 unit per 50 videos (a search would cost 100)."""
+    entry = resolve_channel(handle, state)
+    if not entry:
         return []
-
-    ids = []
-    page_token = None
-    pages = 1 if fresh else PAGES_PER_SEARCH
-
+    pages = DAILY_PAGES if entry.get("backfilled") else BACKFILL_PAGES
+    ids, token, complete = [], None, True
     for _ in range(pages):
-        params = {
-            "part": "snippet",
-            "q": query,
-            "type": "video",
-            "maxResults": 50,
-            "key": YOUTUBE_KEY,
-        }
-
-        if fresh:
-            cutoff = TODAY - datetime.timedelta(days=FRESH_DAYS)
-            params["order"] = "date"
-            params["publishedAfter"] = cutoff.isoformat() + "T00:00:00Z"
-
-        if page_token:
-            params["pageToken"] = page_token
-
-        response = requests.get(
-            "https://www.googleapis.com/youtube/v3/search",
-            params=params,
-            timeout=45,
-        )
-
-        try:
-            data = response.json()
-        except ValueError:
-            raise RuntimeError(
-                f"YouTube returned invalid JSON for {query} "
-                f"(HTTP {response.status_code})"
-            )
-
-        if response.status_code != 200 or "error" in data:
-            error = data.get("error", {})
-            message = error.get("message", response.text[:500])
-
-            reasons = [
-                item.get("reason", "")
-                for item in error.get("errors", [])
-            ]
-
-            quota_errors = {
-                "quotaExceeded",
-                "dailyLimitExceeded",
-                "rateLimitExceeded",
-            }
-
-            if (
-                response.status_code == 429
-                or quota_errors.intersection(reasons)
-            ):
-                YOUTUBE_QUOTA_EXHAUSTED = True
-                print(
-                    "WARNING: YouTube API quota exhausted. "
-                    "Skipping remaining searches."
-                )
-                return ids
-
-            raise RuntimeError(
-                f"YouTube search failed for '{query}' "
-                f"(HTTP {response.status_code}): {message}"
-            )
-
-        ids.extend(
-            item["id"]["videoId"]
-            for item in data.get("items", [])
-            if item.get("id", {}).get("videoId")
-        )
-
-        page_token = data.get("nextPageToken")
-
-        if not page_token:
+        params = {"part": "contentDetails", "playlistId": entry["uploads"], "maxResults": 50}
+        if token:
+            params["pageToken"] = token
+        data = youtube_get("playlistItems", params, 1)
+        if data is None:
+            complete = False
             break
-
+        ids.extend(i["contentDetails"]["videoId"] for i in data.get("items", [])
+                   if i.get("contentDetails", {}).get("videoId"))
+        token = data.get("nextPageToken")
+        if not token:
+            break
+    if complete:
+        entry["backfilled"] = True
+    print(f"  {handle}: {len(ids)} videos read")
     return ids
 
 
+def search_youtube(query, fresh=False, duration=None):
+    """One YouTube search = 100 units. Used sparingly, to find videos on OTHER people's channels."""
+    params = {"part": "snippet", "q": query, "type": "video", "maxResults": 50}
+    if fresh:
+        cutoff = TODAY - datetime.timedelta(days=FRESH_DAYS)
+        params["order"] = "date"
+        params["publishedAfter"] = cutoff.isoformat() + "T00:00:00Z"
+    elif duration:
+        params["videoDuration"] = duration       # "long" (20+ min) or "medium" (4-20 min): skips Shorts
+    data = youtube_get("search", params, 100)
+    if not data:
+        return []
+    return [item["id"]["videoId"] for item in data.get("items", [])
+            if item.get("id", {}).get("videoId")]
+
+
+def pick_searches():
+    """Pick today's searches. They rotate, so over a few days every query gets its turn."""
+    groups = [[(cat, q) for q in queries] for cat, queries in VIDEO_SEARCHES.items()]
+    mixed = [x for row in zip_longest(*groups) for x in row if x]   # alternates Goggins / Longevity
+    if not mixed:
+        return []
+    start = (TODAY.toordinal() * SEARCHES_PER_RUN) % len(mixed)
+    return [mixed[(start + i) % len(mixed)] for i in range(min(SEARCHES_PER_RUN, len(mixed)))]
+
 
 def get_details(video_ids):
-    """Fetch title, channel, length and views for each video (50 at a time)."""
+    """Fetch title, channel, length and views for each video (50 at a time, 1 unit each)."""
     details = []
     for start in range(0, len(video_ids), 50):
         chunk = video_ids[start:start + 50]
-        response = requests.get(
-            "https://www.googleapis.com/youtube/v3/videos",
-            params={
-                "part": "snippet,contentDetails,statistics",
-                "id": ",".join(chunk),
-                "key": YOUTUBE_KEY,
-            },
-            timeout=45,
-        )
-        try:
-            data = response.json()
-        except ValueError:
-            raise RuntimeError(
-                f"YouTube details returned non-JSON (HTTP {response.status_code})."
-            )
-        if response.status_code != 200 or "error" in data:
-            message = data.get("error", {}).get("message", response.text[:500])
-            raise RuntimeError(
-                f"YouTube details failed (HTTP {response.status_code}): {message}"
-            )
+        data = youtube_get("videos", {"part": "snippet,contentDetails,statistics", "id": ",".join(chunk)}, 1)
+        if data is None:
+            break
         details.extend(data.get("items", []))
     return details
 
@@ -247,21 +333,22 @@ def duration_to_seconds(iso):
     return hours * 3600 + minutes * 60 + seconds
 
 
-def guess_category(item, searched_for):
-    """Assign a broad candidate category from all searches that found this video."""
+def guess_category(item, info):
+    """Decide which section a video could belong to (Gemini makes the final call)."""
     snippet = item.get("snippet", {})
-    title = snippet.get("title", "").lower()
-    channel = snippet.get("channelTitle", "").lower()
-    searched_categories = set(searched_for or [])
+    title = snippet.get("title", "")
+    channel = snippet.get("channelTitle", "")
+    cats, modes = info.get("cats", set()), info.get("modes", set())
 
-    # Explicit Goggins matches take priority when a video appears in both streams.
-    if "goggins" in title or "goggins" in channel:
+    if "goggins" in title.lower() or "goggins" in channel.lower():
         return "Goggins"
-
-    # A video discovered by any longevity query is eligible for Gemini review.
-    if "Longevity" in searched_categories:
-        return "Longevity"
-
+    if "Goggins" in cats and "trusted" in modes:        # e.g. Goggins' own channel
+        return "Goggins"
+    if "Longevity" in cats:
+        if modes & {"trusted", "search"}:                # focused channel, or a longevity search hit
+            return "Longevity"
+        if LONGEVITY_RE.search(title + " " + snippet.get("description", "")[:500]):
+            return "Longevity"
     return None
 
 
@@ -729,48 +816,70 @@ def main():
     else:
         gemini_available = True
 
-    # --- Video discovery. Quota exhaustion skips video work, not the research feeds. ---
-    found = {}
-    video_search_ok = False
+    # --- Video discovery (cheap channel reading first, a few rotating searches last). ---
+    found = {}   # video_id -> {"cats": {...}, "modes": {...}}
+
+    def note(ids, category, mode):
+        for video_id in ids:
+            info = found.setdefault(video_id, {"cats": set(), "modes": set()})
+            info["cats"].add(category)
+            info["modes"].add(mode)
+
+    load_quota()
     if not YOUTUBE_KEY:
         print("No YOUTUBE_API_KEY configured. Retaining existing videos and continuing with papers.")
     else:
-        for category, queries in VIDEO_SEARCHES.items():
-            for query in queries:
-                print("Searching videos:", query)
+        channel_state = load_json_dict(CHANNELS_PATH)
+        for category, channels in CHANNELS.items():
+            for channel in channels:
+                print("Reading channel:", channel["handle"])
                 try:
-                    ids = search_youtube(query)
-                    if ids: video_search_ok = True
-                    for video_id in ids: found.setdefault(video_id, set()).add(category)
+                    note(channel_video_ids(channel["handle"], channel_state),
+                         category, "trusted" if channel["all"] else "channel")
                 except Exception as exc:
-                    print(f"  Search failed ({query}): {exc}")
-                    if YOUTUBE_QUOTA_EXHAUSTED: break
-            if YOUTUBE_QUOTA_EXHAUSTED: break
-            fresh_query = FRESH_SEARCHES.get(category)
-            if fresh_query:
-                print("Searching recent videos:", fresh_query)
-                try:
-                    ids = search_youtube(fresh_query, fresh=True)
-                    if ids: video_search_ok = True
-                    for video_id in ids: found.setdefault(video_id, set()).add(category)
-                except Exception as exc:
-                    print(f"  Recent search failed ({category}): {exc}")
-                if YOUTUBE_QUOTA_EXHAUSTED: break
+                    print(f"  Channel failed ({channel['handle']}): {exc}")
+        write_json_atomic(CHANNELS_PATH, channel_state)
+
+        duration = "long" if TODAY.toordinal() % 2 == 0 else "medium"
+        todo_searches = [(c, q, False) for c, q in pick_searches()]
+        todo_searches += [(c, q, True) for c, q in FRESH_SEARCHES.items()]
+        for category, query, fresh in todo_searches:
+            key = f"{category}|{query}|{'fresh' if fresh else duration}"
+            if key in QUOTA["done"]:
+                print("Already searched today, skipping:", query)
+                continue
+            if YOUTUBE_QUOTA_EXHAUSTED or not can_spend(100):
+                print("Out of safe YouTube budget; remaining searches wait for the next run.")
+                break
+            print("Searching", "recent" if fresh else "videos", ":", query)
+            try:
+                ids = search_youtube(query, fresh=fresh, duration=duration)
+                note(ids, category, "search")
+                if ids:
+                    QUOTA["done"].append(key)
+                    save_quota()
+            except Exception as exc:
+                print(f"  Search failed ({query}): {exc}")
 
     newly_kept_videos = []
     candidates = []
     labels = load_labels()
     fresh_cutoff = (TODAY - datetime.timedelta(days=FRESH_DAYS)).isoformat()
+    known_ids = {v.get("id") for v in existing_videos}
 
-    if found and gemini_available:
+    # Only look up videos we have not judged before (saves quota and Gemini calls).
+    need = [vid for vid in found
+            if vid not in labels or (labels[vid].get("keep") and vid not in known_ids)]
+    print(f"Found {len(found)} videos in total; {len(need)} are new to us.")
+
+    if need:
         try:
-            details = get_details(list(found))
-            for item in details:
+            for item in get_details(need):
                 snippet = item.get("snippet") or {}
                 content_details = item.get("contentDetails") or {}
                 if not snippet or not content_details.get("duration"): continue
                 seconds = duration_to_seconds(content_details["duration"])
-                guess = guess_category(item, found.get(item.get("id"), set()))
+                guess = guess_category(item, found.get(item.get("id"), {}))
                 if seconds < MIN_SECONDS or guess is None: continue
                 candidates.append({
                     "id":item["id"], "title":snippet.get("title", ""),
@@ -778,41 +887,38 @@ def main():
                     "seconds":seconds, "views":int((item.get("statistics") or {}).get("viewCount", 0)),
                     "published":snippet.get("publishedAt", "")[:10], "guess":guess,
                 })
-            # Fair allocation: rank each category separately so Goggins cannot crowd out Longevity.
-            chosen = []
-            for category in ("Goggins", "Longevity"):
-                group = [v for v in candidates if v["guess"] == category]
-                group.sort(key=lambda v: -v["views"])
-                chosen.extend(group[:150])
-                fresh = [v for v in group[150:] if v["published"] >= fresh_cutoff]
-                chosen.extend(fresh[:50])
-            # De-duplicate while preserving order.
-            unique = {}
-            for video in chosen: unique[video["id"]] = video
-            chosen = list(unique.values())
-            print(f"Eligible video candidates: {len(candidates)}; balanced Gemini review: {len(chosen)}.")
+            # Already judged earlier + a fair share of new ones per category (so neither section starves).
+            chosen = [v for v in candidates if v["id"] in labels]
+            if gemini_available:
+                for category in ("Goggins", "Longevity"):
+                    group = sorted((v for v in candidates if v["id"] not in labels and v["guess"] == category),
+                                   key=lambda v: -v["views"])
+                    picks = group[:MAX_NEW_PER_CATEGORY]
+                    picks += [v for v in group[MAX_NEW_PER_CATEGORY:] if v["published"] >= fresh_cutoff][:40]
+                    chosen.extend(picks)
+                    waiting = len(group) - len(picks)
+                    if waiting > 0:
+                        print(f"  {waiting} more {category} videos will be judged on the next run.")
+            print(f"Eligible video candidates: {len(candidates)}; sending to review: {len(chosen)}.")
             if chosen:
-                gemini_ok = judge_all(chosen, labels, judge_videos, VIDEO_BATCH)
-                if gemini_ok:
-                    for video in chosen:
-                        label = labels.get(video["id"])
-                        if not label or not label.get("keep"): continue
-                        category = label.get("cat")
-                        if category not in ("Goggins", "Longevity"):
-                            category = video["guess"]
-                        newly_kept_videos.append({
-                            "id":video["id"], "title":video["title"], "channel":video["channel"],
-                            "seconds":video["seconds"], "views":video["views"], "published":video["published"],
-                            "category":category, "topic":label.get("topic", ""),
-                        })
-                else:
-                    print("Gemini video review incomplete; unjudged videos will not be added.")
+                if gemini_available and any(v["id"] not in labels for v in chosen):
+                    if not judge_all(chosen, labels, judge_videos, VIDEO_BATCH):
+                        print("Gemini video review incomplete; the rest will be judged on the next run.")
+                for video in chosen:
+                    label = labels.get(video["id"])
+                    if not label or not label.get("keep"): continue
+                    category = label.get("cat")
+                    if category not in ("Goggins", "Longevity"):
+                        category = video["guess"]
+                    newly_kept_videos.append({
+                        "id":video["id"], "title":video["title"], "channel":video["channel"],
+                        "seconds":video["seconds"], "views":video["views"], "published":video["published"],
+                        "category":category, "topic":label.get("topic", ""),
+                    })
         except Exception as exc:
             print(f"Video processing failed; existing videos will be retained: {exc}")
     elif YOUTUBE_QUOTA_EXHAUSTED:
         print("YouTube quota exhausted. Skipping video discovery; continuing to research providers.")
-    elif not found:
-        print("No video IDs found. Existing videos will be retained; continuing to research providers.")
 
     videos = merge_by_id(existing_videos, newly_kept_videos)
     videos.sort(key=lambda video: (-int(video.get("views", 0)), video.get("published", "")))
@@ -868,6 +974,7 @@ def main():
         "video_candidates":len(candidates), "paper_candidates":paper_candidates_count,
         "gemini_ok":bool(gemini_available), "youtube_quota_exhausted":bool(YOUTUBE_QUOTA_EXHAUSTED),
         "video_categories":{"Goggins":goggins_count,"Longevity":longevity_count},
+        "youtube_units_used_today":QUOTA["used"], "youtube_quota_day":QUOTA["day"],
     }
     write_json_atomic(status_path, status)
     print("Pipeline completed successfully.")
