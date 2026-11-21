@@ -2,262 +2,288 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GogginsTube</title>
+<meta name="description" content="Goggins, longevity and learn-Russian videos, ranked so only the best come first. Read a summary instead of watching.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0b0b0d">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
-  :root { --bg:#0b0b0d; --card:#17171b; --text:#f2f2f2; --muted:#9a9aa5; --goggins:#ff3b30; --long:#30d158; --tough:#ff9f0a; }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--text); font-family: system-ui, sans-serif; }
-  header { padding:20px 24px 8px; }
-  h1 { margin:0; font-size:28px; letter-spacing:1px; }
-  h1 span { color:var(--goggins); }
-  .sub { color:var(--muted); margin:4px 0 0; font-size:14px; }
-  .controls { display:flex; flex-wrap:wrap; gap:8px; padding:12px 24px; align-items:center; }
-  .controls button, .controls select, .controls input {
-    background:var(--card); color:var(--text); border:1px solid #2a2a31; border-radius:999px;
-    padding:8px 16px; font-size:14px; cursor:pointer; }
-  .controls button.active { background:var(--text); color:var(--bg); font-weight:600; }
-  .controls input { cursor:text; min-width:180px; }
-  .controls select:disabled, .controls button:disabled { opacity:.35; cursor:default; }
+  :root {
+    color-scheme: dark;
+    --bg:#0b0b0d; --card:#17171b; --card2:#1f1f25; --line:#2a2a31; --text:#f2f2f2; --muted:#9a9aa5;
+    --goggins:#ff3b30; --long:#30d158; --ru:#4da3ff; --gold:#ffd60a; --accent:#f2f2f2;
+    --radius:12px; --gutter:clamp(14px, 3vw, 28px);
+  }
+  * { box-sizing:border-box; }
+  html { scroll-padding-top:64px; -webkit-text-size-adjust:100%; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+         -webkit-font-smoothing:antialiased; padding-bottom:env(safe-area-inset-bottom); }
+  body.noscroll { overflow:hidden; }
+  button, input, select { font:inherit; color:inherit; }
+  button { cursor:pointer; }
+  :focus-visible { outline:2px solid var(--ru); outline-offset:2px; }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  .muted { color:var(--muted); }
 
-  #grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px; padding:8px 24px 40px; }
+  header.hero { padding:20px var(--gutter) 6px; }
+  h1 { margin:0; font-size:28px; letter-spacing:1px; line-height:1.1; }
+  h1 span { color:var(--goggins); }
+  .sub { color:var(--muted); margin:4px 0 0; font-size:14px; min-height:1.4em; }
+
+  nav.tabs { position:sticky; top:0; z-index:5; display:flex; gap:6px; padding:10px var(--gutter);
+             background:rgba(11,11,13,.88); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+             border-bottom:1px solid var(--line); overflow-x:auto; scrollbar-width:none; }
+  nav.tabs::-webkit-scrollbar { display:none; }
+  .tab { flex:none; background:transparent; border:1px solid transparent; border-radius:999px; padding:8px 14px;
+         color:var(--muted); font-weight:600; white-space:nowrap; }
+  .tab:hover { color:var(--text); }
+  .tab[aria-selected="true"] { background:var(--text); color:var(--bg); }
+  .tab .n { font-weight:500; opacity:.65; margin-left:5px; font-size:12px; }
+  .tab[data-tab="Russian"][aria-selected="true"] { background:var(--ru); color:#001a33; }
+
+  .controls { display:flex; flex-wrap:wrap; gap:8px; padding:12px var(--gutter) 4px; align-items:center; }
+  .controls input, .controls select, .pill {
+    background:var(--card); border:1px solid var(--line); border-radius:999px; padding:8px 16px; min-height:38px; }
+  .controls input { min-width:min(100%, 220px); flex:1 1 200px; max-width:340px; }
+  .pill { font-weight:500; }
+  .pill[aria-pressed="true"] { background:var(--text); color:var(--bg); font-weight:600; }
+  .pill:disabled, .controls select:disabled { opacity:.35; cursor:default; }
+  .rubar { display:flex; flex-wrap:wrap; gap:8px 16px; padding:6px var(--gutter) 0; align-items:center; }
+  .rubar[hidden] { display:none; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:5px 11px; font-size:13px; font-weight:600; }
+  .chip[aria-pressed="true"] { background:var(--ru); border-color:var(--ru); color:#001a33; }
+  .chip small { opacity:.65; font-weight:500; margin-left:3px; }
+  .info { padding:8px var(--gutter) 0; color:var(--muted); font-size:13px; min-height:1.6em; }
+  .info button { background:none; border:0; padding:0; color:var(--ru); text-decoration:underline; font-size:13px; }
+  #note { padding:0 var(--gutter) 4px; color:var(--muted); font-size:13px; max-width:900px; }
+  #note[hidden] { display:none; }
+
+  #grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px; padding:10px var(--gutter) 24px; }
   #grid.papers { grid-template-columns:1fr; max-width:900px; }
-  .card { background:var(--card); border-radius:12px; overflow:hidden; cursor:pointer; position:relative; transition:transform .15s; }
-  .card:hover { transform:translateY(-3px); }
-  .card img { width:100%; display:block; aspect-ratio:16/9; object-fit:cover; }
-  .card .info { padding:10px 12px 12px; }
-  .card .title { font-size:14px; font-weight:600; line-height:1.3; margin:0 0 6px;
-    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-  .meta { font-size:12px; color:var(--muted); }
-  .badge { position:absolute; top:8px; left:8px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; color:#000; }
+  .head { grid-column:1 / -1; margin:10px 0 0; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .head:first-child { margin-top:0; }
+
+  .card { background:var(--card); border-radius:var(--radius); overflow:hidden; position:relative; display:flex; flex-direction:column;
+          transition:transform .15s, box-shadow .15s; content-visibility:auto; contain-intrinsic-size:auto 290px; }
+  @media (hover:hover) { .card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.45); } }
+  .media { position:relative; display:block; width:100%; padding:0; border:0; background:#000; aspect-ratio:16/9; }
+  .media img { width:100%; height:100%; object-fit:cover; display:block; }
+  .media img.broken { visibility:hidden; }
+  .card.watched .media img, .card.watched .body { opacity:.45; }
+  .badge, .newtag, .time, .star, .count { position:absolute; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; pointer-events:none; }
+  .badge { top:8px; left:8px; color:#000; }
   .badge.Goggins { background:var(--goggins); color:#fff; }
   .badge.Longevity { background:var(--long); }
-  .badge.Toughness { background:var(--tough); }
-  .new { position:absolute; top:8px; right:8px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; background:#fff; color:#000; }
-  .time { position:absolute; right:8px; top:calc(56.25% - 28px); background:rgba(0,0,0,.8); font-size:12px; padding:2px 6px; border-radius:4px; }
-  .card.watched { opacity:.45; }
+  .badge.Russian { background:var(--ru); }
+  .badge.Playlist { background:#fff; }
+  .newtag { top:8px; right:8px; background:#fff; color:#000; }
+  .time { right:8px; bottom:8px; background:rgba(0,0,0,.82); color:#fff; font-weight:600; padding:2px 6px; border-radius:4px; font-size:12px; }
+  .star { left:8px; bottom:8px; background:rgba(0,0,0,.82); color:var(--gold); padding:2px 7px; }
+  .count { right:0; top:0; bottom:0; width:34%; border-radius:0; background:rgba(0,0,0,.78); color:#fff; display:flex; flex-direction:column;
+           align-items:center; justify-content:center; font-size:16px; gap:2px; }
+  .count small { font-size:11px; font-weight:600; opacity:.8; }
+  .lvl { display:inline-block; font-size:11px; font-weight:800; padding:2px 7px; border-radius:6px; background:var(--ru); color:#001a33; margin-right:6px; }
+  .badge.lvl { margin:0; padding:3px 8px; }
+  .body { padding:10px 12px 12px; display:flex; flex-direction:column; gap:6px; flex:1; }
+  .title { margin:0; font-size:14px; font-weight:600; line-height:1.3; }
+  .title button { background:none; border:0; padding:0; text-align:left; font:inherit; color:inherit;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .title button:hover { text-decoration:underline; }
+  .meta { font-size:12px; color:var(--muted); }
+  .acts { display:flex; gap:6px; margin-top:auto; padding-top:4px; }
+  .act { background:var(--card2); border:1px solid var(--line); border-radius:8px; padding:5px 10px; font-size:12px; font-weight:600; color:var(--text); }
+  .act:hover { border-color:#4a4a55; }
+  .act.sum { background:#16263a; border-color:#23466f; color:#a9d2ff; }
+  .act.save[aria-pressed="true"] { background:#3a1215; border-color:#6b1d22; color:#ff9a95; }
+  .skeleton { aspect-ratio:16/11; border-radius:var(--radius);
+    background:linear-gradient(100deg,var(--card) 30%,var(--card2) 50%,var(--card) 70%); background-size:200% 100%; animation:sh 1.3s infinite linear; }
+  @keyframes sh { to { background-position:-200% 0; } }
 
-  .paper { background:var(--card); border-radius:12px; padding:16px 18px; }
+  .paper { background:var(--card); border-radius:var(--radius); padding:16px 18px; }
   .paper .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
   .tag { font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; color:#000; }
-  .tag.Longevity { background:var(--long); }
-  .tag.Toughness { background:var(--tough); }
-  .tag.Math { background:#64d2ff; }
-  .tag.AI { background:#bf5af2; color:#fff; }
-  .tag.Proofs { background:#ffd60a; }
-  .paper .links { display:flex; gap:16px; flex-wrap:wrap; }
+  .tag.Math { background:#64d2ff; } .tag.AI { background:#bf5af2; color:#fff; } .tag.Proofs { background:#ffd60a; }
   .tag.chip { background:#2a2a31; color:var(--text); font-weight:600; }
-  .tag.warn { background:#3a2f12; color:#ffd479; font-weight:600; }
-  .tag.new { background:#fff; color:#000; position:static; }
+  .tag.new { background:#fff; color:#000; }
   .paper h3 { margin:0 0 6px; font-size:16px; line-height:1.35; }
   .paper .sum { margin:10px 0; font-size:14px; line-height:1.5; }
+  .paper .links { display:flex; gap:16px; flex-wrap:wrap; }
   .paper a { color:var(--long); font-size:14px; font-weight:600; text-decoration:none; }
   .paper a:hover { text-decoration:underline; }
-  #note { display:none; padding:0 24px 8px; color:var(--muted); font-size:13px; max-width:900px; }
 
-  #modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.92); z-index:10; align-items:center; justify-content:center; flex-direction:column; padding:16px; }
-  #modal.open { display:flex; }
-  #player { width:min(960px, 100%); aspect-ratio:16/9; border:0; border-radius:12px; }
-  #modalTitle { max-width:960px; margin:12px 0; font-size:16px; text-align:center; }
-  #close { background:var(--card); color:var(--text); border:0; border-radius:999px; padding:10px 22px; font-size:15px; cursor:pointer; }
-  #empty { padding:40px 24px; color:var(--muted); display:none; }
+  #more { display:none; margin:0 auto 40px; }
+  #more.show { display:block; }
+  #empty { padding:40px var(--gutter); color:var(--muted); max-width:640px; }
+  #empty[hidden] { display:none; }
+  #empty h2 { color:var(--text); margin:0 0 6px; font-size:18px; }
+
+  /* ---------- modal ---------- */
+  .modal { position:fixed; inset:0; z-index:20; background:rgba(0,0,0,.9); display:none; align-items:center; justify-content:center; padding:12px; }
+  .modal.open { display:flex; }
+  .sheet { width:min(1280px, 100%); max-height:100%; display:flex; flex-direction:column; background:#101014; border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+  .mhead { display:flex; align-items:flex-start; gap:12px; padding:14px 16px 10px; }
+  .mhead h2 { margin:0; font-size:16px; line-height:1.35; flex:1; }
+  .mhead .sub2 { font-size:12px; color:var(--muted); margin-top:2px; font-weight:400; display:block; }
+  .x { background:var(--card); border:1px solid var(--line); border-radius:999px; width:36px; height:36px; flex:none; }
+  .mtabs { display:none; gap:6px; padding:0 16px 8px; }
+  .mbody { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr); gap:16px; padding:0 16px 16px; min-height:0; flex:1; overflow:hidden; }
+  .pane.watch { min-width:0; overflow-y:auto; }
+  .pane.sum { overflow-y:auto; min-height:0; padding-right:4px; }
+  .stage { aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden; position:relative; }
+  .stage iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .poster { position:absolute; inset:0; width:100%; height:100%; border:0; padding:0; background:#000; }
+  .poster img { width:100%; height:100%; object-fit:cover; opacity:.8; }
+  .poster .play { position:absolute; inset:0; margin:auto; width:72px; height:72px; border-radius:50%; background:rgba(255,255,255,.92); color:#000; font-size:28px; display:flex; align-items:center; justify-content:center; padding-left:5px; }
+  .mlinks { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .mlinks a, .mlinks button { text-decoration:none; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:7px 14px; font-size:13px; font-weight:600; color:var(--text); }
+  .mlinks button[aria-pressed="true"] { background:#3a1215; border-color:#6b1d22; color:#ff9a95; }
+  .pane.sum h3 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:18px 0 6px; }
+  .pane.sum h3:first-of-type { margin-top:10px; }
+  .tldr { font-size:16px; line-height:1.55; margin:0; }
+  .pane.sum ul { margin:0; padding-left:20px; } .pane.sum li { margin:0 0 7px; line-height:1.5; }
+  .src { display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:12px; color:var(--muted); }
+  .src .ai { background:#16263a; color:#a9d2ff; border-radius:6px; padding:2px 8px; font-weight:700; }
+  .readtime { margin:8px 0 0; font-size:13px; color:var(--long); font-weight:600; }
+  .moments { list-style:none; padding:0 !important; margin:0; }
+  .moments li { display:flex; gap:10px; align-items:baseline; }
+  .ts { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:1px 8px; font-size:12px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--ru); flex:none; }
+  .ts:hover { border-color:var(--ru); }
+  .vocab { display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:0; }
+  .vocab dt { font-weight:700; } .vocab dd { margin:0; color:var(--muted); }
+  .fine { font-size:12px; color:var(--muted); margin-top:18px; }
+
+  @media (max-width:899px) {
+    .modal { padding:0; align-items:flex-end; }
+    .sheet { border-radius:16px 16px 0 0; max-height:100%; height:100%; border-width:0; }
+    .mtabs { display:flex; }
+    .mbody { grid-template-columns:1fr; overflow:hidden; }
+    .modal[data-pane="watch"] .pane.sum, .modal[data-pane="sum"] .pane.watch { display:none; }
+    .pane.sum { padding-bottom:24px; }
+  }
+  @media (max-width:520px) {
+    #grid { grid-template-columns:1fr; gap:14px; }
+    h1 { font-size:24px; }
+    .controls select { flex:1; }
+  }
+  @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } html { scroll-behavior:auto; } }
 </style>
 </head>
 <body>
 
-<header>
+<header class="hero">
   <h1>GOGGINS<span>TUBE</span></h1>
-  <p class="sub" id="status">Stay hard. Live long.</p>
+  <p class="sub" id="status">Stay hard. Live long. Learn Russian.</p>
 </header>
 
+<nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
+
 <div class="controls">
-  <button class="tab active" data-cat="All">All</button>
-  <button class="tab" data-cat="Goggins">Goggins</button>
-  <button class="tab" data-cat="Longevity">Longevity</button>
-  <button class="tab" data-cat="Research">Math &amp; AI</button>
-  <input id="search" placeholder="Search...">
-  <select id="sort">
-    <option value="newest">Newest</option>
-    <option value="views">Most viewed</option>
-    <option value="shortest">Shortest</option>
-    <option value="longest">Longest</option>
-  </select>
-  <button id="hideWatched">Hide watched</button>
+  <input id="search" type="search" placeholder="Search…  (press / )" aria-label="Search" autocomplete="off">
+  <select id="sort" aria-label="Sort by"></select>
+  <button class="pill" id="picks" aria-pressed="true" title="Only show the highest-ranked videos">★ Top picks</button>
+  <button class="pill" id="hideWatched" aria-pressed="false">Hide watched</button>
 </div>
 
-<div id="note">Open-access math and AI papers from arXiv, picked for substance. arXiv papers are preprints, so they are not peer reviewed (a venue badge means the authors say it was accepted there). Summaries are written by AI from each abstract and can be wrong, so read the paper itself.</div>
-<div id="grid"></div>
-<div id="empty">Nothing in this section yet. The daily update will fill it, or try a different search.</div>
+<div class="rubar" id="ruBar" hidden>
+  <div class="chips" id="levels" role="group" aria-label="Level"></div>
+  <div class="chips" id="rtype" role="group" aria-label="Type">
+    <button class="chip" data-rt="all" aria-pressed="true">Everything</button>
+    <button class="chip" data-rt="playlists" aria-pressed="false">Playlists</button>
+    <button class="chip" data-rt="videos" aria-pressed="false">Videos</button>
+  </div>
+</div>
 
-<div id="modal">
-  <iframe id="player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-  <p id="modalTitle"></p>
-  <button id="close">Close</button>
+<div class="info" id="resultInfo" aria-live="polite"></div>
+<div id="note" hidden>Open-access math and AI papers from arXiv, picked for substance. arXiv papers are preprints, so they are not peer reviewed (a venue badge means the authors say it was accepted there). Summaries are written by AI from each abstract and can be wrong, so read the paper itself.</div>
+<main id="grid"></main>
+<button class="pill" id="more">Show more</button>
+<div id="empty" hidden></div>
+<noscript><p style="padding:24px">GogginsTube needs JavaScript to show the videos.</p></noscript>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" data-pane="watch">
+  <div class="sheet">
+    <div class="mhead">
+      <h2 id="mTitle"></h2>
+      <button class="x" id="mClose" aria-label="Close">✕</button>
+    </div>
+    <div class="mtabs" role="tablist">
+      <button class="pill" id="mtWatch" aria-pressed="true">Watch</button>
+      <button class="pill" id="mtSum" aria-pressed="false">Summary</button>
+    </div>
+    <div class="mbody">
+      <section class="pane watch">
+        <div class="stage" id="stage"></div>
+        <div class="mlinks" id="mLinks"></div>
+      </section>
+      <section class="pane sum" id="paneSum" aria-label="Summary"></section>
+    </div>
+  </div>
 </div>
 
 <script>
-let videos = [];
-let papers = [];
-let category = "All";
-let hideWatched = false;
+(() => {
+"use strict";
 
-// "Watched" list is saved in your browser only. try/catch in case storage is blocked.
-let watched = new Set();
-try { watched = new Set(JSON.parse(localStorage.getItem("watched") || "[]")); } catch (e) {}
-function saveWatched() {
-  try { localStorage.setItem("watched", JSON.stringify([...watched])); } catch (e) {}
-}
+// ---------- small helpers ----------
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const ESC = { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" };
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ESC[c]);
+const ID_RE = /^[\w-]{6,64}$/;
+const safeId = id => ID_RE.test(id || "") ? id : "";
+const safeImg = u => /^https:\/\/i\d?\.ytimg\.com\//.test(u || "") ? u : "";
+const safeUrl = u => /^https:\/\//.test(u || "") ? u : "";
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+};
+const fetchJSON = (url, fallback) =>
+  fetch(url, { cache: "no-cache" }).then(r => { if (!r.ok) throw 0; return r.json(); }).catch(() => fallback);
 
+const LEVELS = ["A1", "A2", "B1", "B2", "C1"];
+const LEVEL_ORDER = l => { const i = LEVELS.indexOf(l); return i < 0 ? 9 : i; };
+const TABS = [["All","All"], ["Goggins","Goggins"], ["Longevity","Longevity"], ["Russian","Russian"], ["Research","Math & AI"], ["Saved","Saved"]];
+const SORTS = {
+  best: "Best first", level: "Beginner → advanced", newest: "Newest", views: "Most viewed", shortest: "Shortest", longest: "Longest",
+};
+const PAGE = 48;
+
+// ---------- state ----------
+const prefs = Object.assign({ tab:"All", sorts:{}, picks:true, hideWatched:false, level:"", rtype:"all" }, store.get("gt.prefs", {}));
+const S = {
+  videos: [], playlists: [], papers: [], summaries: null, sumPromise: null,
+  q: "", watched: new Set(store.get("watched", [])), saved: new Set(store.get("saved", [])),
+  hasPicks: false, view: [], shown: 0, loaded: false, modalId: null, lastFocus: null, dirty: false,
+};
+const savePrefs = () => store.set("gt.prefs", prefs);
+const saveWatched = () => store.set("watched", [...S.watched]);
+const saveSaved = () => store.set("saved", [...S.saved]);
+
+// ---------- formatting ----------
 function fmtTime(s) {
   const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
-  const mm = h ? String(m).padStart(2, "0") : m;
-  return (h ? h + ":" : "") + mm + ":" + String(sec).padStart(2, "0");
+  return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(sec).padStart(2, "0");
 }
+function fmtLen(s) { const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60); return h ? `${h}h ${m}m` : `${m} min`; }
 function fmtViews(n) {
   if (n >= 1e6) return (n / 1e6).toFixed(1) + "M views";
   if (n >= 1e3) return Math.round(n / 1e3) + "K views";
   return n + " views";
 }
-function daysAgo(dateStr) {
-  const d = new Date(dateStr);
-  if (isNaN(d)) return null;
-  return Math.max(0, Math.floor((Date.now() - d.getTime()) / 86400000));
-}
-function fmtAgo(dateStr) {
-  const n = daysAgo(dateStr);
+function daysAgo(d) { const t = new Date(d); return isNaN(t) ? null : Math.max(0, Math.floor((Date.now() - t.getTime()) / 864e5)); }
+function fmtAgo(d) {
+  const n = daysAgo(d);
   if (n === null) return "";
   if (n === 0) return "today";
   if (n < 30) return n + "d ago";
   if (n < 365) return Math.floor(n / 30) + "mo ago";
   return Math.floor(n / 365) + "y ago";
 }
-function isNew(dateStr) { const n = daysAgo(dateStr); return n !== null && n <= 14; }
-
-function render() {
-  const q = document.getElementById("search").value.toLowerCase();
-  const sortEl = document.getElementById("sort");
-  const grid = document.getElementById("grid");
-  const research = category === "Research";
-
-  sortEl.disabled = research;                 // papers are always newest first
-  document.getElementById("hideWatched").disabled = research;
-  document.getElementById("note").style.display = research ? "block" : "none";
-  grid.className = research ? "papers" : "";
-  grid.innerHTML = "";
-
-  const list = research ? renderPapers(q) : renderVideos(q, sortEl.value);
-  document.getElementById("empty").style.display = list ? "none" : "block";
-}
-
-function renderVideos(q, sort) {
-  let list = videos.filter(v =>
-    (category === "All" || v.category === category) &&
-    ((v.title + " " + v.channel + " " + (v.topic || "")).toLowerCase().includes(q)) &&
-    !(hideWatched && watched.has(v.id)));
-
-  const sorters = {
-    views: (a, b) => b.views - a.views,
-    newest: (a, b) => (b.published || "").localeCompare(a.published || ""),
-    shortest: (a, b) => a.seconds - b.seconds,
-    longest: (a, b) => b.seconds - a.seconds,
-  };
-  list.sort(sorters[sort]);
-
-  const grid = document.getElementById("grid");
-  for (const v of list) {
-    const card = document.createElement("div");
-    card.className = "card" + (watched.has(v.id) ? " watched" : "");
-    card.innerHTML = `
-      <img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg" alt="">
-      <span class="badge ${v.category}">${v.category}</span>
-      ${isNew(v.published) ? '<span class="new">NEW</span>' : ""}
-      <span class="time">${fmtTime(v.seconds)}</span>
-      <div class="info">
-        <p class="title"></p>
-        <div class="meta"></div>
-      </div>`;
-    // textContent (not innerHTML) so weird characters in titles can't break the page
-    card.querySelector(".title").textContent = v.title;
-    card.querySelector(".meta").textContent =
-      `${v.channel} · ${fmtViews(v.views)} · ${fmtAgo(v.published)}` + (v.topic ? ` · ${v.topic}` : "");
-    card.onclick = () => openVideo(v);
-    grid.appendChild(card);
-  }
-  return list.length;
-}
-
-function renderPapers(q) {
-  const list = papers
-    .filter(p => (p.title + " " + p.journal + " " + p.summary + " " + p.authors).toLowerCase().includes(q))
-    .sort((a, b) => b.date.localeCompare(a.date));
-
-  const grid = document.getElementById("grid");
-  for (const p of list) {
-    const el = document.createElement("div");
-    el.className = "paper";
-    el.innerHTML = `
-      <div class="tags"></div>
-      <h3></h3>
-      <div class="meta"></div>
-      <p class="sum"></p>
-      <div class="links"></div>`;
-    const tags = el.querySelector(".tags");
-    const addTag = (text, cls) => { const t = document.createElement("span"); t.className = "tag " + cls; t.textContent = text; tags.appendChild(t); };
-    addTag(p.category, p.category);
-    if (p.kind) addTag(p.kind, "chip");
-    if (p.level) addTag(p.level, "chip");
-    if (isNew(p.date)) addTag("NEW", "new");
-
-    el.querySelector("h3").textContent = p.title;
-    el.querySelector(".meta").textContent = [p.journal, p.authors, p.date].filter(Boolean).join(" · ");
-    el.querySelector(".sum").textContent = "AI summary: " + p.summary;
-    const links = el.querySelector(".links");
-    const addLink = (text, url) => {
-      if (!/^https:\/\//.test(url || "")) return;          // only ever link to https pages
-      const a = document.createElement("a");
-      a.textContent = text; a.href = url; a.target = "_blank"; a.rel = "noopener";
-      links.appendChild(a);
-    };
-    addLink("Abstract ↗", p.url);
-    addLink("PDF ↗", p.pdf);
-    addLink("Code ↗", p.code);
-    grid.appendChild(el);
-  }
-  return list.length;
-}
-
-function openVideo(v) {
-  document.getElementById("player").src = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
-  document.getElementById("modalTitle").textContent = v.title;
-  document.getElementById("modal").classList.add("open");
-  watched.add(v.id);
-  saveWatched();
-}
-function closeVideo() {
-  document.getElementById("player").src = "";      // stops the video
-  document.getElementById("modal").classList.remove("open");
-  render();
-}
-
-document.getElementById("close").onclick = closeVideo;
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeVideo(); });
-document.getElementById("search").oninput = render;
-document.getElementById("sort").onchange = render;
-document.getElementById("hideWatched").onclick = e => {
-  hideWatched = !hideWatched;
-  e.target.classList.toggle("active", hideWatched);
-  render();
-};
-document.querySelectorAll(".tab").forEach(btn => btn.onclick = () => {
-  category = btn.dataset.cat;
-  document.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b === btn));
-  render();
-});
-
+const isNew = d => { const n = daysAgo(d); return n !== null && n <= 14; };
 function fmtUpdated(iso) {
   const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
   if (isNaN(m)) return "";
@@ -265,20 +291,472 @@ function fmtUpdated(iso) {
   if (m < 1440) return Math.floor(m / 60) + "h ago";
   return Math.floor(m / 1440) + "d ago";
 }
-// "Updated 3h ago" line (optional: the site works without status.json)
-fetch("status.json").then(r => r.json()).then(s => {
-  document.getElementById("status").textContent =
-    `Stay hard. Live long. · Updated ${fmtUpdated(s.updated)} · ${s.new_videos} new videos · ${s.papers} papers`;
-}).catch(() => {});
 
-// Lets the site install as an app on your phone
+// ---------- data ----------
+function prepare() {
+  S.hasPicks = S.videos.some(v => "pick" in v);
+  for (const v of S.videos) v._hay = `${v.title} ${v.channel} ${v.topic || ""} ${v.level || ""} ${v.category}`.toLowerCase();
+  for (const p of S.playlists) { p.category = "Russian"; p._hay = `${p.title} ${p.channel} ${p.topic || ""} ${p.level || ""} playlist course`.toLowerCase(); }
+  for (const p of S.papers) p._hay = `${p.title} ${p.journal} ${p.summary} ${p.authors}`.toLowerCase();
+}
+const byId = id => S.videos.find(v => v.id === id) || S.playlists.find(p => p.id === id);
+
+// ---------- building the list ----------
+const sorters = {
+  best: (a, b) => (b.score ?? 0) - (a.score ?? 0) || (b.views ?? 0) - (a.views ?? 0),
+  level: (a, b) => LEVEL_ORDER(a.level) - LEVEL_ORDER(b.level) || (b.score ?? b.q ?? 0) - (a.score ?? a.q ?? 0),
+  newest: (a, b) => (b.published || "").localeCompare(a.published || ""),
+  views: (a, b) => (b.views ?? 0) - (a.views ?? 0),
+  shortest: (a, b) => a.seconds - b.seconds,
+  longest: (a, b) => b.seconds - a.seconds,
+};
+const currentSort = () => prefs.sorts[prefs.tab] || (prefs.tab === "Russian" ? "level" : "best");
+const terms = () => S.q.toLowerCase().split(/\s+/).filter(Boolean);
+const hit = (item, ts) => ts.every(t => item._hay.includes(t));
+
+function passes(v, ts, opts = {}) {
+  if (!hit(v, ts)) return false;
+  if (opts.hideWatched && S.watched.has(v.id)) return false;
+  if (opts.picks && S.hasPicks && !v.pick) return false;
+  return true;
+}
+
+function listVideos(tab, ts, opts) {
+  let list = S.videos.filter(v => (tab === "All" || v.category === tab) && passes(v, ts, opts));
+  if (tab === "Russian" && prefs.level) list = list.filter(v => v.level === prefs.level);
+  return list;
+}
+function listPlaylists(ts, opts) {
+  let list = S.playlists.filter(p => hit(p, ts) && (!opts.picks || (p.q ?? 5) >= 3));
+  if (prefs.level) list = list.filter(p => p.level === prefs.level);
+  return list;
+}
+
+function buildView() {
+  const ts = terms();
+  const opts = { picks: prefs.picks, hideWatched: prefs.hideWatched };
+  const tab = prefs.tab, sort = sorters[currentSort()] || sorters.best;
+  const entries = [];
+  let total = 0, hidden = 0;   // hidden = how many the "Top picks" filter removed
+
+  if (tab === "Research") {
+    const list = S.papers.filter(p => hit(p, ts)).sort((a, b) => b.date.localeCompare(a.date));
+    list.forEach(p => entries.push({ t: "paper", d: p }));
+    return { entries, total: list.length, hidden: 0 };
+  }
+  if (tab === "Saved") {
+    const all = { picks: false, hideWatched: prefs.hideWatched };
+    const vs = S.videos.filter(v => S.saved.has(v.id) && passes(v, ts, all)).sort(sort);
+    const ps = S.playlists.filter(p => S.saved.has(p.id) && hit(p, ts));
+    ps.forEach(p => entries.push({ t: "playlist", d: p }));
+    vs.forEach(v => entries.push({ t: "video", d: v }));
+    return { entries, total: entries.length, hidden: 0 };
+  }
+
+  const vids = listVideos(tab, ts, opts);
+  vids.sort(sort);
+  if (opts.picks && S.hasPicks) hidden = listVideos(tab, ts, { ...opts, picks: false }).length - vids.length;
+
+  if (tab === "Russian") {
+    const showP = prefs.rtype !== "videos", showV = prefs.rtype !== "playlists";
+    const pls = showP ? listPlaylists(ts, opts).sort((a, b) => LEVEL_ORDER(a.level) - LEVEL_ORDER(b.level) || (b.q ?? 0) - (a.q ?? 0) || b.count - a.count) : [];
+    if (pls.length) { entries.push({ t: "head", d: `Playlists · ${pls.length}` }); pls.forEach(p => entries.push({ t: "playlist", d: p })); }
+    if (showV && vids.length) {
+      if (pls.length) entries.push({ t: "head", d: `Videos · ${vids.length}` });
+      vids.forEach(v => entries.push({ t: "video", d: v }));
+    }
+    total = pls.length + (showV ? vids.length : 0);
+  } else {
+    vids.forEach(v => entries.push({ t: "video", d: v }));
+    total = vids.length;
+  }
+  return { entries, total, hidden };
+}
+
+// ---------- rendering ----------
+function videoCard(v) {
+  const id = safeId(v.id);
+  const watched = S.watched.has(id), saved = S.saved.has(id);
+  const russian = v.category === "Russian";
+  const badge = russian && v.level ? `<span class="badge lvl">${esc(v.level === "Mixed" ? "All levels" : v.level)}</span>`
+                                   : `<span class="badge ${esc(v.category)}">${esc(v.category)}</span>`;
+  const sum = v.s ? `<button class="act sum" data-act="summary">${v.s === 2 ? "Summary" : "Outline"}</button>` : "";
+  const meta = `${esc(v.channel)} · ${fmtViews(v.views || 0)} · ${esc(fmtAgo(v.published))}` + (v.topic ? ` · ${esc(v.topic)}` : "");
+  return `<article class="card${watched ? " watched" : ""}" data-id="${id}" data-type="video">
+    <button class="media" data-act="play" aria-label="Play: ${esc(v.title)}">
+      <img loading="lazy" decoding="async" width="320" height="180" src="https://i.ytimg.com/vi/${id}/mqdefault.jpg" alt="">
+      ${badge}${isNew(v.published) ? '<span class="newtag">NEW</span>' : ""}
+      ${v.pick && !prefs.picks ? '<span class="star" title="Top pick">★</span>' : ""}
+      <span class="time">${fmtTime(v.seconds || 0)}</span>
+    </button>
+    <div class="body">
+      <h3 class="title"><button data-act="play">${esc(v.title)}</button></h3>
+      <div class="meta">${meta}</div>
+      <div class="acts">${sum}<button class="act save" data-act="save" aria-pressed="${saved}">${saved ? "♥ Saved" : "♡ Save"}</button></div>
+    </div></article>`;
+}
+
+function playlistCard(p) {
+  const id = safeId(p.id), saved = S.saved.has(id), img = safeImg(p.thumb);
+  return `<article class="card" data-id="${id}" data-type="playlist">
+    <button class="media" data-act="play" aria-label="Open playlist: ${esc(p.title)}">
+      ${img ? `<img loading="lazy" decoding="async" width="320" height="180" src="${esc(img)}" alt="">` : ""}
+      <span class="badge lvl">${esc(p.level === "Mixed" || !p.level ? "All levels" : p.level)}</span>
+      <span class="count">▶ ${p.count}<small>videos</small></span>
+    </button>
+    <div class="body">
+      <h3 class="title"><button data-act="play">${esc(p.title)}</button></h3>
+      <div class="meta">Playlist · ${esc(p.channel)}${p.topic ? " · " + esc(p.topic) : ""}</div>
+      <div class="acts"><button class="act save" data-act="save" aria-pressed="${saved}">${saved ? "♥ Saved" : "♡ Save"}</button></div>
+    </div></article>`;
+}
+
+function paperEl(p) {
+  const el = document.createElement("article");
+  el.className = "paper";
+  const links = [["Abstract ↗", p.url], ["PDF ↗", p.pdf], ["Code ↗", p.code]]
+    .filter(([, u]) => safeUrl(u)).map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`).join("");
+  el.innerHTML = `<div class="tags"><span class="tag ${esc(p.category)}">${esc(p.category)}</span>
+      ${p.kind ? `<span class="tag chip">${esc(p.kind)}</span>` : ""}${p.level ? `<span class="tag chip">${esc(p.level)}</span>` : ""}
+      ${isNew(p.date) ? '<span class="tag new">NEW</span>' : ""}</div>
+    <h3>${esc(p.title)}</h3>
+    <div class="meta">${esc([p.journal, p.authors, p.date].filter(Boolean).join(" · "))}</div>
+    <p class="sum">AI summary: ${esc(p.summary)}</p><div class="links">${links}</div>`;
+  return el;
+}
+
+function renderChunk() {
+  const grid = $("#grid");
+  const end = Math.min(S.view.length, S.shown + PAGE);
+  const frag = document.createDocumentFragment();
+  const tpl = document.createElement("template");
+  let html = "";
+  for (let i = S.shown; i < end; i++) {
+    const e = S.view[i];
+    if (e.t === "video") html += videoCard(e.d);
+    else if (e.t === "playlist") html += playlistCard(e.d);
+    else if (e.t === "head") html += `<h2 class="head">${esc(e.d)}</h2>`;
+    else if (e.t === "paper") frag.appendChild(paperEl(e.d));
+  }
+  tpl.innerHTML = html;
+  frag.appendChild(tpl.content);
+  grid.appendChild(frag);
+  S.shown = end;
+  $("#more").classList.toggle("show", S.shown < S.view.length);
+}
+
+function emptyMessage() {
+  const tab = prefs.tab;
+  if (S.q) return ["No matches", "Try different words, or clear the search."];
+  if (tab === "Saved") return ["Nothing saved yet", "Tap “♡ Save” on any video or playlist and it will show up here."];
+  if (tab === "Russian" && !S.videos.some(v => v.category === "Russian") && !S.playlists.length)
+    return ["The Russian section fills on the next update", "The daily update finds learn-Russian videos and playlists from A1 to C1. Run the “Update GogginsTube” workflow once and refresh."];
+  if (prefs.picks && S.hasPicks) return ["No top picks here", "Switch off “★ Top picks” to see everything in this section."];
+  return ["Nothing here yet", "The daily update will fill this section."];
+}
+
+function render() {
+  const tab = prefs.tab, research = tab === "Research", saved = tab === "Saved", russian = tab === "Russian";
+  // tabs
+  $$(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
+  // controls
+  const sortEl = $("#sort");
+  const opts = russian ? ["level", "best", "newest", "views", "shortest", "longest"] : ["best", "newest", "views", "shortest", "longest"];
+  if (sortEl.dataset.tab !== tab) {
+    sortEl.innerHTML = opts.map(k => `<option value="${k}">${SORTS[k]}</option>`).join("");
+    sortEl.dataset.tab = tab;
+  }
+  sortEl.value = currentSort();
+  sortEl.disabled = research;
+  const picksBtn = $("#picks");
+  picksBtn.setAttribute("aria-pressed", prefs.picks);
+  picksBtn.disabled = research || saved || !S.hasPicks;
+  $("#hideWatched").setAttribute("aria-pressed", prefs.hideWatched);
+  $("#hideWatched").disabled = research;
+  $("#note").hidden = !research;
+  $("#ruBar").hidden = !russian;
+  if (russian) renderLevels();
+
+  const view = buildView();
+  S.view = view.entries; S.shown = 0;
+  const grid = $("#grid");
+  grid.className = research ? "papers" : "";
+  grid.textContent = "";
+  if (!S.loaded) grid.innerHTML = '<div class="skeleton"></div>'.repeat(8);
+  else renderChunk();
+
+  const empty = $("#empty");
+  if (!view.entries.length && S.loaded) {
+    const [h, p] = emptyMessage();
+    empty.innerHTML = `<h2>${esc(h)}</h2><p>${esc(p)}</p>`;
+    empty.hidden = false;
+  } else empty.hidden = true;
+
+  const info = $("#resultInfo");
+  if (!S.loaded || research) info.textContent = "";
+  else if (view.hidden > 0) {
+    info.innerHTML = `Showing the ${view.total} best of ${view.total + view.hidden}. <button id="showAll">Show everything</button>`;
+  } else info.textContent = view.total ? `${view.total} ${view.total === 1 ? "result" : "results"}` : "";
+  renderCounts();
+}
+
+function renderLevels() {
+  const ts = terms(), opts = { picks: prefs.picks, hideWatched: prefs.hideWatched };
+  const saveLevel = prefs.level; prefs.level = "";
+  const vids = listVideos("Russian", ts, opts), pls = listPlaylists(ts, opts);
+  prefs.level = saveLevel;
+  const count = l => vids.filter(v => v.level === l).length + pls.filter(p => p.level === l).length;
+  const all = vids.length + pls.length;
+  $("#levels").innerHTML = `<button class="chip" data-level="" aria-pressed="${!prefs.level}">All levels<small>${all}</small></button>` +
+    LEVELS.map(l => `<button class="chip" data-level="${l}" aria-pressed="${prefs.level === l}">${l === "C1" ? "C1+" : l}<small>${count(l)}</small></button>`).join("");
+  $$("#rtype .chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.rt === prefs.rtype));
+}
+
+function renderCounts() {
+  const opts = { picks: prefs.picks, hideWatched: false };
+  const n = {};
+  const lvl = prefs.level; prefs.level = "";
+  for (const [k] of TABS) {
+    if (k === "Research") n[k] = S.papers.length;
+    else if (k === "Saved") n[k] = S.saved.size;
+    else n[k] = listVideos(k, [], opts).length + (k === "Russian" ? listPlaylists([], opts).length : 0);
+  }
+  prefs.level = lvl;
+  $$(".tab .n").forEach(el => { const c = n[el.parentNode.dataset.tab]; el.textContent = S.loaded && c ? c : ""; });
+}
+
+function buildTabs() {
+  $("#tabs").innerHTML = TABS.map(([k, label]) =>
+    `<button class="tab" role="tab" data-tab="${k}" aria-selected="false">${esc(label)}<span class="n"></span></button>`).join("");
+}
+
+// ---------- modal ----------
+const modal = $("#modal");
+const isOpen = () => modal.classList.contains("open");
+
+function setPane(p) {
+  modal.dataset.pane = p;
+  $("#mtWatch").setAttribute("aria-pressed", p === "watch");
+  $("#mtSum").setAttribute("aria-pressed", p === "sum");
+}
+function loadPlayer(item, t) {
+  const stage = $("#stage");
+  const iframe = document.createElement("iframe");
+  iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+  iframe.allowFullscreen = true;
+  iframe.title = item.title;
+  iframe.src = item.count !== undefined && item.seconds === undefined
+    ? `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(item.id)}&autoplay=1&rel=0&playsinline=1`
+    : `https://www.youtube-nocookie.com/embed/${encodeURIComponent(item.id)}?autoplay=1&rel=0&playsinline=1${t ? "&start=" + Math.floor(t) : ""}`;
+  stage.textContent = "";
+  stage.appendChild(iframe);
+  if (!S.watched.has(item.id)) { S.watched.add(item.id); saveWatched(); S.dirty = true; }
+}
+function showPoster(item) {
+  const stage = $("#stage");
+  const img = item.seconds !== undefined ? `https://i.ytimg.com/vi/${encodeURIComponent(item.id)}/hqdefault.jpg` : safeImg(item.thumb);
+  stage.innerHTML = `<button class="poster" aria-label="Play">${img ? `<img src="${esc(img)}" alt="">` : ""}<span class="play">▶</span></button>`;
+  $(".poster", stage).onclick = () => { loadPlayer(item); setPane("watch"); };
+}
+
+function openItem(item, mode) {
+  const isPlaylist = item.seconds === undefined;
+  S.modalId = item.id;
+  S.lastFocus = document.activeElement;
+  $("#mTitle").innerHTML = `${esc(item.title)}<span class="sub2">${esc(item.channel)}${isPlaylist ? ` · Playlist · ${item.count} videos` : ` · ${fmtLen(item.seconds)} · ${fmtViews(item.views || 0)}`}</span>`;
+  const ytUrl = isPlaylist ? `https://www.youtube.com/playlist?list=${encodeURIComponent(item.id)}` : `https://www.youtube.com/watch?v=${encodeURIComponent(item.id)}`;
+  const saved = S.saved.has(item.id);
+  $("#mLinks").innerHTML = `<a href="${esc(ytUrl)}" target="_blank" rel="noopener">Open on YouTube ↗</a>
+    <button id="mSave" aria-pressed="${saved}">${saved ? "♥ Saved" : "♡ Save"}</button><button id="mCopy">Copy link</button>`;
+  $("#mSave").onclick = () => { toggleSave(item.id); const on = S.saved.has(item.id); $("#mSave").setAttribute("aria-pressed", on); $("#mSave").textContent = on ? "♥ Saved" : "♡ Save"; };
+  $("#mCopy").onclick = async e => {
+    const url = location.origin + location.pathname + "#v=" + item.id;
+    try { await navigator.clipboard.writeText(url); e.target.textContent = "Copied ✓"; } catch (err) { e.target.textContent = "Copy failed"; }
+    setTimeout(() => { e.target.textContent = "Copy link"; }, 1500);
+  };
+  const summaryFirst = mode === "summary";
+  if (summaryFirst) showPoster(item); else loadPlayer(item);
+  setPane(summaryFirst ? "sum" : "watch");
+  renderSummary(item);
+  modal.classList.add("open");
+  document.body.classList.add("noscroll");
+  $("#mClose").focus();
+  if (!(history.state && history.state.m)) history.pushState({ m: item.id }, "", "#v=" + item.id);
+}
+
+function hideModal() {
+  if (!isOpen()) return;
+  $("#stage").textContent = "";                               // removing the iframe stops the video
+  modal.classList.remove("open");
+  document.body.classList.remove("noscroll");
+  S.modalId = null;
+  if (S.lastFocus && document.contains(S.lastFocus)) S.lastFocus.focus({ preventScroll: true });
+  if (S.dirty) { S.dirty = false; render(); }
+}
+function closeModal() {
+  if (!isOpen()) return;
+  if (history.state && history.state.m) history.back(); else hideModal();
+}
+
+function toggleSave(id) {
+  S.saved.has(id) ? S.saved.delete(id) : S.saved.add(id);
+  saveSaved();
+  if (prefs.tab === "Saved") { if (!isOpen()) render(); else S.dirty = true; return; }
+  $$(`.card[data-id="${CSS.escape(id)}"] .act.save`).forEach(b => {
+    const on = S.saved.has(id); b.setAttribute("aria-pressed", on); b.textContent = on ? "♥ Saved" : "♡ Save";
+  });
+  renderCounts();
+}
+
+async function ensureSummaries() {
+  if (S.summaries) return S.summaries;
+  if (!S.sumPromise) S.sumPromise = fetchJSON("summaries.json", {}).then(d => (S.summaries = d));
+  return S.sumPromise;
+}
+const SRC = { transcript: "from the transcript", video: "AI watched the video", description: "from the description only, so less detailed" };
+
+async function renderSummary(item) {
+  const pane = $("#paneSum");
+  if (item.seconds === undefined) {                                   // a playlist has no summary
+    pane.innerHTML = `<div class="src"><span class="ai">Playlist</span></div>
+      <h3>About</h3><p class="tldr">${esc(item.topic || "Learn-Russian course")} · ${item.count} videos${item.level ? " · level " + esc(item.level === "Mixed" ? "mixed" : item.level) : ""}.</p>
+      <p class="fine">Videos play one after another. Use the playlist button in the player to jump between lessons.</p>`;
+    return;
+  }
+  pane.innerHTML = '<p class="muted">Loading summary…</p>';
+  const all = await ensureSummaries();
+  if (S.modalId !== item.id) return;
+  const s = all[item.id];
+  if (!s || (!s.tldr && !(s.ch && s.ch.length))) {
+    pane.innerHTML = `<h3>Summary</h3><p>No summary yet. The daily update writes summaries for the best-ranked videos first, so check back soon.</p>`;
+    return;
+  }
+  let html = "";
+  if (s.tldr) {
+    const words = (s.tldr + " " + (s.points || []).join(" ")).split(/\s+/).length;
+    const secs = Math.max(15, Math.round(words / 3.3 / 5) * 5);                      // ~200 words a minute
+    html += `<div class="src"><span class="ai">AI summary</span><span>${esc(SRC[s.src] || "")}</span></div>
+      <p class="readtime">≈ ${secs < 90 ? secs + " sec" : Math.round(secs / 60) + " min"} read instead of ${fmtLen(item.seconds)}</p>
+      <h3>In short</h3><p class="tldr">${esc(s.tldr)}</p>`;
+    if (s.points && s.points.length) html += `<h3>Key points</h3><ul>${s.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>`;
+    if (s.vocab && s.vocab.length) html += `<h3>Key phrases</h3><dl class="vocab">${s.vocab.map(([ru, en]) => `<dt lang="ru">${esc(ru)}</dt><dd>${esc(en)}</dd>`).join("")}</dl>`;
+  } else {
+    html += `<div class="src"><span class="ai">Outline</span><span>from the video's own chapters. A written summary comes with the next updates.</span></div>`;
+  }
+  if (s.ch && s.ch.length) {
+    html += `<h3>Key moments</h3><ol class="moments">${s.ch.map(([t, title]) =>
+      `<li><button class="ts" data-t="${Number(t) | 0}">${fmtTime(Number(t) | 0)}</button><span>${esc(title)}</span></li>`).join("")}</ol>`;
+  }
+  if (s.tldr) html += `<p class="fine">Written by AI and can contain mistakes. Watch the video for anything important.</p>`;
+  pane.innerHTML = html;
+  pane.scrollTop = 0;
+}
+
+// focus trap + keyboard
+document.addEventListener("keydown", e => {
+  if (isOpen()) {
+    if (e.key === "Escape") { e.preventDefault(); closeModal(); return; }
+    if (e.key === "Tab") {
+      const f = $$("button, a[href], iframe, [tabindex]:not([tabindex='-1'])", modal).filter(el => !el.disabled && el.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    return;
+  }
+  if (e.key === "/" && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); $("#search").focus(); }
+});
+window.addEventListener("popstate", () => { if (isOpen() && !(history.state && history.state.m)) hideModal(); });
+
+// ---------- events ----------
+$("#grid").addEventListener("click", e => {
+  const actEl = e.target.closest("[data-act]");
+  const card = e.target.closest(".card");
+  if (!actEl || !card) return;
+  const item = byId(card.dataset.id);
+  if (!item) return;
+  const act = actEl.dataset.act;
+  if (act === "play") openItem(item, "watch");
+  else if (act === "summary") openItem(item, "summary");
+  else if (act === "save") toggleSave(item.id);
+});
+$("#grid").addEventListener("error", e => { if (e.target.tagName === "IMG") e.target.classList.add("broken"); }, true);
+$("#tabs").addEventListener("click", e => {
+  const b = e.target.closest(".tab"); if (!b) return;
+  setTab(b.dataset.tab);
+});
+$("#tabs").addEventListener("keydown", e => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const tabs = $$(".tab"), i = tabs.indexOf(document.activeElement); if (i < 0) return;
+  const n = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length]; n.focus(); setTab(n.dataset.tab);
+});
+function setTab(tab) {
+  prefs.tab = tab; savePrefs();
+  try { history.replaceState(history.state, "", "#tab=" + tab); } catch (e) {}
+  render(); window.scrollTo({ top: Math.min(window.scrollY, $("#tabs").offsetTop), behavior: "instant" });
+}
+$("#search").addEventListener("input", debounce(e => { S.q = e.target.value; render(); }, 120));
+$("#sort").addEventListener("change", e => { prefs.sorts[prefs.tab] = e.target.value; savePrefs(); render(); });
+$("#picks").addEventListener("click", () => { prefs.picks = !prefs.picks; savePrefs(); render(); });
+$("#hideWatched").addEventListener("click", () => { prefs.hideWatched = !prefs.hideWatched; savePrefs(); render(); });
+$("#levels").addEventListener("click", e => { const b = e.target.closest("[data-level]"); if (!b) return; prefs.level = b.dataset.level; savePrefs(); render(); });
+$("#rtype").addEventListener("click", e => { const b = e.target.closest("[data-rt]"); if (!b) return; prefs.rtype = b.dataset.rt; savePrefs(); render(); });
+$("#resultInfo").addEventListener("click", e => { if (e.target.id === "showAll") { prefs.picks = false; savePrefs(); render(); } });
+$("#more").addEventListener("click", renderChunk);
+$("#mClose").addEventListener("click", closeModal);
+modal.addEventListener("mousedown", e => { if (e.target === modal) closeModal(); });
+$("#mtWatch").addEventListener("click", () => { setPane("watch"); if (!$("#stage iframe")) { const it = byId(S.modalId); if (it) loadPlayer(it); } });
+$("#mtSum").addEventListener("click", () => setPane("sum"));
+$("#paneSum").addEventListener("click", e => {
+  const b = e.target.closest(".ts"); if (!b) return;
+  const it = byId(S.modalId); if (!it) return;
+  loadPlayer(it, Number(b.dataset.t)); setPane("watch");
+});
+
+// load more automatically when the bottom comes into view
+if ("IntersectionObserver" in window) {
+  new IntersectionObserver(es => { if (es.some(x => x.isIntersecting) && S.shown < S.view.length) renderChunk(); }, { rootMargin: "600px" })
+    .observe($("#more"));
+}
+
+// ---------- start ----------
+function readHash() {
+  const h = location.hash.slice(1);
+  const tab = /(?:^|&)tab=([^&]+)/.exec(h), vid = /(?:^|&)v=([\w-]+)/.exec(h);
+  if (tab && TABS.some(([k]) => k === decodeURIComponent(tab[1]))) prefs.tab = decodeURIComponent(tab[1]);
+  return vid ? vid[1] : null;
+}
+const wantVideo = readHash();
+buildTabs();
+render();                                                     // shows tabs and controls straight away
+
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 
-// Load both data files. Papers are optional: the site still works without papers.json.
 Promise.all([
-  fetch("videos.json").then(r => r.json()).catch(() => []),
-  fetch("papers.json").then(r => r.json()).catch(() => []),
-]).then(([v, p]) => { videos = v; papers = p; render(); });
+  fetchJSON("videos.json", null), fetchJSON("playlists.json", []), fetchJSON("papers.json", []), fetchJSON("status.json", null),
+]).then(([v, pl, pa, st]) => {
+  S.videos = v || []; S.playlists = pl || []; S.papers = pa || [];
+  S.loaded = true;
+  prepare();
+  if (v === null) {
+    $("#grid").textContent = "";
+    $("#empty").hidden = false;
+    $("#empty").innerHTML = `<h2>Couldn't load the videos</h2><p>Check your connection and <button class="pill" id="retry">try again</button>.</p>`;
+    $("#retry").onclick = () => location.reload();
+    return;
+  }
+  render();
+  if (st && st.updated) {
+    const bits = [`Updated ${fmtUpdated(st.updated)}`];
+    if (S.hasPicks && st.picks) bits.push(`${st.picks} top picks of ${st.videos}`); else bits.push(`${st.videos} videos`);
+    if (st.new_videos) bits.push(`${st.new_videos} new`);
+    if (st.papers) bits.push(`${st.papers} papers`);
+    $("#status").textContent = "Stay hard. Live long. Learn Russian. · " + bits.join(" · ");
+  }
+  if (wantVideo) { const it = byId(wantVideo); if (it) openItem(it, "watch"); }
+});
+})();
 </script>
 </body>
 </html>
