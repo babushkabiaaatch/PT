@@ -548,8 +548,8 @@ function loadPlayer(item, t) {
   iframe.referrerPolicy = "strict-origin-when-cross-origin";   // YouTube needs a referrer or it shows an error / sign-in screen
   iframe.title = item.title;
   iframe.src = item.count !== undefined && item.seconds === undefined
-    ? `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(item.id)}&autoplay=1&rel=0&playsinline=1`
-    : `https://www.youtube-nocookie.com/embed/${encodeURIComponent(item.id)}?autoplay=1&rel=0&playsinline=1${t ? "&start=" + Math.floor(t) : ""}`;
+    ? `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(item.id)}&autoplay=1&rel=0&playsinline=1&origin=${encodeURIComponent(location.origin)}`
+    : `https://www.youtube.com/embed/${encodeURIComponent(item.id)}?autoplay=1&rel=0&playsinline=1&origin=${encodeURIComponent(location.origin)}${t ? "&start=" + Math.floor(t) : ""}`;
   stage.textContent = "";
   stage.appendChild(iframe);
   if (!S.watched.has(item.id)) { S.watched.add(item.id); saveWatched(); S.dirty = true; }
