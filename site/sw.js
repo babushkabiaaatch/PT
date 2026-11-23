@@ -1,6 +1,6 @@
 // Service worker: lets the site install as an app and still open when you're offline.
 // Strategy: always try the internet first (so you get fresh videos), fall back to the saved copy.
-const CACHE = "gogginstube-v4";
+const CACHE = "gogginstube-v5";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
@@ -21,7 +21,7 @@ self.addEventListener("fetch", e => {
   // Only handle our own files. YouTube thumbnails and videos go straight to the internet.
   if (e.request.method !== "GET" || url.origin !== location.origin) return;
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, { cache: "no-cache" })      // always revalidate, so GitHub Pages' 10-minute cache never serves stale data
       .then(res => {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, copy));
