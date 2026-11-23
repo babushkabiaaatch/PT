@@ -121,6 +121,18 @@
   #empty[hidden] { display:none; }
   #empty h2 { color:var(--text); margin:0 0 6px; font-size:18px; }
 
+  .tag.Physics { background:#ff9f0a; }
+  .prog { position:absolute; left:0; bottom:0; height:4px; background:var(--goggins); pointer-events:none; }
+  .paper .links .act { margin-left:auto; }
+  #grid:not(.papers) .paper { grid-column:1 / -1; }
+  #grid.vocabs { grid-template-columns:1fr; max-width:900px; gap:8px; }
+  .vtools { grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:10px; align-items:center; color:var(--muted); font-size:13px; }
+  .vrow { background:var(--card); border-radius:10px; padding:10px 14px; display:grid; grid-template-columns:minmax(110px,1fr) minmax(110px,1.5fr) auto; gap:4px 16px; align-items:center; }
+  .vrow .ru { font-size:17px; font-weight:700; }
+  .foot { padding:8px var(--gutter) 40px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; color:var(--muted); font-size:13px; }
+  .foot span { flex:1 1 260px; }
+  .foot .pill { font-size:13px; padding:6px 14px; min-height:34px; }
+
   /* ---------- modal ---------- */
   .modal { position:fixed; inset:0; z-index:20; background:rgba(0,0,0,.9); display:none; align-items:center; justify-content:center; padding:12px; }
   .modal.open { display:flex; }
@@ -168,6 +180,8 @@
     #grid { grid-template-columns:1fr; gap:14px; }
     h1 { font-size:24px; }
     .controls select { flex:1; }
+    .vrow { grid-template-columns:1fr auto; }
+    .vrow .ru { grid-column:1 / -1; }
   }
   @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } html { scroll-behavior:auto; } }
 </style>
@@ -186,6 +200,11 @@
   <select id="sort" aria-label="Sort by"></select>
   <button class="pill" id="picks" aria-pressed="true" title="Only show the highest-ranked videos">★ Top picks</button>
   <button class="pill" id="hideWatched" aria-pressed="false">Hide watched</button>
+  <select id="len" aria-label="Video length">
+    <option value="">Any length</option><option value="short">Under 20 min</option>
+    <option value="mid">20–60 min</option><option value="long">Over 1 hour</option>
+  </select>
+  <button class="pill" id="since" aria-pressed="false" title="Only things added since you last opened the site">New since last visit</button>
 </div>
 
 <div class="rubar" id="ruBar" hidden>
@@ -197,11 +216,20 @@
   </div>
 </div>
 
+<div class="rubar" id="rsBar" hidden>
+  <div class="chips" id="fields" role="group" aria-label="Field"></div>
+</div>
+
 <div class="info" id="resultInfo" aria-live="polite"></div>
-<div id="note" hidden>Open-access math and AI papers from arXiv, picked for substance. arXiv papers are preprints, so they are not peer reviewed (a venue badge means the authors say it was accepted there). Summaries are written by AI from each abstract and can be wrong, so read the paper itself.</div>
+<div id="note" hidden>Open-access math, AI and physics papers from arXiv, picked for substance. arXiv papers are preprints, so they are not peer reviewed (a venue badge means the authors say it was accepted there). Summaries are written by AI from each abstract and can be wrong, so read the paper itself.</div>
 <main id="grid"></main>
 <button class="pill" id="more">Show more</button>
 <div id="empty" hidden></div>
+<footer class="foot">
+  <span>Your watched list, saves and resume points live in this browser only.</span>
+  <button class="pill" id="backup">Back up</button><button class="pill" id="restore">Restore</button>
+  <input type="file" id="restoreFile" accept="application/json" hidden>
+</footer>
 <noscript><p style="padding:24px">GogginsTube needs JavaScript to show the videos.</p></noscript>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" data-pane="watch">
@@ -247,18 +275,19 @@ const fetchJSON = (url, fallback) =>
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1"];
 const LEVEL_ORDER = l => { const i = LEVELS.indexOf(l); return i < 0 ? 9 : i; };
-const TABS = [["All","All"], ["Goggins","Goggins"], ["Longevity","Longevity"], ["Russian","Russian"], ["Research","Math & AI"], ["Saved","Saved"]];
+const TABS = [["All","All"], ["Goggins","Goggins"], ["Longevity","Longevity"], ["Russian","Russian"], ["Vocab","Vocab"], ["Research","Math, AI & Physics"], ["Saved","Saved"]];
 const SORTS = {
   best: "Best first", level: "Beginner → advanced", newest: "Newest", views: "Most viewed", shortest: "Shortest", longest: "Longest",
 };
 const PAGE = 48;
 
 // ---------- state ----------
-const prefs = Object.assign({ tab:"All", sorts:{}, picks:true, hideWatched:false, level:"", rtype:"all" }, store.get("gt.prefs2", {}));
+const prefs = Object.assign({ tab:"All", sorts:{}, picks:true, hideWatched:false, level:"", rtype:"all", len:"", rfield:"" }, store.get("gt.prefs2", {}));
 const S = {
   videos: [], playlists: [], papers: [], summaries: null, sumPromise: null,
   q: "", watched: new Set(store.get("watched", [])), saved: new Set(store.get("saved", [])),
   hasPicks: false, view: [], shown: 0, loaded: false, modalId: null, lastFocus: null, dirty: false,
+  pos: store.get("gt.pos", {}), since: false, prevDate: null, vocab: [], player: null, poll: null,
 };
 const savePrefs = () => store.set("gt.prefs2", prefs);
 const saveWatched = () => store.set("watched", [...S.watched]);
@@ -300,7 +329,30 @@ function prepare() {
   for (const p of S.playlists) { p.category = "Russian"; p._hay = `${p.title} ${p.channel} ${p.topic || ""} ${p.level || ""} playlist course`.toLowerCase(); }
   for (const p of S.papers) p._hay = `${p.title} ${p.journal} ${p.summary} ${p.authors}`.toLowerCase();
 }
-const byId = id => S.videos.find(v => v.id === id) || S.playlists.find(p => p.id === id);
+const byId = id => S.videos.find(v => v.id === id) || S.playlists.find(p => p.id === id) || S.papers.find(p => p.id === id);
+
+// vocabulary from the Russian lessons' summaries, one row per distinct word
+function buildVocab() {
+  const seen = new Set(), out = [];
+  for (const v of S.videos) {
+    if (v.category !== "Russian") continue;
+    const sm = (S.summaries || {})[v.id];
+    if (!sm || !Array.isArray(sm.vocab)) continue;
+    for (const pair of sm.vocab) {
+      if (!Array.isArray(pair) || pair.length < 2) continue;
+      const ru = String(pair[0]).trim(), en = String(pair[1]).trim(), k = ru.toLowerCase();
+      if (!ru || !en || seen.has(k)) continue;
+      seen.add(k);
+      out.push({ ru, en, id: v.id, title: v.title, level: v.level || "", _hay: `${ru} ${en} ${v.title}`.toLowerCase() });
+    }
+  }
+  return out.sort((a, b) => LEVEL_ORDER(a.level) - LEVEL_ORDER(b.level) || a.ru.localeCompare(b.ru, "ru"));
+}
+
+// resume points and progress bars
+const resumeAt = item => { const p = S.pos[item.id]; return p && p[0] >= 30 && p[1] && p[0] / p[1] < 0.95 ? p[0] : 0; };
+const progressPct = id => { const p = S.pos[id]; return p && p[1] ? p[0] / p[1] : 0; };
+const continueList = () => S.videos.filter(v => resumeAt(v)).sort((a, b) => S.pos[b.id][2] - S.pos[a.id][2]).slice(0, 6);
 
 // ---------- building the list ----------
 const sorters = {
@@ -318,10 +370,13 @@ const hit = (item, ts) => ts.every(t => item._hay.includes(t));
 // a brand-new upload has almost no views yet, so its score is low. Never let "Top picks" hide a fresh video
 // that Gemini rated decent (3+ of 5) and did not flag as a compilation, reaction, clickbait or ad.
 const BAD_KINDS = new Set(["compilation", "reaction", "clickbait", "ad"]);
+const LEN = { short: [0, 1200], mid: [1200, 3600], long: [3600, 1e9] };
+const lenOk = v => !prefs.len || (v.seconds >= LEN[prefs.len][0] && v.seconds < LEN[prefs.len][1]);
+const sinceOk = x => !S.since || !S.prevDate || (x.added || x.published || x.date || "") >= S.prevDate;
 const freshOk = v => isNew(v.published) && (v.q ?? 5) >= 3 && !BAD_KINDS.has(v.kind);
 
 function passes(v, ts, opts = {}) {
-  if (!hit(v, ts)) return false;
+  if (!hit(v, ts) || !lenOk(v) || !sinceOk(v)) return false;
   if (opts.hideWatched && S.watched.has(v.id)) return false;
   if (opts.picks && S.hasPicks && !v.pick && !freshOk(v)) return false;
   return true;
@@ -333,7 +388,7 @@ function listVideos(tab, ts, opts) {
   return list;
 }
 function listPlaylists(ts, opts) {
-  let list = S.playlists.filter(p => hit(p, ts) && (!opts.picks || (p.q ?? 5) >= 3));
+  let list = S.playlists.filter(p => hit(p, ts) && sinceOk(p) && (!opts.picks || (p.q ?? 5) >= 3));
   if (prefs.level) list = list.filter(p => p.level === prefs.level);
   return list;
 }
@@ -346,22 +401,44 @@ function buildView() {
   let total = 0, hidden = 0;   // hidden = how many the "Top picks" filter removed
 
   if (tab === "Research") {
-    const list = S.papers.filter(p => hit(p, ts)).sort((a, b) => b.date.localeCompare(a.date));
+    const list = S.papers.filter(p => hit(p, ts) && sinceOk(p) && (!prefs.rfield || p.category === prefs.rfield))
+      .sort((a, b) => b.date.localeCompare(a.date));
     list.forEach(p => entries.push({ t: "paper", d: p }));
+    return { entries, total: list.length, hidden: 0 };
+  }
+  if (tab === "Vocab") {
+    const list = S.vocab.filter(x => hit(x, ts) && (!prefs.level || x.level === prefs.level));
+    if (list.length) entries.push({ t: "vtools", d: list.length });
+    list.forEach(x => entries.push({ t: "vocab", d: x }));
     return { entries, total: list.length, hidden: 0 };
   }
   if (tab === "Saved") {
     const all = { picks: false, hideWatched: prefs.hideWatched };
     const vs = S.videos.filter(v => S.saved.has(v.id) && passes(v, ts, all)).sort(sort);
     const ps = S.playlists.filter(p => S.saved.has(p.id) && hit(p, ts));
+    const pa = S.papers.filter(p => S.saved.has(p.id) && hit(p, ts)).sort((a, b) => b.date.localeCompare(a.date));
     ps.forEach(p => entries.push({ t: "playlist", d: p }));
     vs.forEach(v => entries.push({ t: "video", d: v }));
-    return { entries, total: entries.length, hidden: 0 };
+    if (pa.length && entries.length) entries.push({ t: "head", d: "Papers" });
+    pa.forEach(p => entries.push({ t: "paper", d: p }));
+    return { entries, total: entries.filter(e => e.t !== "head").length, hidden: 0 };
   }
 
-  const vids = listVideos(tab, ts, opts);
+  let vids = listVideos(tab, ts, opts);
+  const skip = new Set();
+  if (tab === "All" && !S.q && !S.since && !prefs.len) {            // pick up where you left off
+    const cont = continueList();
+    if (cont.length) {
+      entries.push({ t: "head", d: "Continue watching" });
+      cont.forEach(v => { skip.add(v.id); entries.push({ t: "video", d: v }); });
+      entries.push({ t: "head", d: "Latest" });
+    }
+  }
+  if (skip.size) vids = vids.filter(v => !skip.has(v.id));
   vids.sort(sort);
-  if (opts.picks && S.hasPicks) hidden = listVideos(tab, ts, { ...opts, picks: false }).length - vids.length;
+  if (opts.picks && S.hasPicks) {
+    hidden = listVideos(tab, ts, { ...opts, picks: false }).filter(v => !skip.has(v.id)).length - vids.length;
+  }
 
   if (tab === "Russian") {
     const showP = prefs.rtype !== "videos", showV = prefs.rtype !== "playlists";
@@ -374,7 +451,7 @@ function buildView() {
     total = pls.length + (showV ? vids.length : 0);
   } else {
     vids.forEach(v => entries.push({ t: "video", d: v }));
-    total = vids.length;
+    total = vids.length + skip.size;
   }
   return { entries, total, hidden };
 }
@@ -394,6 +471,7 @@ function videoCard(v) {
       ${badge}${isNew(v.published) ? '<span class="newtag">NEW</span>' : ""}
       ${v.pick && !prefs.picks ? '<span class="star" title="Top pick">★</span>' : ""}
       <span class="time">${fmtTime(v.seconds || 0)}</span>
+      ${(() => { const pc = progressPct(id); return pc > 0.01 && pc < 0.95 ? `<span class="prog" style="width:${(pc * 100).toFixed(0)}%"></span>` : ""; })()}
     </button>
     <div class="body">
       <h3 class="title"><button data-act="play">${esc(v.title)}</button></h3>
@@ -420,6 +498,8 @@ function playlistCard(p) {
 function paperEl(p) {
   const el = document.createElement("article");
   el.className = "paper";
+  el.dataset.id = p.id;
+  const saved = S.saved.has(p.id);
   const links = [["Abstract ↗", p.url], ["PDF ↗", p.pdf], ["Code ↗", p.code]]
     .filter(([, u]) => safeUrl(u)).map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`).join("");
   el.innerHTML = `<div class="tags"><span class="tag ${esc(p.category)}">${esc(p.category)}</span>
@@ -427,7 +507,8 @@ function paperEl(p) {
       ${isNew(p.date) ? '<span class="tag new">NEW</span>' : ""}</div>
     <h3>${esc(p.title)}</h3>
     <div class="meta">${esc([p.journal, p.authors, p.date].filter(Boolean).join(" · "))}</div>
-    <p class="sum">AI summary: ${esc(p.summary)}</p><div class="links">${links}</div>`;
+    <p class="sum">AI summary: ${esc(p.summary)}</p>
+    <div class="links">${links}<button class="act save" data-act="save" aria-pressed="${saved}">${saved ? "♥ Saved" : "♡ Save"}</button></div>`;
   return el;
 }
 
@@ -442,6 +523,8 @@ function renderChunk() {
     if (e.t === "video") html += videoCard(e.d);
     else if (e.t === "playlist") html += playlistCard(e.d);
     else if (e.t === "head") html += `<h2 class="head">${esc(e.d)}</h2>`;
+    else if (e.t === "vtools") html += `<div class="vtools"><span>${e.d} phrases from Russian lessons</span><button class="act" data-act="copyvocab">Copy all for Anki</button></div>`;
+    else if (e.t === "vocab") html += `<div class="vrow" data-id="${safeId(e.d.id)}"><div class="ru" lang="ru">${esc(e.d.ru)}</div><div>${esc(e.d.en)}</div><button class="act" data-act="play" title="${esc(e.d.title)}">▶ ${esc(e.d.level || "lesson")}</button></div>`;
     else if (e.t === "paper") frag.appendChild(paperEl(e.d));
   }
   tpl.innerHTML = html;
@@ -454,6 +537,9 @@ function renderChunk() {
 function emptyMessage() {
   const tab = prefs.tab;
   if (S.q) return ["No matches", "Try different words, or clear the search."];
+  if (S.since) return ["Nothing new", "Nothing was added since your last visit. Switch off “New since last visit” to see everything."];
+  if (tab === "Vocab") return ["No vocabulary yet", "Key phrases are collected from Russian lessons as the daily update summarises them."];
+  if (prefs.len) return ["Nothing that length", "Pick “Any length” to see everything in this section."];
   if (tab === "Saved") return ["Nothing saved yet", "Tap “♡ Save” on any video or playlist and it will show up here."];
   if (tab === "Russian" && !S.videos.some(v => v.category === "Russian") && !S.playlists.length)
     return ["The Russian section fills on the next update", "The daily update finds learn-Russian videos and playlists from A1 to C1. Run the “Update GogginsTube” workflow once and refresh."];
@@ -462,7 +548,7 @@ function emptyMessage() {
 }
 
 function render() {
-  const tab = prefs.tab, research = tab === "Research", saved = tab === "Saved", russian = tab === "Russian";
+  const tab = prefs.tab, research = tab === "Research", saved = tab === "Saved", russian = tab === "Russian", vocab = tab === "Vocab";
   // tabs
   $$(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
   // controls
@@ -473,20 +559,27 @@ function render() {
     sortEl.dataset.tab = tab;
   }
   sortEl.value = currentSort();
-  sortEl.disabled = research;
+  sortEl.disabled = research || vocab;
   const picksBtn = $("#picks");
   picksBtn.setAttribute("aria-pressed", prefs.picks);
-  picksBtn.disabled = research || saved || !S.hasPicks;
+  picksBtn.disabled = research || saved || vocab || !S.hasPicks;
   $("#hideWatched").setAttribute("aria-pressed", prefs.hideWatched);
-  $("#hideWatched").disabled = research;
+  $("#hideWatched").disabled = research || vocab;
+  $("#len").value = prefs.len;
+  $("#len").disabled = research || vocab;
+  $("#since").setAttribute("aria-pressed", S.since);
+  $("#since").disabled = !S.prevDate || vocab;
   $("#note").hidden = !research;
-  $("#ruBar").hidden = !russian;
-  if (russian) renderLevels();
+  $("#ruBar").hidden = !(russian || vocab);
+  $("#rtype").hidden = vocab;
+  $("#rsBar").hidden = !research;
+  if (russian || vocab) renderLevels();
+  if (research) renderFields();
 
   const view = buildView();
   S.view = view.entries; S.shown = 0;
   const grid = $("#grid");
-  grid.className = research ? "papers" : "";
+  grid.className = research ? "papers" : vocab ? "vocabs" : "";
   grid.textContent = "";
   if (!S.loaded) grid.innerHTML = '<div class="skeleton"></div>'.repeat(8);
   else renderChunk();
@@ -508,14 +601,28 @@ function render() {
 
 function renderLevels() {
   const ts = terms(), opts = { picks: prefs.picks, hideWatched: prefs.hideWatched };
-  const saveLevel = prefs.level; prefs.level = "";
-  const vids = listVideos("Russian", ts, opts), pls = listPlaylists(ts, opts);
-  prefs.level = saveLevel;
-  const count = l => vids.filter(v => v.level === l).length + pls.filter(p => p.level === l).length;
-  const all = vids.length + pls.length;
+  let count, all;
+  if (prefs.tab === "Vocab") {
+    const base = S.vocab.filter(x => hit(x, ts));
+    count = l => base.filter(x => x.level === l).length; all = base.length;
+  } else {
+    const saveLevel = prefs.level; prefs.level = "";
+    const vids = listVideos("Russian", ts, opts), pls = listPlaylists(ts, opts);
+    prefs.level = saveLevel;
+    count = l => vids.filter(v => v.level === l).length + pls.filter(p => p.level === l).length;
+    all = vids.length + pls.length;
+  }
   $("#levels").innerHTML = `<button class="chip" data-level="" aria-pressed="${!prefs.level}">All levels<small>${all}</small></button>` +
     LEVELS.map(l => `<button class="chip" data-level="${l}" aria-pressed="${prefs.level === l}">${l === "C1" ? "C1+" : l}<small>${count(l)}</small></button>`).join("");
   $$("#rtype .chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.rt === prefs.rtype));
+}
+
+function renderFields() {
+  const ts = terms();
+  const base = S.papers.filter(p => hit(p, ts) && sinceOk(p));
+  const n = f => f ? base.filter(p => p.category === f).length : base.length;
+  $("#fields").innerHTML = ["", "Math", "AI", "Proofs", "Physics"].map(f =>
+    `<button class="chip" data-field="${f}" aria-pressed="${prefs.rfield === f}">${f || "All"}<small>${n(f)}</small></button>`).join("");
 }
 
 function renderCounts() {
@@ -524,6 +631,7 @@ function renderCounts() {
   const lvl = prefs.level; prefs.level = "";
   for (const [k] of TABS) {
     if (k === "Research") n[k] = S.papers.length;
+    else if (k === "Vocab") n[k] = S.vocab.length;
     else if (k === "Saved") n[k] = S.saved.size;
     else n[k] = listVideos(k, [], opts).length + (k === "Russian" ? listPlaylists([], opts).length : 0);
   }
@@ -545,19 +653,55 @@ function setPane(p) {
   $("#mtWatch").setAttribute("aria-pressed", p === "watch");
   $("#mtSum").setAttribute("aria-pressed", p === "sum");
 }
-function loadPlayer(item, t) {
+function loadPlayer(item, t, fresh) {
   const stage = $("#stage");
+  if (!t && !fresh) { const r = resumeAt(item); if (r) t = Math.max(0, r - 3); }          // pick up where you left off
   const iframe = document.createElement("iframe");
   iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
   iframe.allowFullscreen = true;
   iframe.referrerPolicy = "strict-origin-when-cross-origin";   // YouTube needs a referrer or it shows an error / sign-in screen
   iframe.title = item.title;
+  const origin = `&origin=${encodeURIComponent(location.origin)}`;
   iframe.src = item.count !== undefined && item.seconds === undefined
-    ? `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(item.id)}&autoplay=1&rel=0&playsinline=1&origin=${encodeURIComponent(location.origin)}`
-    : `https://www.youtube.com/embed/${encodeURIComponent(item.id)}?autoplay=1&rel=0&playsinline=1&origin=${encodeURIComponent(location.origin)}${t ? "&start=" + Math.floor(t) : ""}`;
+    ? `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(item.id)}&autoplay=1&rel=0&playsinline=1${origin}`
+    : `https://www.youtube.com/embed/${encodeURIComponent(item.id)}?autoplay=1&rel=0&playsinline=1&enablejsapi=1${origin}${t ? "&start=" + Math.floor(t) : ""}`;
+  stopTracking();
   stage.textContent = "";
   stage.appendChild(iframe);
+  trackPlayer(item, iframe);
   if (!S.watched.has(item.id)) { S.watched.add(item.id); saveWatched(); S.dirty = true; }
+}
+
+// YouTube's player API: lets us remember how far you got. If it fails to load, the plain player still works.
+let ytPromise = null;
+function ensureYT() {
+  if (window.YT && window.YT.Player) return Promise.resolve(window.YT);
+  if (!ytPromise) ytPromise = new Promise((res, rej) => {
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => { if (typeof prev === "function") prev(); res(window.YT); };
+    const sc = document.createElement("script");
+    sc.src = "https://www.youtube.com/iframe_api"; sc.onerror = () => rej(new Error("no player api"));
+    document.head.appendChild(sc);
+    setTimeout(() => rej(new Error("player api timeout")), 15000);
+  });
+  return ytPromise;
+}
+function savePos() {
+  const id = S.modalId, pl = S.player;
+  if (!id || !pl || typeof pl.getCurrentTime !== "function") return;
+  try {
+    const t = Math.floor(pl.getCurrentTime()), d = Math.floor(pl.getDuration());
+    if (d > 60 && t >= 5) { S.pos[id] = [t, d, Date.now()]; store.set("gt.pos", S.pos); S.dirty = true; }
+  } catch (e) {}
+}
+function stopTracking() { clearInterval(S.poll); S.poll = null; S.player = null; }
+function trackPlayer(item, iframe) {
+  if (item.seconds === undefined) return;                       // playlists are not tracked
+  ensureYT().then(YT => {
+    if (S.modalId !== item.id || !iframe.isConnected) return;
+    S.player = new YT.Player(iframe, {});
+    S.poll = setInterval(savePos, 5000);
+  }).catch(() => {});
 }
 function showPoster(item) {
   const stage = $("#stage");
@@ -582,7 +726,14 @@ function openItem(item, mode) {
     setTimeout(() => { e.target.textContent = "Copy link"; }, 1500);
   };
   const summaryFirst = mode === "summary";
+  const resumed = !isPlaylist && resumeAt(item);
   if (summaryFirst) showPoster(item); else loadPlayer(item);
+  if (resumed) {
+    const b = document.createElement("button");
+    b.textContent = `↺ Start over (resumed at ${fmtTime(Math.floor(resumed))})`;
+    b.onclick = () => { delete S.pos[item.id]; store.set("gt.pos", S.pos); S.dirty = true; loadPlayer(item, 0, true); setPane("watch"); b.remove(); };
+    $("#mLinks").appendChild(b);
+  }
   setPane(summaryFirst ? "sum" : "watch");
   renderSummary(item);
   modal.classList.add("open");
@@ -593,6 +744,7 @@ function openItem(item, mode) {
 
 function hideModal() {
   if (!isOpen()) return;
+  savePos(); stopTracking();
   $("#stage").textContent = "";                               // removing the iframe stops the video
   modal.classList.remove("open");
   document.body.classList.remove("noscroll");
@@ -609,7 +761,7 @@ function toggleSave(id) {
   S.saved.has(id) ? S.saved.delete(id) : S.saved.add(id);
   saveSaved();
   if (prefs.tab === "Saved") { if (!isOpen()) render(); else S.dirty = true; return; }
-  $$(`.card[data-id="${CSS.escape(id)}"] .act.save`).forEach(b => {
+  $$(`[data-id="${CSS.escape(id)}"] .act.save`).forEach(b => {
     const on = S.saved.has(id); b.setAttribute("aria-pressed", on); b.textContent = on ? "♥ Saved" : "♡ Save";
   });
   renderCounts();
@@ -679,11 +831,18 @@ window.addEventListener("popstate", () => { if (isOpen() && !(history.state && h
 // ---------- events ----------
 $("#grid").addEventListener("click", e => {
   const actEl = e.target.closest("[data-act]");
-  const card = e.target.closest(".card");
-  if (!actEl || !card) return;
+  if (!actEl) return;
+  const act = actEl.dataset.act;
+  if (act === "copyvocab") {
+    const rows = S.view.filter(x => x.t === "vocab").map(x => x.d.ru + "\t" + x.d.en).join("\n");
+    navigator.clipboard.writeText(rows).then(() => { actEl.textContent = "Copied ✓"; }, () => { actEl.textContent = "Copy failed"; });
+    setTimeout(() => { actEl.textContent = "Copy all for Anki"; }, 1800);
+    return;
+  }
+  const card = e.target.closest(".card, .paper, .vrow");
+  if (!card) return;
   const item = byId(card.dataset.id);
   if (!item) return;
-  const act = actEl.dataset.act;
   if (act === "play") openItem(item, "watch");
   else if (act === "summary") openItem(item, "summary");
   else if (act === "save") toggleSave(item.id);
@@ -706,6 +865,32 @@ function setTab(tab) {
 $("#search").addEventListener("input", debounce(e => { S.q = e.target.value; render(); }, 120));
 $("#sort").addEventListener("change", e => { prefs.sorts[prefs.tab] = e.target.value; savePrefs(); render(); });
 $("#picks").addEventListener("click", () => { prefs.picks = !prefs.picks; savePrefs(); render(); });
+$("#len").addEventListener("change", e => { prefs.len = e.target.value; savePrefs(); render(); });
+$("#since").addEventListener("click", () => { S.since = !S.since; render(); });
+$("#fields").addEventListener("click", e => { const b = e.target.closest("[data-field]"); if (!b) return; prefs.rfield = b.dataset.field; savePrefs(); render(); });
+window.addEventListener("pagehide", savePos);
+$("#backup").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify({ v: 1, watched: [...S.watched], saved: [...S.saved], pos: S.pos, prefs })], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "gogginstube-backup.json"; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+});
+$("#restore").addEventListener("click", () => $("#restoreFile").click());
+$("#restoreFile").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = "";
+  if (!f) return;
+  try {
+    const d = JSON.parse(await f.text());
+    if (!d || typeof d !== "object") throw 0;
+    (Array.isArray(d.watched) ? d.watched : []).forEach(x => { if (typeof x === "string") S.watched.add(x); });
+    (Array.isArray(d.saved) ? d.saved : []).forEach(x => { if (typeof x === "string") S.saved.add(x); });
+    for (const [k, v] of Object.entries(d.pos || {})) {
+      if (Array.isArray(v) && v.length >= 3 && v.every(Number.isFinite) && (!S.pos[k] || v[2] > S.pos[k][2])) S.pos[k] = v;
+    }
+    saveWatched(); saveSaved(); store.set("gt.pos", S.pos); render();
+    alert("Restored.");
+  } catch (err) { alert("That file is not a GogginsTube backup."); }
+});
 $("#hideWatched").addEventListener("click", () => { prefs.hideWatched = !prefs.hideWatched; savePrefs(); render(); });
 $("#levels").addEventListener("click", e => { const b = e.target.closest("[data-level]"); if (!b) return; prefs.level = b.dataset.level; savePrefs(); render(); });
 $("#rtype").addEventListener("click", e => { const b = e.target.closest("[data-rt]"); if (!b) return; prefs.rtype = b.dataset.rt; savePrefs(); render(); });
@@ -740,12 +925,23 @@ render();                                                     // shows tabs and 
 
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 
+// "new since your last visit": remember the previous visit for the whole browser session, so a refresh keeps it
+(function () {
+  let prev = null;
+  try { prev = sessionStorage.getItem("gt.prev"); } catch (e) {}
+  if (prev === null) { prev = store.get("gt.visit", ""); try { sessionStorage.setItem("gt.prev", prev || ""); } catch (e) {} }
+  store.set("gt.visit", new Date().toISOString());
+  S.prevDate = prev ? String(prev).slice(0, 10) : null;
+})();
+
 Promise.all([
   fetchJSON("videos.json", null), fetchJSON("playlists.json", []), fetchJSON("papers.json", []), fetchJSON("status.json", null),
-]).then(([v, pl, pa, st]) => {
-  S.videos = v || []; S.playlists = pl || []; S.papers = pa || [];
+  fetchJSON("summaries.json", {}),
+]).then(([v, pl, pa, st, sm]) => {
+  S.videos = v || []; S.playlists = pl || []; S.papers = pa || []; S.summaries = sm || {};
   S.loaded = true;
   prepare();
+  S.vocab = buildVocab();
   if (v === null) {
     $("#grid").textContent = "";
     $("#empty").hidden = false;
