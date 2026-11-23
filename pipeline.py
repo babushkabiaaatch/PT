@@ -98,8 +98,8 @@ MAX_QUEUE = 4000                    # unjudged candidates kept for the next runs
 VIDEO_JUDGE_CALLS = 8               # new videos, 50 per request
 PLAYLIST_JUDGE_CALLS = 3
 RATE_OLD_CALLS = 8                  # gives already-kept videos a quality rating, 50 per request
-PAPER_CALLS = 8
-SUMMARY_CALLS = 45                  # one video per request
+PAPER_CALLS = 6
+SUMMARY_CALLS = 30                  # one video per request
 VIDEO_BATCH = 50
 PLAYLIST_BATCH = 30
 PAPER_BATCH = 15
@@ -137,6 +137,9 @@ PAPER_FEEDS = {
     "Math": ("cat:math.NT OR cat:math.CO OR cat:math.LO OR cat:math.PR OR cat:math.AG OR cat:math.GR "
              "OR cat:math.CA OR cat:math.DS OR cat:math.AT OR cat:math.RT", 5, 400),
     "AI": ("cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:stat.ML", 3, 300),
+    "Physics": ("cat:hep-th OR cat:hep-ph OR cat:hep-ex OR cat:gr-qc OR cat:quant-ph OR cat:math-ph OR cat:nucl-th "
+                "OR cat:cond-mat.str-el OR cat:cond-mat.supr-con OR cat:cond-mat.mes-hall OR cat:astro-ph.CO "
+                "OR cat:astro-ph.HE OR cat:astro-ph.GA", 3, 300),
     "Proofs": ('(cat:cs.LO OR cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:math.LO) AND '
                '(abs:"theorem proving" OR abs:"formal proof" OR abs:Lean OR abs:autoformalization '
                'OR abs:"proof assistant" OR abs:"formal verification" OR abs:"mathematical reasoning")', 14, 100),
@@ -148,7 +151,9 @@ GOOD_VENUES = ["NeurIPS", "ICML", "ICLR", "ACL", "EMNLP", "NAACL", "CVPR", "AAAI
 SIGNALS = {"we prove": 3, "we resolve": 4, "we settle": 4, "we disprove": 4, "counterexample": 3,
            "conjecture": 2, "open problem": 3, "new proof": 3, "first proof": 4, "theorem": 2,
            "formalized": 3, "formalised": 3, "lean 4": 3, "machine-checked": 3, "state-of-the-art": 1,
-           "scaling law": 2, "mathematical reasoning": 2, "we show that": 1}
+           "scaling law": 2, "mathematical reasoning": 2, "we show that": 1,
+           "first observation": 4, "we observe": 1, "experimental": 1, "quantum advantage": 3, "gravitational wave": 2,
+           "dark matter": 1, "black hole": 1, "superconduct": 2, "we derive": 2, "exact solution": 3}
 
 LEVELS = ("A1", "A2", "B1", "B2", "C1")
 VIDEO_KINDS = ("interview", "talk", "lecture", "explainer", "documentary", "workout", "course", "lesson",
@@ -642,8 +647,7 @@ def fetch_arxiv(feed, query, days, max_results):
 
 
 def rank_for_judging(by_feed):
-    """NEWEST first (so the latest papers are always judged before older ones), best-looking first within a day."""
-    lists = [sorted(v, key=lambda p: (p["meta"]["date"], p["score"]), reverse=True) for v in by_feed.values()]
+    lists = [sorted(v, key=lambda p: -p["score"]) for v in by_feed.values()]
     out = []
     for i in range(max((len(l) for l in lists), default=0)):
         for l in lists:
@@ -706,14 +710,15 @@ Playlists:
 """
 
 PAPER_PROMPT = """You are curating a research section for a reader who wants HIGH-LEVEL work in mathematics
-(proofs, number theory, combinatorics, logic, ...) and AI (reasoning, theory, formal theorem proving,
-major advances). All papers below are open-access arXiv preprints, so quality varies a lot.
+(proofs, number theory, combinatorics, logic, ...), AI (reasoning, theory, formal theorem proving,
+major advances) and PHYSICS (fundamental and theoretical physics: quantum, high-energy, gravity, cosmology,
+condensed matter; plus experiments with strong, well-supported results). All papers below are open-access arXiv preprints, so quality varies a lot.
 KEEP only papers that look substantive and significant: new theorems or proofs, resolved or advanced
 conjectures, rigorous theory, formalized or machine-checked proofs (Lean etc.), important new methods,
 strong results from credible work. REJECT incremental tweaks, narrow applications, hype, vague or
 low-information abstracts.
 For kept papers also write:
-- "cat": "Math", "AI" or "Proofs" ("Proofs" = formal, machine-checked proofs or AI theorem proving)
+- "cat": "Math", "AI", "Physics" or "Proofs" ("Proofs" = formal, machine-checked proofs or AI theorem proving)
 - "summary": ONE plain-English sentence (max 35 words) using ONLY what the abstract says. No hype,
   and never add claims that are not in the abstract.
 - "kind": one of "new theorem", "new proof", "survey", "new method", "theory", "benchmark", "formal proof", "other"
@@ -878,7 +883,7 @@ def judge_papers(batch):
     out = []
     for i in range(len(batch)):
         x = verdicts.get(i)
-        if x and x.get("keep") and x.get("cat") in ("Math", "AI", "Proofs") and x.get("summary"):
+        if x and x.get("keep") and x.get("cat") in ("Math", "AI", "Physics", "Proofs") and x.get("summary"):
             out.append({"keep": True, "cat": x["cat"], "summary": x["summary"],
                         "kind": x.get("kind", "other"), "level": x.get("level", "advanced")})
         elif x is None:
@@ -1057,9 +1062,7 @@ def stage_summaries(lib):
             and lib.labels.get(v["id"], {}).get("sum_fail", 0) < SUMMARY_MAX_FAILS]
     new_cut = (TODAY - datetime.timedelta(days=NEW_DAYS)).isoformat()
     # fresh uploads first (that is what you open the site for), then top picks, then by score
-    # Goggins + Longevity first (that is what the site is for), Russian after; then fresh uploads, top picks, score
-    todo.sort(key=lambda v: (v.get("category") == "Russian", v.get("published", "") < new_cut,
-                             not v.get("pick"), -(v.get("score") or 0)))
+    todo.sort(key=lambda v: (v.get("published", "") < new_cut, not v.get("pick"), -(v.get("score") or 0)))
     print(f"{len(todo)} videos have no summary yet; doing up to {SUMMARY_CALLS} (best first).")
     calls_before, made, attempts = GEM["calls"], 0, 0
     for v in todo:
@@ -1239,6 +1242,7 @@ def stage_judge_videos(lib, candidates):
                    if v.get(k) is not None}
             rec.update({k: lab[k] for k in ("topic", "q", "kind", "level") if lab.get(k) is not None})
             rec["category"] = lab["cat"]
+            rec["added"] = TODAY.isoformat()
             lib.videos[v["id"]] = rec
         lib.save_state()
 
@@ -1348,7 +1352,7 @@ def paper_record(p, lab):
     m = p["meta"]
     return {"id": p["id"], "title": m["title"], "authors": m["authors"], "journal": m["journal"], "date": m["date"],
             "url": m["url"], "pdf": m["pdf"], "code": m["code"], "category": lab["cat"], "summary": lab["summary"],
-            "kind": lab.get("kind", ""), "level": lab.get("level", "")}
+            "kind": lab.get("kind", ""), "level": lab.get("level", ""), "added": TODAY.isoformat()}
 
 
 # ---------------------------------------------------------------
