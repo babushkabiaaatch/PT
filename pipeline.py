@@ -98,8 +98,8 @@ MAX_QUEUE = 4000                    # unjudged candidates kept for the next runs
 VIDEO_JUDGE_CALLS = 8               # new videos, 50 per request
 PLAYLIST_JUDGE_CALLS = 3
 RATE_OLD_CALLS = 8                  # gives already-kept videos a quality rating, 50 per request
-PAPER_CALLS = 4
-SUMMARY_CALLS = 30                  # one video per request
+PAPER_CALLS = 8
+SUMMARY_CALLS = 45                  # one video per request
 VIDEO_BATCH = 50
 PLAYLIST_BATCH = 30
 PAPER_BATCH = 15
@@ -642,7 +642,8 @@ def fetch_arxiv(feed, query, days, max_results):
 
 
 def rank_for_judging(by_feed):
-    lists = [sorted(v, key=lambda p: -p["score"]) for v in by_feed.values()]
+    """NEWEST first (so the latest papers are always judged before older ones), best-looking first within a day."""
+    lists = [sorted(v, key=lambda p: (p["meta"]["date"], p["score"]), reverse=True) for v in by_feed.values()]
     out = []
     for i in range(max((len(l) for l in lists), default=0)):
         for l in lists:
@@ -1056,7 +1057,9 @@ def stage_summaries(lib):
             and lib.labels.get(v["id"], {}).get("sum_fail", 0) < SUMMARY_MAX_FAILS]
     new_cut = (TODAY - datetime.timedelta(days=NEW_DAYS)).isoformat()
     # fresh uploads first (that is what you open the site for), then top picks, then by score
-    todo.sort(key=lambda v: (v.get("published", "") < new_cut, not v.get("pick"), -(v.get("score") or 0)))
+    # Goggins + Longevity first (that is what the site is for), Russian after; then fresh uploads, top picks, score
+    todo.sort(key=lambda v: (v.get("category") == "Russian", v.get("published", "") < new_cut,
+                             not v.get("pick"), -(v.get("score") or 0)))
     print(f"{len(todo)} videos have no summary yet; doing up to {SUMMARY_CALLS} (best first).")
     calls_before, made, attempts = GEM["calls"], 0, 0
     for v in todo:
