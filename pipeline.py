@@ -90,6 +90,7 @@ TIERS = {"Goggins": ["fresh", "top", "long"], "Longevity": ["fresh", "top", "lon
 
 CHANNEL_DEEP_PAGES = 6              # first time a channel is read: up to 6 x 50 = 300 videos
 FRESH_DAYS = 30
+NEW_DAYS = 14                       # uploads this recent are never hidden by the "Top picks" filter
 MIN_SECONDS = 240                   # skip anything under 4 minutes (kills Shorts)
 MAX_QUEUE = 4000                    # unjudged candidates kept for the next runs
 
@@ -134,8 +135,8 @@ FIRST_RUN_MULTIPLIER = 4
 ARXIV_PAUSE = 3
 PAPER_FEEDS = {
     "Math": ("cat:math.NT OR cat:math.CO OR cat:math.LO OR cat:math.PR OR cat:math.AG OR cat:math.GR "
-             "OR cat:math.CA OR cat:math.DS OR cat:math.AT OR cat:math.RT", 2, 200),
-    "AI": ("cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:stat.ML", 1, 200),
+             "OR cat:math.CA OR cat:math.DS OR cat:math.AT OR cat:math.RT", 5, 400),
+    "AI": ("cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:stat.ML", 3, 300),
     "Proofs": ('(cat:cs.LO OR cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:math.LO) AND '
                '(abs:"theorem proving" OR abs:"formal proof" OR abs:Lean OR abs:autoformalization '
                'OR abs:"proof assistant" OR abs:"formal verification" OR abs:"mathematical reasoning")', 14, 100),
@@ -519,9 +520,13 @@ def score_videos(videos):
         ranked = sorted((v["score"] for v in items), reverse=True)
         keep_n = max(1, int(round(len(ranked) * PICK_FRACTION.get(cat, 0.35))))
         cutoff = max(MIN_PICK_SCORE, ranked[min(keep_n, len(ranked)) - 1])
+        fresh_cut = (today - datetime.timedelta(days=NEW_DAYS)).isoformat()
         for v in items:
             kind = v.get("kind") or guess_kind(v.get("title", ""), v.get("channel", ""), v.get("seconds", 0))
-            v["pick"] = bool(v["score"] >= cutoff and kind not in BAD_KINDS and (not v.get("q") or v["q"] >= 3))
+            good = kind not in BAD_KINDS and (not v.get("q") or v["q"] >= 3)
+            # a brand-new upload has almost no views, so views-based scores bury it; keep decent ones visible
+            is_new = v.get("published", "") >= fresh_cut
+            v["pick"] = bool(good and (v["score"] >= cutoff or is_new))
 
 
 # ---------------------------------------------------------------
