@@ -1,24 +1,21 @@
-# Runs the pipeline in the cloud every day, so you never need your laptop.
 name: Update GogginsTube
 
 on:
   schedule:
-    # 09:30 UTC = AFTER YouTube's quota resets (midnight Pacific = 08:00 UTC in winter, 07:00 in summer).
-    # The old 03:00 UTC time ran BEFORE the reset, so it used up yesterday's already-empty quota.
     - cron: "30 9 * * *"
-  workflow_dispatch:        # the "Run workflow" button
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: gogginstube-update   # never two runs at the same time
+  group: gogginstube-update
   cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
 
