@@ -1256,7 +1256,28 @@
     "r2W-AnwPxG0": "Goggins",
     "gHAUCdgaOs4": "Longevity",
     "FDGBdPy_uOg": "Russian",
-    "UkJwucn-vvw": "Russian"
+    "UkJwucn-vvw": "Russian",
+    "brzkTni-nTQ": "Longevity",
+    "opImPNR--pY": "Russian",
+    "PTE38Zxz9eo": "Russian",
+    "DjA_dCeXIi8": "Russian",
+    "zSwDaPiSWWo": "Russian",
+    "DKDYYP-Kfsw": "Longevity",
+    "ZxBdOy8-rUY": "Russian",
+    "1te__SSLKGY": "Russian",
+    "PZitH8ZDEAw": "Russian",
+    "QGd9ut_IZx0": "Russian",
+    "3GJU5GOY-Jg": "Russian",
+    "IIAW6MTUZ8c": "Goggins",
+    "uu79xb6gghQ": "Russian",
+    "yq7XkCxa244": "Russian",
+    "-WcXnyW99DU": "Russian",
+    "pW1WC5wac8c": "Russian",
+    "ULvHzox2V6s": "Russian",
+    "lA-Ct-H6XI4": "Russian",
+    "yUbWonFEcJs": "Russian",
+    "C_PAUAB-9q0": "Longevity",
+    "n1G3xqgzB2c": "Longevity"
   },
   "wbJ_Q1xsDHg": {
     "keep": true,
@@ -1572,7 +1593,8 @@
     "topic": "learning while walking",
     "q": 3,
     "kind": "lesson",
-    "level": "A1"
+    "level": "A1",
+    "sum_fail": 1
   },
   "BoVRNDO-gXs": {
     "keep": false,
@@ -1835,7 +1857,7 @@
     "topic": "unstoppable mindset",
     "q": 2,
     "kind": "compilation",
-    "miss": 1
+    "miss": 2
   },
   "a7mnjc7jV-I": {
     "keep": false
@@ -8463,7 +8485,8 @@
     "cat": "Longevity",
     "topic": "retatrutide anti-aging drug",
     "q": 3,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "x2LKGn_8M3s": {
     "keep": true,
@@ -8540,7 +8563,8 @@
     "cat": "Goggins",
     "topic": "push up workout",
     "q": 3,
-    "kind": "workout"
+    "kind": "workout",
+    "sum_fail": 1
   },
   "y_7CUu9RXQM": {
     "keep": true,
@@ -15092,7 +15116,8 @@
     "topic": "full course a1 b2",
     "q": 5,
     "kind": "course",
-    "level": "Mixed"
+    "level": "Mixed",
+    "sum_fail": 1
   },
   "mQ1uBcrHodo": {
     "keep": true,
@@ -15100,7 +15125,7 @@
     "topic": "vo2 max healthspan",
     "q": 4,
     "kind": "interview",
-    "sum_fail": 1
+    "sum_fail": 2
   },
   "M3LGLnnnMiI": {
     "keep": true,
@@ -19047,7 +19072,7 @@
   },
   "Y_CZZ53gjuo": {
     "keep": true,
-    "sum_fail": 1
+    "sum_fail": 2
   },
   "0nDEEg8y8iU": {
     "keep": true,
@@ -19063,9 +19088,21 @@
   },
   "0nUehDwTHI8": {
     "keep": true,
-    "sum_fail": 1
+    "sum_fail": 2
   },
   "FMlcKIsnAhE": {
+    "keep": true,
+    "sum_fail": 2
+  },
+  "Td0izbvDwPw": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "Nz8zETECHiI": {
+    "keep": true,
+    "sum_fail": 1
+  },
+  "W6qOZQLQ1Dk": {
     "keep": true,
     "sum_fail": 1
   }
