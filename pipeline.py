@@ -99,7 +99,7 @@ VIDEO_JUDGE_CALLS = 8               # new videos, 50 per request
 PLAYLIST_JUDGE_CALLS = 3
 RATE_OLD_CALLS = 8                  # gives already-kept videos a quality rating, 50 per request
 PAPER_CALLS = 4
-SUMMARY_CALLS = 15                  # one video per request
+SUMMARY_CALLS = 30                  # one video per request
 VIDEO_BATCH = 50
 PLAYLIST_BATCH = 30
 PAPER_BATCH = 15
@@ -1054,7 +1054,9 @@ def stage_summaries(lib):
     todo = [v for v in lib.videos.values()
             if not (lib.summaries.get(v["id"]) or {}).get("tldr")
             and lib.labels.get(v["id"], {}).get("sum_fail", 0) < SUMMARY_MAX_FAILS]
-    todo.sort(key=lambda v: (not v.get("pick"), -(v.get("score") or 0)))
+    new_cut = (TODAY - datetime.timedelta(days=NEW_DAYS)).isoformat()
+    # fresh uploads first (that is what you open the site for), then top picks, then by score
+    todo.sort(key=lambda v: (v.get("published", "") < new_cut, not v.get("pick"), -(v.get("score") or 0)))
     print(f"{len(todo)} videos have no summary yet; doing up to {SUMMARY_CALLS} (best first).")
     calls_before, made, attempts = GEM["calls"], 0, 0
     for v in todo:
@@ -1421,9 +1423,9 @@ def main():
     found = guarded("discovery", stage_discover, lib) or {}
     candidates = guarded("video details", stage_videos, lib, found) or []
     guarded("video judging", stage_judge_videos, lib, candidates)
+    guarded("papers", stage_papers, lib)                           # before the low-value stages, so Gemini's daily limit can't starve it
     guarded("playlists", stage_playlists, lib)
     guarded("rating", stage_rate_old, lib)
-    guarded("papers", stage_papers, lib)
     build_site(lib)                                                # scores are needed to pick what to summarise
     guarded("summaries", stage_summaries, lib)
     build_site(lib)
