@@ -254,13 +254,13 @@ const SORTS = {
 const PAGE = 48;
 
 // ---------- state ----------
-const prefs = Object.assign({ tab:"All", sorts:{}, picks:true, hideWatched:false, level:"", rtype:"all" }, store.get("gt.prefs", {}));
+const prefs = Object.assign({ tab:"All", sorts:{}, picks:true, hideWatched:false, level:"", rtype:"all" }, store.get("gt.prefs2", {}));
 const S = {
   videos: [], playlists: [], papers: [], summaries: null, sumPromise: null,
   q: "", watched: new Set(store.get("watched", [])), saved: new Set(store.get("saved", [])),
   hasPicks: false, view: [], shown: 0, loaded: false, modalId: null, lastFocus: null, dirty: false,
 };
-const savePrefs = () => store.set("gt.prefs", prefs);
+const savePrefs = () => store.set("gt.prefs2", prefs);
 const saveWatched = () => store.set("watched", [...S.watched]);
 const saveSaved = () => store.set("saved", [...S.saved]);
 
@@ -306,19 +306,24 @@ const byId = id => S.videos.find(v => v.id === id) || S.playlists.find(p => p.id
 const sorters = {
   best: (a, b) => (b.score ?? 0) - (a.score ?? 0) || (b.views ?? 0) - (a.views ?? 0),
   level: (a, b) => LEVEL_ORDER(a.level) - LEVEL_ORDER(b.level) || (b.score ?? b.q ?? 0) - (a.score ?? a.q ?? 0),
-  newest: (a, b) => (b.published || "").localeCompare(a.published || ""),
+  newest: (a, b) => (b.published || "").localeCompare(a.published || "") || (b.score ?? 0) - (a.score ?? 0),
   views: (a, b) => (b.views ?? 0) - (a.views ?? 0),
   shortest: (a, b) => a.seconds - b.seconds,
   longest: (a, b) => b.seconds - a.seconds,
 };
-const currentSort = () => prefs.sorts[prefs.tab] || (prefs.tab === "Russian" ? "level" : "best");
+const currentSort = () => prefs.sorts[prefs.tab] || "newest";   // newest first by default, so fresh uploads are on top
 const terms = () => S.q.toLowerCase().split(/\s+/).filter(Boolean);
 const hit = (item, ts) => ts.every(t => item._hay.includes(t));
+
+// a brand-new upload has almost no views yet, so its score is low. Never let "Top picks" hide a fresh video
+// that Gemini rated decent (3+ of 5) and did not flag as a compilation, reaction, clickbait or ad.
+const BAD_KINDS = new Set(["compilation", "reaction", "clickbait", "ad"]);
+const freshOk = v => isNew(v.published) && (v.q ?? 5) >= 3 && !BAD_KINDS.has(v.kind);
 
 function passes(v, ts, opts = {}) {
   if (!hit(v, ts)) return false;
   if (opts.hideWatched && S.watched.has(v.id)) return false;
-  if (opts.picks && S.hasPicks && !v.pick) return false;
+  if (opts.picks && S.hasPicks && !v.pick && !freshOk(v)) return false;
   return true;
 }
 
