@@ -105,7 +105,7 @@ MIN_SECONDS = 240                   # skip anything under 4 minutes (kills Short
 MAX_QUEUE = 4000                    # unjudged candidates kept for the next runs
 
 # --- Gemini (free tier is limited, so every stage has a hard cap on requests per run) ---
-VIDEO_JUDGE_CALLS = 8               # new videos, 50 per request
+VIDEO_JUDGE_CALLS = 20              # new videos, 50 per request
 PLAYLIST_JUDGE_CALLS = 3
 RATE_OLD_CALLS = 8                  # gives already-kept videos a quality rating, 50 per request
 PAPER_CALLS = 6
