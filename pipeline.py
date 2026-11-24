@@ -2,7 +2,7 @@
 """
 GogginsTube pipeline v5
 -----------------------
-Sections: Goggins, Longevity, Russian (learning Russian), plus Math & AI papers.
+Sections: Goggins, Longevity, Russian (learning Russian), and Cool Stuff (curated maths, science, computing and engineering videos).
 
 What is new in v5, in plain words
   1. RUSSIAN section: videos AND playlists from learn-Russian channels and searches. Gemini labels each
@@ -13,7 +13,7 @@ What is new in v5, in plain words
        - Gemini quality    (1-5: substance, original source, not clickbait / compilation / ad)
        - channel trust     (a list of channels you trust, a penalty for "motivation" re-upload farms)
        - length fit        (a 4-minute "podcast" or a 6-hour stream is rarely the best pick)
-     The site shows only the "top picks" by default.
+     The site presents videos newest-first by default; quality scores remain available for curation but never hide fresh uploads.
   3. SUMMARIES: written to site/summaries.json.  Source, best first:
        transcript (youtube-transcript-api)  ->  Gemini watching the video (short videos)  ->  description.
      Chapters ("key moments") are read free from video descriptions.
@@ -50,7 +50,7 @@ except ImportError:                                   # in the cloud (GitHub) th
 
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "").strip() or "gemini-3.5-flash-lite"
 
-CATS = ("Goggins", "Longevity", "Russian")
+CATS = ("Goggins", "Longevity", "Russian", "Cool Stuff")
 
 # --- YouTube channels (cheap: 1 unit per 50 videos). Handles look like @name. ---
 # A wrong handle just prints "Couldn't find channel" once and is retried after two weeks.
@@ -60,6 +60,10 @@ CHANNELS = {
     "Russian": ["@RealRussianClub", "@russianpod101", "@RussianLevel1", "@BeFluentinRussian",
                 "@RussianwithAnastasia", "@RussianwithDasha", "@LearnRussianStanislavAcademy",
                 "@BoostYourRussian", "@EasyRussianVideos", "@RussianwithMax", "@ComprehensibleRussian"],
+    "Cool Stuff": ["@numberphile", "@computerphile", "@veritasium", "@3blue1brown",
+                   "@standupmaths", "@mattparker", "@minutephysics", "@PBSInfiniteSeries",
+                   "@Fermilab", "@SmarterEveryDay", "@SteveMould", "@PracticalEngineeringChannel",
+                   "@BenEater", "@SebastianLague", "@WelchLabsVideo", "@TheRoyalInstitution"],
 }
 
 # --- YouTube searches (expensive: 100 units each) ---
@@ -76,6 +80,11 @@ SEARCHES = {
     "Russian": ["learn Russian for beginners A1", "Russian grammar explained", "Russian listening practice A2 B1",
                 "learn Russian intermediate B1 B2", "Russian vocabulary lesson", "Russian alphabet pronunciation lesson",
                 "Russian comprehensible input"],
+    "Cool Stuff": ["Numberphile mathematics explained", "Computerphile computer science explained",
+                   "Veritasium science engineering mathematics", "3Blue1Brown visual mathematics",
+                   "Stand-up Maths mathematical puzzles", "Fermilab particle physics explained",
+                   "Ben Eater computer engineering build", "Practical Engineering infrastructure science",
+                   "SmarterEveryDay engineering science experiment", "Steve Mould physics engineering"],
 }
 PLAYLIST_SEARCHES = ["learn Russian full course playlist beginner", "Russian A1 A2 B1 B2 course playlist",
                      "Russian grammar lessons playlist", "Russian listening practice playlist"]
@@ -86,7 +95,8 @@ TIER_PARAMS = {
     "long": {"videoDuration": "long", "order": "relevance"},       # 20+ minutes (interviews, lectures)
     "mid": {"videoDuration": "medium", "order": "relevance"},      # 4-20 minutes
 }
-TIERS = {"Goggins": ["fresh", "top", "long"], "Longevity": ["fresh", "top", "long"], "Russian": ["top", "long", "mid"]}
+TIERS = {"Goggins": ["fresh", "top", "long"], "Longevity": ["fresh", "top", "long"],
+         "Russian": ["top", "long", "mid"], "Cool Stuff": ["fresh", "top", "long", "mid"]}
 
 CHANNEL_DEEP_PAGES = 6              # first time a channel is read: up to 6 x 50 = 300 videos
 FRESH_DAYS = 30
@@ -112,9 +122,9 @@ VIDEO_SECONDS_PER_RUN = 3 * 3600       # total video minutes Gemini may watch pe
 SUMMARY_MAX_FAILS = 3
 
 # --- Ranking ---
-PICK_FRACTION = {"Goggins": 0.30, "Longevity": 0.35, "Russian": 0.60}   # share of each section marked "top pick"
+PICK_FRACTION = {"Goggins": 0.30, "Longevity": 0.35, "Russian": 0.60, "Cool Stuff": 0.45}   # share of each section marked "top pick"
 MIN_PICK_SCORE = 40
-LENGTH_FIT_MIN = {"Goggins": (10, 150), "Longevity": (15, 180), "Russian": (6, 60)}   # minutes with full marks
+LENGTH_FIT_MIN = {"Goggins": (10, 150), "Longevity": (15, 180), "Russian": (6, 60), "Cool Stuff": (6, 90)}   # minutes with full marks
 WEIGHTS = {"eng": 0.25, "pop": 0.20, "qual": 0.30, "trust": 0.15, "fit": 0.10}
 BAD_KINDS = {"compilation", "reaction", "clickbait", "ad"}
 # Channel trust 0..1. Matched as a lowercase substring of the channel name. Unknown channels get 0.5.
@@ -126,6 +136,10 @@ TRUSTED = {
     "real russian club": 0.9, "russianpod101": 0.8, "easy russian": 0.85, "russian level 1": 0.8,
     "be fluent in russian": 0.8, "russian with": 0.8, "comprehensible russian": 0.9, "boost your russian": 0.8,
     "learn russian": 0.7, "russian progress": 0.8,
+    "numberphile": 1.0, "computerphile": 1.0, "veritasium": 1.0, "3blue1brown": 1.0,
+    "stand-up maths": 1.0, "matt parker": 1.0, "minutephysics": 0.95, "pbs infinite series": 0.95,
+    "fermilab": 1.0, "smarter every day": 0.95, "steve mould": 0.95, "practical engineering": 0.95,
+    "ben eater": 1.0, "sebastian lague": 0.95, "welch labs": 0.95, "royal institution": 0.95,
 }
 LOW_TRUST_HINTS = ["motivat", "inspir", "mindset", "clips", "compilation", "shorts", "status", "quotes", "viral"]
 
@@ -660,40 +674,20 @@ def rank_for_judging(by_feed):
 # 7. GEMINI
 # ---------------------------------------------------------------
 
-VIDEO_PROMPT = """You are curating a personal video site. It has exactly three sections:
-- "Goggins": videos where David Goggins himself speaks or is the main subject (interviews, podcasts, talks, documentaries, workouts).
-- "Longevity": videos about living longer and healthier (aging science, healthspan, exercise, sleep or nutrition for long life, medical longevity research).
-- "Russian": lessons that TEACH the Russian language to foreign learners (grammar, vocabulary, pronunciation, the alphabet, listening practice or stories made for learners, comprehensible-input lessons).
-  REJECT for Russian: content made for native speakers, news, politics, music, entertainment, vlogs that are not lessons, lessons about other languages.
-For each numbered video decide whether to KEEP it, and rate it. The site only wants the BEST videos, so be strict.
-"q" is the quality from 1 to 5:
-- Goggins: 5 = Goggins himself speaking at length (long interview, podcast, keynote, his own channel, a serious documentary); 3 = fine but secondary (host commentary, a workout inspired by him); 1-2 = fan-made compilations with music, recycled clips, clickbait titles, reaction videos, AI voices.
-- Longevity: 5 = a credible scientist or physician teaching with real substance, original long-form; 3 = general-audience explainer without depth; 1-2 = clickbait, supplement or product sales, miracle claims, thin listicles.
-- Russian: 5 = clear, well structured, accurate lesson by a qualified teacher, correct stress, level-appropriate; 3 = fine but disorganised or very long-winded; 1-2 = inaccurate, mostly English chatter, advertising.
-"kind" is one of: interview, talk, lecture, explainer, documentary, workout, course, lesson, compilation, reaction, clickbait, ad, other.
-For Russian videos also give "level": A1, A2, B1, B2, C1 (C1 = advanced), or "Mixed" if it covers several levels.
-Return ONLY a JSON array, one object per video, like this:
-[{"i": 0, "keep": true, "cat": "Goggins", "topic": "mental toughness", "q": 4, "kind": "interview"},
- {"i": 1, "keep": true, "cat": "Russian", "topic": "cases grammar", "q": 5, "kind": "lesson", "level": "A2"},
- {"i": 2, "keep": false}]
-"cat" must be "Goggins", "Longevity" or "Russian". "topic" is 2-4 words.
+VIDEO_PROMPT = """You are a strict curator for a personal library of exceptional videos. There are exactly four sections:
+- "Goggins": David Goggins himself is the main subject.
+- "Longevity": evidence-based science of healthspan, aging, exercise, sleep and nutrition.
+- "Russian": lessons specifically teaching Russian to non-native learners.
+- "Cool Stuff": outstanding mathematics, theoretical and experimental science, physics, computer science, engineering, algorithms, visual explanations and genuinely educational technical demonstrations. Prefer channels such as Numberphile, Computerphile, Veritasium, 3Blue1Brown, Stand-up Maths, Fermilab, Ben Eater, Practical Engineering, SmarterEveryDay, Steve Mould and the Royal Institution.
 
-Videos:
-"""
+For "Cool Stuff", KEEP only a real educational video with a clear concept, derivation, experiment, demonstration, build, proof, or technical explanation. REJECT podcast episodes, interviews whose main content is conversation, reaction videos, generic commentary, news roundups, paper-reading/research-paper discussion, AI-generated slop, low-effort listicles, motivational content, shorts, compilations, and vague speculation. A video merely mentioning a scientific paper is not enough. Prefer evergreen teaching and original demonstrations over chatter. Be very selective: if it is not genuinely educational and technically substantive, reject it.
 
-RATE_PROMPT = """You are rating videos that are already on a personal video site with three sections:
-Goggins (David Goggins), Longevity (aging science and healthy long life), Russian (lessons for learners of Russian).
-Do NOT decide whether to keep them. Only rate each one. The site wants only the BEST videos, so be strict.
-"q" is the quality from 1 to 5:
-- Goggins: 5 = Goggins himself speaking at length (long interview, podcast, keynote, serious documentary); 3 = fine but secondary; 1-2 = fan-made compilations with music, recycled clips, clickbait, reaction videos, AI voices.
-- Longevity: 5 = a credible scientist or physician with real substance, original long-form; 3 = general explainer; 1-2 = clickbait, product sales, miracle claims, thin listicles.
-- Russian: 5 = clear, structured, accurate lesson for learners; 3 = fine but disorganised; 1-2 = inaccurate, mostly English chatter, advertising.
-"kind" is one of: interview, talk, lecture, explainer, documentary, workout, course, lesson, compilation, reaction, clickbait, ad, other.
-Return ONLY a JSON array, one object per video, like this:
-[{"i": 0, "q": 4, "kind": "interview"}]
+Return for each video: keep, cat, topic (2-4 words), q (quality 1-5), kind. Kinds: interview, talk, lecture, explainer, documentary, workout, course, lesson, demonstration, build, experiment, compilation, reaction, clickbait, ad, other. For Russian videos also give level A1, A2, B1, B2, C1 or Mixed. Return ONLY a JSON array, one object per video, like [{"i":0,"keep":true,"cat":"Cool Stuff","topic":"visual calculus","q":5,"kind":"explainer"},{"i":1,"keep":false}]. "cat" must be exactly "Goggins", "Longevity", "Russian" or "Cool Stuff". Videos: """
 
-Videos:
-"""
+
+RATE_PROMPT = """You are rating videos already on a personal video site with four sections: Goggins, Longevity, Russian and Cool Stuff (excellent maths, science, physics, computer science and engineering teaching). Do NOT decide whether to keep them. Only rate each one.
+For Cool Stuff, reward clear teaching, original demonstrations, rigorous explanations and substantive technical content. Give low scores to podcasts, paper-discussion chatter, generic commentary, news roundups and low-effort content.
+"q" is quality from 1 to 5. Score substance, clarity, originality and educational value. "kind" is one of: interview, talk, lecture, explainer, documentary, workout, course, lesson, demonstration, build, experiment, compilation, reaction, clickbait, ad, other. Return ONLY a JSON array like [{"i":0,"q":5,"kind":"explainer"}]. Videos: """
 
 PLAYLIST_PROMPT = """You are curating the "Russian" section of a personal site for someone learning Russian.
 Below are YouTube playlists. KEEP only playlists that are a structured way to LEARN Russian as a foreign language:
