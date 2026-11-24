@@ -410,6 +410,8 @@ def guess_category(item, searched_for):
                                            ["longevity", "aging", "ageing", "healthspan", "lifespan",
                                             "live longer", "anti-aging", "vo2 max", "blue zone"]):
         return "Longevity"
+    if searched_for == "Cool Stuff":
+        return "Cool Stuff"                          # Gemini decides whether it is good enough
     if searched_for == "Russian" and ("russian" in text or "русск" in text) and any(w in text for w in LEARN_WORDS):
         return "Russian"
     return None
@@ -891,6 +893,7 @@ def run_batches(items, judge, batch_size, max_calls, apply, label):
     """Send items to Gemini in batches (at most max_calls requests). apply(item, result) stores each answer.
     Returns the number of items that were handled. Stops quietly if Gemini has a problem."""
     done = 0
+    failures = 0
     for n, start in enumerate(range(0, len(items), batch_size)):
         if n >= max_calls or GEM["dead"]:
             print(f"  {len(items) - start} more {label} will be handled in a later run.")
@@ -899,8 +902,15 @@ def run_batches(items, judge, batch_size, max_calls, apply, label):
         try:
             results = judge(batch)
         except Exception as e:
-            print("  Gemini problem:", e)
-            break
+            print(f"  Gemini problem on {label} batch {n + 1}: {e}")
+            if GEM["dead"]:
+                break
+            failures += 1
+            if failures >= 3:                        # 3 bad batches in a row: stop, try again next run
+                break
+            time.sleep(PAUSE_BETWEEN_CALLS)
+            continue                                 # skip the bad batch instead of blocking every batch behind it
+        failures = 0
         for item, res in zip(batch, results):
             if res is not None:
                 apply(item, res)
