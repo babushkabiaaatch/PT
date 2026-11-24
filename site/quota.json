@@ -1,6 +1,6 @@
 {
   "day": "2026-11-24",
-  "used": 1663,
+  "used": 3231,
   "done": [
     "Goggins|David Goggins documentary|fresh",
     "Longevity|longevity science explained|fresh",
@@ -15,6 +15,20 @@
     "Longevity|longevity science explained|long",
     "Russian|Russian listening practice A2 B1|mid",
     "Cool Stuff|Stand-up Maths mathematical puzzles|long",
-    "Goggins|David Goggins interview|fresh"
+    "Goggins|David Goggins interview|fresh",
+    "Longevity|healthspan how to live longer|fresh",
+    "Russian|learn Russian intermediate B1 B2|top",
+    "Cool Stuff|Stand-up Maths mathematical puzzles|mid",
+    "Goggins|David Goggins interview|top",
+    "Longevity|healthspan how to live longer|top",
+    "Russian|learn Russian intermediate B1 B2|long",
+    "Cool Stuff|Fermilab particle physics explained|fresh",
+    "Goggins|David Goggins interview|long",
+    "Longevity|healthspan how to live longer|long",
+    "Russian|learn Russian intermediate B1 B2|mid",
+    "Cool Stuff|Fermilab particle physics explained|top",
+    "Goggins|David Goggins podcast|top",
+    "Longevity|David Sinclair aging|top",
+    "Russian|Russian vocabulary lesson|top"
   ]
 }

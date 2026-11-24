@@ -4115,7 +4115,11 @@
     "vD1EvxL4aiA": "Cool Stuff",
     "nNwC2da8fhA": "Cool Stuff",
     "r9_tbHEEWYo": "Cool Stuff",
-    "z4XsYTsmRBY": "Longevity"
+    "z4XsYTsmRBY": "Longevity",
+    "LssrBZb5ffU": "Longevity",
+    "tlsBvxTnZxo": "Goggins",
+    "MPjWauqAwgI": "Longevity",
+    "isqz2xJ_UtI": "Longevity"
   },
   "wbJ_Q1xsDHg": {
     "keep": true,
@@ -5119,7 +5123,8 @@
     "topic": "cases grammar",
     "q": 5,
     "kind": "lesson",
-    "level": "A2"
+    "level": "A2",
+    "sum_fail": 1
   },
   "sBfPGadMa5U": {
     "keep": true,
@@ -11166,7 +11171,7 @@
   },
   "fh2dBmLN-ZM": {
     "keep": true,
-    "sum_fail": 1
+    "sum_fail": 2
   },
   "qMs145DJyb0": {
     "keep": true,
@@ -12042,7 +12047,7 @@
     "q": 5,
     "kind": "lesson",
     "level": "A2",
-    "sum_fail": 1
+    "sum_fail": 2
   },
   "NZ51n-HBnU8": {
     "keep": true,
@@ -18244,7 +18249,8 @@
     "topic": "action verbs acted",
     "q": 5,
     "kind": "lesson",
-    "level": "A2"
+    "level": "A2",
+    "sum_fail": 1
   },
   "JKK0F51W1GA": {
     "keep": true,
@@ -23147,5 +23153,214 @@
     "level": "A1",
     "topic": "beginner course",
     "q": 4
+  },
+  "arxiv:2611.30890": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "The authors prove that a specific lower bound form for $r_k(A,x)$ is impossible for any $c>0$, obtain a mean-square estimate, and confirm a conjecture of Chen and Tang for $k\\ge 3$.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.30039": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "Researchers uncover an entropy-like geometric structure where the cubically weighted interaction free energy is nondecreasing under physical dilation, unifying two exact polarization-virial theorems.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.30790": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "The paper proves Monsky's conjecture on ideal colengths in polynomial rings and analyzes the algebraic and transcendental nature of Hilbert-Kunz and Frobenius splitting series.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.31196": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "The study develops a correlation statistic between pairs of stellar deflections for astrometry to search for a stochastic gravitational wave background.",
+    "kind": "new method",
+    "level": "advanced"
+  },
+  "arxiv:2611.29929": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "The authors construct an infinite graph limit for nearest-predecessor random graphs, prove its Benjamini-Schramm convergence, and resolve Ponomarenko's open problem regarding the maximum degree.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.30754": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "Poincaré-Einstein metrics are constructed that bifurcate from anti-de Sitter black holes and break rotational symmetry while keeping conformal infinity fixed.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.29860": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "The authors prove that every minor of a Toeplitz matrix formed by cylindrical dimer matchings has nonnegative coefficients, settling a question by Lai and connecting to Stembridge's conjecture.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.30798": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "The paper analyzes non-convex M-estimation in generalized linear models under rotationally invariant designs using Vector Approximate Message Passing and State Evolution.",
+    "kind": "new method",
+    "level": "expert"
+  },
+  "arxiv:2611.30708": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "The study proves that black holes in weakly coupled trace-anomaly gravity carry scalar hair whose charge is fixed by horizon topology, surface gravity, and the difference of central charges.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.21827": {
+    "keep": false
+  },
+  "arxiv:2611.29806": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove a uniform upper L2 bound for eigenfunctions of the four-dimensional flat torus on the compact paraboloid using Fourier restriction estimates.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.30785": {
+    "keep": false
+  },
+  "arxiv:2611.30426": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We settle the dispute over squeezed-vacuum phase estimation by exact computation of finite-sample errors, resource-fair scaling, phase window, and loss ceilings.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.21791": {
+    "keep": false
+  },
+  "arxiv:2611.29111": {
+    "keep": false
+  },
+  "arxiv:2611.30672": {
+    "keep": false
+  },
+  "arxiv:2611.30380": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We reconstruct elastic neutron-alpha phase shifts in all five channels through l=2 from trapped spectra measured on a quantum computer.",
+    "kind": "new method",
+    "level": "expert"
+  },
+  "arxiv:2611.21009": {
+    "keep": false
+  },
+  "arxiv:2611.31120": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove Lam and Litt's conjecture for families of K3 surfaces over a finitely generated Z-algebra when the initial condition lies in the Hodge line.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.30517": {
+    "keep": false
+  },
+  "arxiv:2611.30276": {
+    "keep": false
+  },
+  "arxiv:2611.20687": {
+    "keep": false
+  },
+  "arxiv:2611.30807": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We study Zariski-constructible functions of class C^k over a real closed field, where functions have graphs that are Boolean combinations of algebraic subsets.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.30406": {
+    "keep": false
+  },
+  "arxiv:2611.29755": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We study stopping-time leakage in blind quantum delegation and prove that the server's best distinguishing advantage equals the total-variation distance between the stopping-time distributions.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.19925": {
+    "keep": false
+  },
+  "arxiv:2611.30403": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We study quantum walks and prove two general theorems producing uniform asymptotic formulae for the wave function, observing a transition governed by the gamma function.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.30404": {
+    "keep": false
+  },
+  "arxiv:2611.29638": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We advance the modeling of hierarchical triple black hole systems by including new relativistic lensing, aberration, and polarization terms to compute exact gravitational waves.",
+    "kind": "new method",
+    "level": "expert"
+  },
+  "arxiv:2611.19122": {
+    "keep": false
+  },
+  "arxiv:2611.30030": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We provide new evidence toward a recent conjecture on the list-recoverability of folded Reed-Solomon codes by proving explicit codes of rate close to a specific bound are list-recoverable.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.30090": {
+    "keep": false
+  },
+  "arxiv:2611.29529": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We propose a superconducting circuit QED source of on-demand frequency-entangled microwave photon pairs based on a transmon-resonator dimer.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.18494": {
+    "keep": false
+  },
+  "arxiv:2611.29705": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We study the base ideal and base locus of a Keller map and prove several foundational properties regarding their structure and radical ideals.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.31032": {
+    "keep": true,
+    "cat": "AI",
+    "summary": "We resolve an open question by constructing a two-node counterexample showing gossip-based algorithms can produce exponential regret, and introduce a black-box reduction.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.31242": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We develop a dynamical mean-field theory for a Hubbard interaction on coherent orbitals in a topological flat band, finding a quantum-geometry-tuned Mott transition.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.17784": {
+    "keep": false
+  },
+  "arxiv:2611.29486": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We resolve Thomassé's directed path conjecture asymptotically by proving that every oriented graph of minimum out-degree d contains a directed path of length at least 2d - O(d log log d / log d).",
+    "kind": "new theorem",
+    "level": "expert"
   }
 }
