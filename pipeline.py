@@ -1225,7 +1225,22 @@ def stage_videos(lib, found):
 
 
 def stage_judge_videos(lib, candidates):
-    candidates.sort(key=lambda v: (not v["new"], -channel_trust(v["channel"]), -v["views"]))
+        candidates.sort(key=lambda v: (not v["new"], -channel_trust(v["channel"]), -v["views"]))
+    # Mix the sections so Cool Stuff isn't starved by the big Russian/Longevity backlog.
+    # Cool Stuff gets 2 slots per round while its section is empty-ish.
+    buckets = {}
+    for v in candidates:
+        buckets.setdefault(v["guess"], []).append(v)
+    pattern = ["Cool Stuff", "Cool Stuff", "Goggins", "Longevity", "Russian"]
+    mixed = []
+    while any(buckets.values()):
+        for c in pattern:
+            if buckets.get(c):
+                mixed.append(buckets[c].pop(0))
+        for c in list(buckets):          # any category not in the pattern
+            if c not in pattern and buckets[c]:
+                mixed.append(buckets[c].pop(0))
+    candidates[:] = mixed
     print(f"{len(candidates)} new videos need Gemini's verdict.")
 
     def apply(v, lab):
