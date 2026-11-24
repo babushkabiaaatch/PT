@@ -1,6 +1,6 @@
 // Service worker: lets the site install as an app and still open when you're offline.
 // Strategy: always try the internet first (so you get fresh videos), fall back to the saved copy.
-const CACHE = "gogginstube-v7";
+const CACHE = "gogginstube-v8";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
