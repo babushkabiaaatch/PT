@@ -102,7 +102,6 @@
   .acts { display:flex; gap:6px; margin-top:auto; padding-top:4px; }
   .act { background:var(--card2); border:1px solid var(--line); border-radius:8px; padding:5px 10px; font-size:12px; font-weight:600; color:var(--text); }
   .act:hover { border-color:#4a4a55; }
-  .act.sum { background:#16263a; border-color:#23466f; color:#a9d2ff; }
   .act.save[aria-pressed="true"] { background:#3a1215; border-color:#6b1d22; color:#ff9a95; }
   .skeleton { aspect-ratio:16/11; border-radius:var(--radius);
     background:linear-gradient(100deg,var(--card) 30%,var(--card2) 50%,var(--card) 70%); background-size:200% 100%; animation:sh 1.3s infinite linear; }
@@ -157,16 +156,14 @@
   /* ---------- modal ---------- */
   .modal { position:fixed; inset:0; z-index:20; background:rgba(0,0,0,.9); display:none; align-items:center; justify-content:center; padding:12px; }
   .modal.open { display:flex; }
-  .sheet { width:min(1280px, 100%); max-height:100%; display:flex; flex-direction:column; background:#101014; border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+  .sheet { width:min(1760px, 100%); max-height:100%; display:flex; flex-direction:column; background:#101014; border:1px solid var(--line); border-radius:16px; overflow:hidden; }
   .mhead { display:flex; align-items:flex-start; gap:12px; padding:14px 16px 10px; }
   .mhead h2 { margin:0; font-size:16px; line-height:1.35; flex:1; }
   .mhead .sub2 { font-size:12px; color:var(--muted); margin-top:2px; font-weight:400; display:block; }
   .x { background:var(--card); border:1px solid var(--line); border-radius:999px; width:36px; height:36px; flex:none; }
-  .mtabs { display:none; gap:6px; padding:0 16px 8px; }
-  .mbody { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr); gap:16px; padding:0 16px 16px; min-height:0; flex:1; overflow:hidden; }
-  .pane.watch { min-width:0; overflow-y:auto; }
-  .pane.sum { overflow-y:auto; min-height:0; padding-right:4px; }
-  .stage { aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden; position:relative; }
+  .mbody { display:block; padding:0 16px 16px; min-height:0; flex:1; overflow-y:auto; }
+  .pane.watch { min-width:0; }
+  .stage { aspect-ratio:16/9; width:min(100%, calc((100vh - 200px) * 16 / 9)); margin:0 auto; background:#000; border-radius:12px; overflow:hidden; position:relative; }
   .stage iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
   .poster { position:absolute; inset:0; width:100%; height:100%; border:0; padding:0; background:#000; }
   .poster img { width:100%; height:100%; object-fit:cover; opacity:.8; }
@@ -174,28 +171,11 @@
   .mlinks { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
   .mlinks a, .mlinks button { text-decoration:none; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:7px 14px; font-size:13px; font-weight:600; color:var(--text); }
   .mlinks button[aria-pressed="true"] { background:#3a1215; border-color:#6b1d22; color:#ff9a95; }
-  .pane.sum h3 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:18px 0 6px; }
-  .pane.sum h3:first-of-type { margin-top:10px; }
-  .tldr { font-size:16px; line-height:1.55; margin:0; }
-  .pane.sum ul { margin:0; padding-left:20px; } .pane.sum li { margin:0 0 7px; line-height:1.5; }
-  .src { display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:12px; color:var(--muted); }
-  .src .ai { background:#16263a; color:#a9d2ff; border-radius:6px; padding:2px 8px; font-weight:700; }
-  .readtime { margin:8px 0 0; font-size:13px; color:var(--long); font-weight:600; }
-  .moments { list-style:none; padding:0 !important; margin:0; }
-  .moments li { display:flex; gap:10px; align-items:baseline; }
-  .ts { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:1px 8px; font-size:12px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--ru); flex:none; }
-  .ts:hover { border-color:var(--ru); }
-  .vocab { display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:0; }
-  .vocab dt { font-weight:700; } .vocab dd { margin:0; color:var(--muted); }
-  .fine { font-size:12px; color:var(--muted); margin-top:18px; }
 
   @media (max-width:899px) {
     .modal { padding:0; align-items:flex-end; }
     .sheet { border-radius:16px 16px 0 0; max-height:100%; height:100%; border-width:0; }
-    .mtabs { display:flex; }
-    .mbody { grid-template-columns:1fr; overflow:hidden; }
-    .modal[data-pane="watch"] .pane.sum, .modal[data-pane="sum"] .pane.watch { display:none; }
-    .pane.sum { padding-bottom:24px; }
+    .stage { width:100%; }
   }
   @media (max-width:520px) {
     #grid { grid-template-columns:1fr; gap:14px; }
@@ -214,7 +194,7 @@
   .modal.mini .sheet { width:100%; height:auto; max-height:none; border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 40px rgba(0,0,0,.65); }
   .modal.mini .mhead { padding:8px 10px 6px; gap:8px; }
   .modal.mini .mhead h2 { font-size:12px; line-height:1.3; cursor:pointer; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-  .modal.mini .sub2, .modal.mini .mtabs, .modal.mini .pane.sum, .modal.mini .mlinks, .modal.mini .related { display:none !important; }
+  .modal.mini .sub2, .modal.mini .mlinks, .modal.mini .related { display:none !important; }
   .modal.mini .mbody { display:block; padding:0 8px 8px; overflow:visible; }
   .modal.mini .pane.watch { overflow:visible; }
   .modal.mini .x { width:30px; height:30px; }
@@ -267,7 +247,6 @@
   .meta { font-size:11px; line-height:1.5; color:#8f99a7; }
   .acts { gap:7px; padding-top:5px; }
   .act { border-radius:8px; padding:6px 10px; font-size:11px; background:#20252d; border-color:#303741; color:#d5dbe3; }
-  .act.sum { background:#18283a; border-color:#294b6d; color:#a9d2ff; }
   .act.save[aria-pressed="true"] { background:#351b20; border-color:#68313a; color:#ffaaa9; }
   .act.queue[aria-pressed="true"] { background:#153022; border-color:#286342; color:#91e5ae; }
   #more { border-radius:10px; padding:10px 22px; background:#e8edf3; color:#101318; border:0; font-weight:750; }
@@ -366,16 +345,12 @@
   </ul>
 </div>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" data-pane="watch">
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
   <div class="sheet">
     <div class="mhead">
       <h2 id="mTitle"></h2>
       <button class="x" id="mMini" aria-label="Keep playing while you browse" title="Keep playing while you browse">▁</button>
       <button class="x" id="mClose" aria-label="Close">✕</button>
-    </div>
-    <div class="mtabs" role="tablist">
-      <button class="pill" id="mtWatch" aria-pressed="true">Watch</button>
-      <button class="pill" id="mtSum" aria-pressed="false">Summary</button>
     </div>
     <div class="mbody">
       <section class="pane watch">
@@ -383,7 +358,6 @@
         <div class="mlinks" id="mLinks"></div>
         <div class="related" id="related"></div>
       </section>
-      <section class="pane sum" id="paneSum" aria-label="Summary"></section>
     </div>
   </div>
 </div>
@@ -422,7 +396,7 @@ const prefs = Object.assign({ tab:"Goggins", sorts:{}, picks:false, hideWatched:
 if (!TABS.some(([key]) => key === prefs.tab)) prefs.tab = "Goggins";
 prefs.picks = false; prefs.hideWatched = false; prefs.len = "";
 const S = {
-  videos: [], playlists: [], papers: [], summaries: null, sumPromise: null,
+  videos: [], playlists: [], papers: [], 
   q: "", watched: new Set(store.get("watched", [])), saved: new Set(store.get("saved", [])),
   hasPicks: false, view: [], shown: 0, loaded: false, modalId: null, lastFocus: null, dirty: false,
   pos: store.get("gt.pos", {}), since: false, prevDate: null, player: null, poll: null,
@@ -636,7 +610,6 @@ function videoCard(v) {
   const russian = v.category === "Russian";
   const badge = russian && v.level ? `<span class="badge lvl">${esc(v.level === "Mixed" ? "All levels" : v.level)}</span>`
                                    : `<span class="badge ${v.category === "Cool Stuff" ? "cool-stuff" : esc(v.category)}">${esc(v.category)}</span>`;
-  const sum = v.s ? `<button class="act sum" data-act="summary">${v.s === 2 ? "Summary" : "Outline"}</button>` : "";
   const lk = (kind, val) => `<button class="lnk" data-act="${kind}" data-v="${esc(val)}" title="Only show this ${kind}">${esc(val)}</button>`;
   const meta = `${lk("channel", v.channel)} · ${fmtViews(v.views || 0)} · ${esc(fmtAgo(v.published))}` + (v.topic ? ` · ${lk("topic", v.topic)}` : "");
   return `<article class="card${watched ? " watched" : ""}" data-id="${id}" data-type="video">
@@ -650,7 +623,7 @@ function videoCard(v) {
     <div class="body">
       <h3 class="title"><button data-act="play">${esc(v.title)}</button></h3>
       <div class="meta">${meta}</div>
-      <div class="acts">${sum}</div>
+      <div class="acts"></div>
     </div></article>`;
 }
 
@@ -899,11 +872,6 @@ function setMini(on) {                                  // mini-player: keeps pl
   b.setAttribute("aria-label", b.title);
 }
 
-function setPane(p) {
-  modal.dataset.pane = p;
-  $("#mtWatch").setAttribute("aria-pressed", p === "watch");
-  $("#mtSum").setAttribute("aria-pressed", p === "sum");
-}
 function loadPlayer(item, t, fresh) {
   const stage = $("#stage");
   if (!t && !fresh) { const r = resumeAt(item); if (r) t = Math.max(0, r - 3); }          // pick up where you left off
@@ -958,13 +926,6 @@ function trackPlayer(item, iframe) {
     S.poll = setInterval(savePos, 5000);
   }).catch(() => {});
 }
-function showPoster(item) {
-  const stage = $("#stage");
-  const img = item.seconds !== undefined ? `https://i.ytimg.com/vi/${encodeURIComponent(item.id)}/hqdefault.jpg` : safeImg(item.thumb);
-  stage.innerHTML = `<button class="poster" aria-label="Play">${img ? `<img src="${esc(img)}" alt="">` : ""}<span class="play">▶</span></button>`;
-  $(".poster", stage).onclick = () => { loadPlayer(item); setPane("watch"); };
-}
-
 function openItem(item, mode, keepMini) {
   const isPlaylist = item.seconds === undefined;
   if (!keepMini) setMini(false);                          // opening something from the list expands the player
@@ -981,13 +942,12 @@ function openItem(item, mode, keepMini) {
     try { await navigator.clipboard.writeText(url); e.target.textContent = "Copied ✓"; } catch (err) { e.target.textContent = "Copy failed"; }
     setTimeout(() => { e.target.textContent = "Copy link"; }, 1500);
   };
-  const summaryFirst = mode === "summary";
   const resumed = !isPlaylist && resumeAt(item);
-  if (summaryFirst) showPoster(item); else loadPlayer(item);
+  loadPlayer(item);
   if (resumed) {
     const b = document.createElement("button");
     b.textContent = `↺ Start over (resumed at ${fmtTime(Math.floor(resumed))})`;
-    b.onclick = () => { delete S.pos[item.id]; store.set("gt.pos", S.pos); S.dirty = true; loadPlayer(item, 0, true); setPane("watch"); b.remove(); };
+    b.onclick = () => { delete S.pos[item.id]; store.set("gt.pos", S.pos); S.dirty = true; loadPlayer(item, 0, true); b.remove(); };
     $("#mLinks").appendChild(b);
   }
   if (S.queue.length) {
@@ -998,8 +958,6 @@ function openItem(item, mode, keepMini) {
   }
   renderRelated(item);
   $(".pane.watch").scrollTop = 0;
-  setPane(summaryFirst ? "sum" : "watch");
-  renderSummary(item);
   modal.classList.add("open");
   document.body.classList.toggle("noscroll", !isMini());
   if (!isMini()) $("#mClose").focus();
@@ -1029,50 +987,6 @@ function toggleSave(id) {
     const on = S.saved.has(id); b.setAttribute("aria-pressed", on); b.textContent = on ? "♥ Saved" : "♡ Save";
   });
   renderCounts();
-}
-
-async function ensureSummaries() {
-  if (S.summaries) return S.summaries;
-  if (!S.sumPromise) S.sumPromise = fetchJSON("summaries.json", {}).then(d => (S.summaries = d));
-  return S.sumPromise;
-}
-const SRC = { transcript: "from the transcript", video: "AI watched the video", description: "from the description only, so less detailed" };
-
-async function renderSummary(item) {
-  const pane = $("#paneSum");
-  if (item.seconds === undefined) {                                   // a playlist has no summary
-    pane.innerHTML = `<div class="src"><span class="ai">Playlist</span></div>
-      <h3>About</h3><p class="tldr">${esc(item.topic || "Learn-Russian course")} · ${item.count} videos${item.level ? " · level " + esc(item.level === "Mixed" ? "mixed" : item.level) : ""}.</p>
-      <p class="fine">Videos play one after another. Use the playlist button in the player to jump between lessons.</p>`;
-    return;
-  }
-  pane.innerHTML = '<p class="muted">Loading summary…</p>';
-  const all = await ensureSummaries();
-  if (S.modalId !== item.id) return;
-  const s = all[item.id];
-  if (!s || (!s.tldr && !(s.ch && s.ch.length))) {
-    pane.innerHTML = `<h3>Summary</h3><p>No summary yet. The daily update writes summaries for the best-ranked videos first, so check back soon.</p>`;
-    return;
-  }
-  let html = "";
-  if (s.tldr) {
-    const words = (s.tldr + " " + (s.points || []).join(" ")).split(/\s+/).length;
-    const secs = Math.max(15, Math.round(words / 3.3 / 5) * 5);                      // ~200 words a minute
-    html += `<div class="src"><span class="ai">AI summary</span><span>${esc(SRC[s.src] || "")}</span></div>
-      <p class="readtime">≈ ${secs < 90 ? secs + " sec" : Math.round(secs / 60) + " min"} read instead of ${fmtLen(item.seconds)}</p>
-      <h3>In short</h3><p class="tldr">${esc(s.tldr)}</p>`;
-    if (s.points && s.points.length) html += `<h3>Key points</h3><ul>${s.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>`;
-    if (s.vocab && s.vocab.length) html += `<h3>Key phrases</h3><dl class="vocab">${s.vocab.map(([ru, en]) => `<dt lang="ru">${esc(ru)}</dt><dd>${esc(en)}</dd>`).join("")}</dl>`;
-  } else {
-    html += `<div class="src"><span class="ai">Outline</span><span>from the video's own chapters. A written summary comes with the next updates.</span></div>`;
-  }
-  if (s.ch && s.ch.length) {
-    html += `<h3>Key moments</h3><ol class="moments">${s.ch.map(([t, title]) =>
-      `<li><button class="ts" data-t="${Number(t) | 0}">${fmtTime(Number(t) | 0)}</button><span>${esc(title)}</span></li>`).join("")}</ol>`;
-  }
-  if (s.tldr) html += `<p class="fine">Written by AI and can contain mistakes. Watch the video for anything important.</p>`;
-  pane.innerHTML = html;
-  pane.scrollTop = 0;
 }
 
 // focus trap + keyboard
@@ -1134,7 +1048,6 @@ $("#grid").addEventListener("click", e => {
   const item = byId(card.dataset.id);
   if (!item) return;
   if (act === "play") openItem(item, "watch");
-  else if (act === "summary") openItem(item, "summary");
   else if (act === "save") toggleSave(item.id);
   else if (act === "queue") toggleQueue(item.id);
 });
@@ -1210,13 +1123,6 @@ modal.addEventListener("mousedown", e => { if (e.target === modal && !isMini()) 
 $("#mMini").addEventListener("click", () => setMini(!isMini()));
 $("#mTitle").addEventListener("click", () => { if (isMini()) setMini(false); });
 $("#viewBtn").addEventListener("click", () => { prefs.view = prefs.view === "list" ? "grid" : "list"; savePrefs(); render(); });
-$("#mtWatch").addEventListener("click", () => { setPane("watch"); if (!$("#stage iframe")) { const it = byId(S.modalId); if (it) loadPlayer(it); } });
-$("#mtSum").addEventListener("click", () => setPane("sum"));
-$("#paneSum").addEventListener("click", e => {
-  const b = e.target.closest(".ts"); if (!b) return;
-  const it = byId(S.modalId); if (!it) return;
-  loadPlayer(it, Number(b.dataset.t)); setPane("watch");
-});
 
 // load more automatically when the bottom comes into view
 if ("IntersectionObserver" in window) {
