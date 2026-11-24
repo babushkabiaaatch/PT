@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://i.ytimg.com">
 <link rel="preconnect" href="https://www.youtube.com">
 <title>GogginsTube</title>
-<meta name="description" content="Goggins, longevity and learn-Russian videos, ranked so only the best come first. Read a summary instead of watching.">
+<meta name="description" content="A hand-picked library of Goggins, longevity, Russian learning, and exceptional maths, science and engineering videos.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0b0b0d">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -45,7 +45,10 @@
   .tab[aria-selected="true"] { background:var(--text); color:var(--bg); }
   .tab .n { font-weight:500; opacity:.65; margin-left:5px; font-size:12px; }
   .tab[data-tab="Russian"][aria-selected="true"] { background:var(--ru); color:#001a33; }
+  .tab[data-tab="Cool Stuff"][aria-selected="true"] { background:#b9a2ff; color:#1a1033; }
+  .badge.cool-stuff { background:#b9a2ff; color:#1a1033; }
 
+  .controls[hidden] { display:none !important; }
   .controls { display:flex; flex-wrap:wrap; gap:8px; padding:12px var(--gutter) 4px; align-items:center; }
   .controls input, .controls select, .pill {
     background:var(--card); border:1px solid var(--line); border-radius:999px; padding:8px 16px; min-height:38px; }
@@ -291,7 +294,7 @@
 
 <header class="hero">
   <h1>GOGGINS<span>TUBE</span></h1>
-  <p class="sub" id="status">Stay hard. Live long. Learn Russian.</p>
+  <p class="sub" id="status">Stay hard. Live long. Learn Russian. Explore big ideas.</p>
   <div class="hero-mark">Your personal knowledge library</div>
 </header>
 
@@ -304,7 +307,7 @@
     <button id="clearSearch" class="search-clear" type="button" aria-label="Clear search" title="Clear search">×</button>
     <kbd>/</kbd>
   </div>
-  <div class="controls">
+  <div class="controls" hidden>
     <label class="select-wrap"><span>Sort</span><select id="sort" aria-label="Sort by"></select></label>
     <button class="pill primary-filter" id="picks" aria-pressed="true" title="Only show the highest-ranked videos">★ Top picks</button>
     <button class="pill" id="hideWatched" aria-pressed="false">Hide watched</button>
@@ -408,14 +411,16 @@ const fetchJSON = (url, fallback) =>
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1"];
 const LEVEL_ORDER = l => { const i = LEVELS.indexOf(l); return i < 0 ? 9 : i; };
-const TABS = [["All","All"], ["Goggins","Goggins"], ["Longevity","Longevity"], ["Russian","Russian"], ["Research","Math, AI & Physics"], ["Queue","Queue"], ["Saved","Saved"]];
+const TABS = [["Goggins","Goggins"], ["Longevity","Longevity"], ["Russian","Russian"], ["Cool Stuff","Cool Stuff"]];
 const SORTS = {
   best: "Best first", level: "Beginner → advanced", newest: "Newest", views: "Most viewed", shortest: "Shortest", longest: "Longest",
 };
 const PAGE = 48;
 
 // ---------- state ----------
-const prefs = Object.assign({ tab:"All", sorts:{}, picks:true, hideWatched:false, level:"", rtype:"all", len:"", rfield:"", rate:1, view:"grid" }, store.get("gt.prefs2", {}));
+const prefs = Object.assign({ tab:"Goggins", sorts:{}, picks:false, hideWatched:false, level:"", rtype:"all", len:"", rfield:"", rate:1, view:"grid" }, store.get("gt.prefs2", {}));
+if (!TABS.some(([key]) => key === prefs.tab)) prefs.tab = "Goggins";
+prefs.picks = false; prefs.hideWatched = false; prefs.len = "";
 const S = {
   videos: [], playlists: [], papers: [], summaries: null, sumPromise: null,
   q: "", watched: new Set(store.get("watched", [])), saved: new Set(store.get("saved", [])),
@@ -496,7 +501,7 @@ const sorters = {
   shortest: (a, b) => a.seconds - b.seconds,
   longest: (a, b) => b.seconds - a.seconds,
 };
-const currentSort = () => prefs.sorts[prefs.tab] || "newest";   // newest first by default, so fresh uploads are on top
+const currentSort = () => "newest";   // newest first by default, so fresh uploads are on top
 // search language: words, "exact phrase", -excluded, channel: topic: kind: level: cat: filters, len:<20 / len:>60 (minutes)
 const FIELDS = new Set(["channel", "topic", "kind", "level", "cat"]);
 const EMPTYQ = { terms: [], not: [], f: {}, minLen: null, maxLen: null };
@@ -562,7 +567,7 @@ function listPlaylists(ts, opts) {
 
 function buildView() {
   const ts = terms();
-  const opts = { picks: prefs.picks, hideWatched: prefs.hideWatched };
+  const opts = { picks: false, hideWatched: false };
   const tab = prefs.tab, sort = sorters[currentSort()] || sorters.best;
   const entries = [];
   let total = 0, hidden = 0;   // hidden = how many the "Top picks" filter removed
@@ -627,10 +632,10 @@ function buildView() {
 // ---------- rendering ----------
 function videoCard(v) {
   const id = safeId(v.id);
-  const watched = S.watched.has(id), saved = S.saved.has(id), queued = S.queue.includes(id);
+  const watched = S.watched.has(id);
   const russian = v.category === "Russian";
   const badge = russian && v.level ? `<span class="badge lvl">${esc(v.level === "Mixed" ? "All levels" : v.level)}</span>`
-                                   : `<span class="badge ${esc(v.category)}">${esc(v.category)}</span>`;
+                                   : `<span class="badge ${v.category === "Cool Stuff" ? "cool-stuff" : esc(v.category)}">${esc(v.category)}</span>`;
   const sum = v.s ? `<button class="act sum" data-act="summary">${v.s === 2 ? "Summary" : "Outline"}</button>` : "";
   const lk = (kind, val) => `<button class="lnk" data-act="${kind}" data-v="${esc(val)}" title="Only show this ${kind}">${esc(val)}</button>`;
   const meta = `${lk("channel", v.channel)} · ${fmtViews(v.views || 0)} · ${esc(fmtAgo(v.published))}` + (v.topic ? ` · ${lk("topic", v.topic)}` : "");
@@ -638,19 +643,19 @@ function videoCard(v) {
     <button class="media" data-act="play" aria-label="Play: ${esc(v.title)}">
       <img loading="lazy" decoding="async" width="320" height="180" src="https://i.ytimg.com/vi/${id}/mqdefault.jpg" alt="">
       ${badge}${isNew(v.published) ? '<span class="newtag">NEW</span>' : ""}
-      ${v.pick && !prefs.picks ? '<span class="star" title="Top pick">★</span>' : ""}
+
       <span class="time">${fmtTime(v.seconds || 0)}</span>
       ${(() => { const pc = progressPct(id); return pc > 0.01 && pc < 0.95 ? `<span class="prog" style="width:${(pc * 100).toFixed(0)}%"></span>` : ""; })()}
     </button>
     <div class="body">
       <h3 class="title"><button data-act="play">${esc(v.title)}</button></h3>
       <div class="meta">${meta}</div>
-      <div class="acts">${sum}<button class="act queue" data-act="queue" aria-pressed="${queued}">${queued ? "✓ Queued" : "＋ Queue"}</button><button class="act save" data-act="save" aria-pressed="${saved}">${saved ? "♥ Saved" : "♡ Save"}</button></div>
+      <div class="acts">${sum}</div>
     </div></article>`;
 }
 
 function playlistCard(p) {
-  const id = safeId(p.id), saved = S.saved.has(id), img = safeImg(p.thumb);
+  const id = safeId(p.id), img = safeImg(p.thumb);
   return `<article class="card" data-id="${id}" data-type="playlist">
     <button class="media" data-act="play" aria-label="Open playlist: ${esc(p.title)}">
       ${img ? `<img loading="lazy" decoding="async" width="320" height="180" src="${esc(img)}" alt="">` : ""}
@@ -660,7 +665,7 @@ function playlistCard(p) {
     <div class="body">
       <h3 class="title"><button data-act="play">${esc(p.title)}</button></h3>
       <div class="meta">Playlist · ${esc(p.channel)}${p.topic ? " · " + esc(p.topic) : ""}</div>
-      <div class="acts"><button class="act save" data-act="save" aria-pressed="${saved}">${saved ? "♥ Saved" : "♡ Save"}</button></div>
+      <div class="acts"></div>
     </div></article>`;
 }
 
@@ -678,7 +683,7 @@ function paperEl(p) {
     <h3>${esc(p.title)}</h3>
     <div class="meta">${esc([p.journal, p.authors, p.date].filter(Boolean).join(" · "))}</div>
     <p class="sum">AI summary: ${esc(p.summary)}</p>
-    <div class="links">${links}<button class="act save" data-act="save" aria-pressed="${saved}">${saved ? "♥ Saved" : "♡ Save"}</button></div>`;
+    <div class="links">${links}</div>`;
   return el;
 }
 
@@ -1261,10 +1266,10 @@ Promise.all([
   render();
   if (st && st.updated) {
     const bits = [`Updated ${fmtUpdated(st.updated)}`];
-    if (S.hasPicks && st.picks) bits.push(`${st.picks} top picks of ${st.videos}`); else bits.push(`${st.videos} videos`);
+    bits.push(`${st.videos} videos`);
     if (st.new_videos) bits.push(`${st.new_videos} new`);
     if (st.papers) bits.push(`${st.papers} papers`);
-    $("#status").textContent = "Stay hard. Live long. Learn Russian. · " + bits.join(" · ");
+    $("#status").textContent = "Stay hard. Live long. Learn Russian. Explore big ideas. · " + bits.join(" · ");
   }
   if (wantVideo) { const it = byId(wantVideo); if (it) openItem(it, "watch"); }
 });
