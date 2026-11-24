@@ -1,6 +1,6 @@
 {
   "day": "2026-11-24",
-  "used": 3231,
+  "used": 4800,
   "done": [
     "Goggins|David Goggins documentary|fresh",
     "Longevity|longevity science explained|fresh",
@@ -29,6 +29,20 @@
     "Cool Stuff|Fermilab particle physics explained|top",
     "Goggins|David Goggins podcast|top",
     "Longevity|David Sinclair aging|top",
-    "Russian|Russian vocabulary lesson|top"
+    "Russian|Russian vocabulary lesson|top",
+    "Cool Stuff|Fermilab particle physics explained|long",
+    "Goggins|David Goggins podcast|long",
+    "Longevity|David Sinclair aging|long",
+    "Russian|Russian vocabulary lesson|long",
+    "Cool Stuff|Fermilab particle physics explained|mid",
+    "Goggins|David Goggins speech|top",
+    "Longevity|zone 2 cardio VO2 max longevity|top",
+    "Russian|Russian vocabulary lesson|mid",
+    "Cool Stuff|Ben Eater computer engineering build|top",
+    "Goggins|David Goggins speech|long",
+    "Longevity|zone 2 cardio VO2 max longevity|long",
+    "Russian|Russian alphabet pronunciation lesson|top",
+    "Cool Stuff|Ben Eater computer engineering build|long",
+    "Goggins|David Goggins workout|top"
   ]
 }
