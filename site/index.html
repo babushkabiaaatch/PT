@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="preconnect" href="https://www.youtube.com">
 <title>GogginsTube</title>
 <meta name="description" content="Goggins, longevity and learn-Russian videos, ranked so only the best come first. Read a summary instead of watching.">
 <link rel="manifest" href="manifest.webmanifest">
@@ -125,10 +127,26 @@
   .prog { position:absolute; left:0; bottom:0; height:4px; background:var(--goggins); pointer-events:none; }
   .paper .links .act { margin-left:auto; }
   #grid:not(.papers) .paper { grid-column:1 / -1; }
-  #grid.vocabs { grid-template-columns:1fr; max-width:900px; gap:8px; }
-  .vtools { grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:10px; align-items:center; color:var(--muted); font-size:13px; }
-  .vrow { background:var(--card); border-radius:10px; padding:10px 14px; display:grid; grid-template-columns:minmax(110px,1fr) minmax(110px,1.5fr) auto; gap:4px 16px; align-items:center; }
-  .vrow .ru { font-size:17px; font-weight:700; }
+  .qbar { grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:10px; align-items:center; color:var(--muted); font-size:13px; }
+  .lnk { background:none; border:0; padding:0; color:inherit; font:inherit; cursor:pointer; text-align:left; }
+  .lnk:hover { color:var(--text); text-decoration:underline; }
+  .act.queue[aria-pressed="true"] { background:#10301a; border-color:#1f6b3a; color:#7ee2a0; }
+  .kb { outline:2px solid var(--ru); outline-offset:2px; }
+  .paper.read { opacity:.55; }
+  .related h3 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:16px 0 8px; }
+  .rail { display:flex; gap:10px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin; }
+  .rel { flex:none; width:170px; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:0; overflow:hidden; }
+  .rel:hover { border-color:#4a4a55; }
+  .rel img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; }
+  .rel span { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; padding:6px 8px 0; font-size:12px; font-weight:600; line-height:1.3; }
+  .rel small { display:block; padding:2px 8px 8px; color:var(--muted); font-size:11px; }
+  #help { position:fixed; right:16px; bottom:16px; z-index:30; width:min(380px, calc(100% - 32px)); max-height:80vh; overflow:auto;
+          background:#101014; border:1px solid var(--line); border-radius:14px; padding:16px 18px; box-shadow:0 10px 40px rgba(0,0,0,.6); }
+  #help[hidden] { display:none; }
+  #help h2 { margin:0 0 8px; font-size:14px; }
+  #help ul { margin:0 0 12px; padding-left:18px; font-size:13px; line-height:1.8; }
+  #help kbd, #help code { background:var(--card); border:1px solid var(--line); border-radius:5px; padding:0 6px; font:12px ui-monospace,Menlo,monospace; }
+  #help .x { position:absolute; top:10px; right:10px; width:30px; height:30px; }
   .foot { padding:8px var(--gutter) 40px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; color:var(--muted); font-size:13px; }
   .foot span { flex:1 1 260px; }
   .foot .pill { font-size:13px; padding:6px 14px; min-height:34px; }
@@ -180,9 +198,23 @@
     #grid { grid-template-columns:1fr; gap:14px; }
     h1 { font-size:24px; }
     .controls select { flex:1; }
-    .vrow { grid-template-columns:1fr auto; }
-    .vrow .ru { grid-column:1 / -1; }
   }
+  /* list view: dense rows for scanning a long list */
+  #grid.list { grid-template-columns:1fr; gap:8px; max-width:1000px; }
+  #grid.list .card { flex-direction:row; contain-intrinsic-size:auto 96px; }
+  #grid.list .media { width:176px; flex:none; align-self:flex-start; }
+  #grid.list .body { padding:8px 12px; }
+  #grid.list .acts { padding-top:2px; flex-wrap:wrap; }
+  @media (max-width:520px) { #grid.list .media { width:132px; } #grid.list .badge, #grid.list .newtag { font-size:10px; padding:2px 6px; } }
+  /* mini-player: keeps playing in the corner while you browse the list */
+  .modal.mini { inset:auto 12px calc(12px + env(safe-area-inset-bottom)) auto; width:min(380px, calc(100vw - 24px)); padding:0; background:transparent; align-items:stretch; }
+  .modal.mini .sheet { width:100%; height:auto; max-height:none; border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 40px rgba(0,0,0,.65); }
+  .modal.mini .mhead { padding:8px 10px 6px; gap:8px; }
+  .modal.mini .mhead h2 { font-size:12px; line-height:1.3; cursor:pointer; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .modal.mini .sub2, .modal.mini .mtabs, .modal.mini .pane.sum, .modal.mini .mlinks, .modal.mini .related { display:none !important; }
+  .modal.mini .mbody { display:block; padding:0 8px 8px; overflow:visible; }
+  .modal.mini .pane.watch { overflow:visible; }
+  .modal.mini .x { width:30px; height:30px; }
   @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } html { scroll-behavior:auto; } }
 </style>
 </head>
@@ -196,7 +228,7 @@
 <nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
 
 <div class="controls">
-  <input id="search" type="search" placeholder="Search…  (press / )" aria-label="Search" autocomplete="off">
+  <input id="search" type="search" placeholder="Search…  try channel:huberman len:<20 -shorts" aria-label="Search" autocomplete="off">
   <select id="sort" aria-label="Sort by"></select>
   <button class="pill" id="picks" aria-pressed="true" title="Only show the highest-ranked videos">★ Top picks</button>
   <button class="pill" id="hideWatched" aria-pressed="false">Hide watched</button>
@@ -205,6 +237,7 @@
     <option value="mid">20–60 min</option><option value="long">Over 1 hour</option>
   </select>
   <button class="pill" id="since" aria-pressed="false" title="Only things added since you last opened the site">New since last visit</button>
+  <button class="pill" id="viewBtn" aria-pressed="false" title="Compact list view">☰ List</button>
 </div>
 
 <div class="rubar" id="ruBar" hidden>
@@ -227,15 +260,36 @@
 <div id="empty" hidden></div>
 <footer class="foot">
   <span>Your watched list, saves and resume points live in this browser only.</span>
+  <button class="pill" id="helpBtn">Shortcuts &amp; search tips</button>
   <button class="pill" id="backup">Back up</button><button class="pill" id="restore">Restore</button>
   <input type="file" id="restoreFile" accept="application/json" hidden>
 </footer>
 <noscript><p style="padding:24px">GogginsTube needs JavaScript to show the videos.</p></noscript>
 
+<div id="help" hidden role="dialog" aria-label="Shortcuts and search tips">
+  <button class="x" id="helpClose" aria-label="Close">✕</button>
+  <h2>Keyboard</h2>
+  <ul>
+    <li><kbd>/</kbd> search &nbsp; <kbd>?</kbd> this help</li>
+    <li><kbd>j</kbd> / <kbd>k</kbd> next / previous card &nbsp; <kbd>Enter</kbd> open</li>
+    <li><kbd>s</kbd> save &nbsp; <kbd>q</kbd> add to queue (on the highlighted card)</li>
+    <li><kbd>n</kbd> next in queue while watching &nbsp; <kbd>m</kbd> minimise player &nbsp; <kbd>Esc</kbd> close</li>
+  </ul>
+  <h2>Search</h2>
+  <ul>
+    <li><code>channel:huberman</code> <code>topic:sleep</code> <code>kind:interview</code></li>
+    <li><code>level:b1</code> <code>cat:longevity</code> (papers: <code>cat:physics</code>)</li>
+    <li><code>len:&lt;20</code> <code>len:&gt;60</code> length in minutes</li>
+    <li><code>-shorts</code> leaves out a word &nbsp; <code>"zone 2"</code> exact phrase</li>
+    <li>Click any channel or topic on a card to filter by it. Combine everything freely.</li>
+  </ul>
+</div>
+
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" data-pane="watch">
   <div class="sheet">
     <div class="mhead">
       <h2 id="mTitle"></h2>
+      <button class="x" id="mMini" aria-label="Keep playing while you browse" title="Keep playing while you browse">▁</button>
       <button class="x" id="mClose" aria-label="Close">✕</button>
     </div>
     <div class="mtabs" role="tablist">
@@ -246,6 +300,7 @@
       <section class="pane watch">
         <div class="stage" id="stage"></div>
         <div class="mlinks" id="mLinks"></div>
+        <div class="related" id="related"></div>
       </section>
       <section class="pane sum" id="paneSum" aria-label="Summary"></section>
     </div>
@@ -275,23 +330,26 @@ const fetchJSON = (url, fallback) =>
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1"];
 const LEVEL_ORDER = l => { const i = LEVELS.indexOf(l); return i < 0 ? 9 : i; };
-const TABS = [["All","All"], ["Goggins","Goggins"], ["Longevity","Longevity"], ["Russian","Russian"], ["Vocab","Vocab"], ["Research","Math, AI & Physics"], ["Saved","Saved"]];
+const TABS = [["All","All"], ["Goggins","Goggins"], ["Longevity","Longevity"], ["Russian","Russian"], ["Research","Math, AI & Physics"], ["Queue","Queue"], ["Saved","Saved"]];
 const SORTS = {
   best: "Best first", level: "Beginner → advanced", newest: "Newest", views: "Most viewed", shortest: "Shortest", longest: "Longest",
 };
 const PAGE = 48;
 
 // ---------- state ----------
-const prefs = Object.assign({ tab:"All", sorts:{}, picks:true, hideWatched:false, level:"", rtype:"all", len:"", rfield:"" }, store.get("gt.prefs2", {}));
+const prefs = Object.assign({ tab:"All", sorts:{}, picks:true, hideWatched:false, level:"", rtype:"all", len:"", rfield:"", rate:1, view:"grid" }, store.get("gt.prefs2", {}));
 const S = {
   videos: [], playlists: [], papers: [], summaries: null, sumPromise: null,
   q: "", watched: new Set(store.get("watched", [])), saved: new Set(store.get("saved", [])),
   hasPicks: false, view: [], shown: 0, loaded: false, modalId: null, lastFocus: null, dirty: false,
-  pos: store.get("gt.pos", {}), since: false, prevDate: null, vocab: [], player: null, poll: null,
+  pos: store.get("gt.pos", {}), since: false, prevDate: null, player: null, poll: null,
+  queue: store.get("gt.queue", []), read: new Set(store.get("gt.read", [])), idx: new Map(),
 };
 const savePrefs = () => store.set("gt.prefs2", prefs);
 const saveWatched = () => store.set("watched", [...S.watched]);
 const saveSaved = () => store.set("saved", [...S.saved]);
+const saveQueue = () => store.set("gt.queue", S.queue);
+const saveRead = () => store.set("gt.read", [...S.read]);
 
 // ---------- formatting ----------
 function fmtTime(s) {
@@ -325,29 +383,26 @@ function fmtUpdated(iso) {
 // ---------- data ----------
 function prepare() {
   S.hasPicks = S.videos.some(v => "pick" in v);
-  for (const v of S.videos) v._hay = `${v.title} ${v.channel} ${v.topic || ""} ${v.level || ""} ${v.category}`.toLowerCase();
-  for (const p of S.playlists) { p.category = "Russian"; p._hay = `${p.title} ${p.channel} ${p.topic || ""} ${p.level || ""} playlist course`.toLowerCase(); }
-  for (const p of S.papers) p._hay = `${p.title} ${p.journal} ${p.summary} ${p.authors}`.toLowerCase();
-}
-const byId = id => S.videos.find(v => v.id === id) || S.playlists.find(p => p.id === id) || S.papers.find(p => p.id === id);
-
-// vocabulary from the Russian lessons' summaries, one row per distinct word
-function buildVocab() {
-  const seen = new Set(), out = [];
+  S.idx = new Map();                                            // id -> item, so lookups are instant
+  const lc = x => String(x || "").toLowerCase();
   for (const v of S.videos) {
-    if (v.category !== "Russian") continue;
-    const sm = (S.summaries || {})[v.id];
-    if (!sm || !Array.isArray(sm.vocab)) continue;
-    for (const pair of sm.vocab) {
-      if (!Array.isArray(pair) || pair.length < 2) continue;
-      const ru = String(pair[0]).trim(), en = String(pair[1]).trim(), k = ru.toLowerCase();
-      if (!ru || !en || seen.has(k)) continue;
-      seen.add(k);
-      out.push({ ru, en, id: v.id, title: v.title, level: v.level || "", _hay: `${ru} ${en} ${v.title}`.toLowerCase() });
-    }
+    v._hay = `${v.title} ${v.channel} ${v.topic || ""} ${v.level || ""} ${v.category}`.toLowerCase();
+    v._ch = lc(v.channel); v._tp = lc(v.topic); v._kd = lc(v.kind); v._lv = lc(v.level); v._cat = lc(v.category);
+    S.idx.set(v.id, v);
   }
-  return out.sort((a, b) => LEVEL_ORDER(a.level) - LEVEL_ORDER(b.level) || a.ru.localeCompare(b.ru, "ru"));
+  for (const p of S.playlists) {
+    p.category = "Russian";
+    p._hay = `${p.title} ${p.channel} ${p.topic || ""} ${p.level || ""} playlist course`.toLowerCase();
+    p._ch = lc(p.channel); p._tp = lc(p.topic); p._kd = ""; p._lv = lc(p.level); p._cat = "russian";
+    S.idx.set(p.id, p);
+  }
+  for (const p of S.papers) {
+    p._hay = `${p.title} ${p.journal} ${p.summary} ${p.authors}`.toLowerCase();
+    p._ch = lc(p.authors); p._tp = lc(p.kind); p._kd = p._tp; p._lv = lc(p.level); p._cat = lc(p.category);
+    S.idx.set(p.id, p);
+  }
 }
+const byId = id => S.idx.get(id);
 
 // resume points and progress bars
 const resumeAt = item => { const p = S.pos[item.id]; return p && p[0] >= 30 && p[1] && p[0] / p[1] < 0.95 ? p[0] : 0; };
@@ -364,8 +419,42 @@ const sorters = {
   longest: (a, b) => b.seconds - a.seconds,
 };
 const currentSort = () => prefs.sorts[prefs.tab] || "newest";   // newest first by default, so fresh uploads are on top
-const terms = () => S.q.toLowerCase().split(/\s+/).filter(Boolean);
-const hit = (item, ts) => ts.every(t => item._hay.includes(t));
+// search language: words, "exact phrase", -excluded, channel: topic: kind: level: cat: filters, len:<20 / len:>60 (minutes)
+const FIELDS = new Set(["channel", "topic", "kind", "level", "cat"]);
+const EMPTYQ = { terms: [], not: [], f: {}, minLen: null, maxLen: null };
+function parseQuery(raw) {
+  const q = { terms: [], not: [], f: {}, minLen: null, maxLen: null };
+  const re = /(-?)(?:(\w+):)?(?:"([^"]*)"|(\S+))/g;
+  const str = String(raw || "").toLowerCase();
+  let m;
+  while ((m = re.exec(str))) {
+    const neg = m[1] === "-", key = m[2], val = (m[3] !== undefined ? m[3] : (m[4] || "")).trim();
+    if (!val) continue;
+    if (key === "len") {
+      const mm = /^([<>]?)(\d+)$/.exec(val);
+      if (mm) { const sec = +mm[2] * 60; if (mm[1] === "<") q.maxLen = sec; else if (mm[1] === ">") q.minLen = sec; continue; }
+    }
+    if (key && FIELDS.has(key)) { (q.f[key] = q.f[key] || []).push([val, neg]); continue; }
+    (neg ? q.not : q.terms).push(key ? key + ":" + val : val);
+  }
+  return q;
+}
+let qCache = ["", EMPTYQ];
+const terms = () => { if (qCache[0] !== S.q) qCache = [S.q, parseQuery(S.q)]; return qCache[1]; };
+const hit = (item, q) => {
+  const h = item._hay;
+  for (const t of q.terms) if (!h.includes(t)) return false;
+  for (const t of q.not) if (h.includes(t)) return false;
+  for (const k in q.f) {
+    const tg = k === "channel" ? item._ch : k === "topic" ? item._tp : k === "kind" ? item._kd : k === "level" ? item._lv : item._cat;
+    for (const [v, neg] of q.f[k]) if ((tg || "").includes(v) === neg) return false;
+  }
+  if (item.seconds !== undefined) {
+    if (q.minLen !== null && item.seconds <= q.minLen) return false;
+    if (q.maxLen !== null && item.seconds >= q.maxLen) return false;
+  }
+  return true;
+};
 
 // a brand-new upload has almost no views yet, so its score is low. Never let "Top picks" hide a fresh video
 // that Gemini rated decent (3+ of 5) and did not flag as a compilation, reaction, clickbait or ad.
@@ -401,16 +490,17 @@ function buildView() {
   let total = 0, hidden = 0;   // hidden = how many the "Top picks" filter removed
 
   if (tab === "Research") {
-    const list = S.papers.filter(p => hit(p, ts) && sinceOk(p) && (!prefs.rfield || p.category === prefs.rfield))
+    const list = S.papers.filter(p => hit(p, ts) && sinceOk(p) && (!prefs.rfield || p.category === prefs.rfield)
+                                      && !(prefs.hideWatched && S.read.has(p.id)))
       .sort((a, b) => b.date.localeCompare(a.date));
     list.forEach(p => entries.push({ t: "paper", d: p }));
     return { entries, total: list.length, hidden: 0 };
   }
-  if (tab === "Vocab") {
-    const list = S.vocab.filter(x => hit(x, ts) && (!prefs.level || x.level === prefs.level));
-    if (list.length) entries.push({ t: "vtools", d: list.length });
-    list.forEach(x => entries.push({ t: "vocab", d: x }));
-    return { entries, total: list.length, hidden: 0 };
+  if (tab === "Queue") {
+    const vs = S.queue.map(id => S.idx.get(id)).filter(v => v && v.seconds !== undefined && hit(v, ts));
+    if (vs.length) entries.push({ t: "qbar", d: vs });
+    vs.forEach(v => entries.push({ t: "video", d: v }));
+    return { entries, total: vs.length, hidden: 0 };
   }
   if (tab === "Saved") {
     const all = { picks: false, hideWatched: prefs.hideWatched };
@@ -459,12 +549,13 @@ function buildView() {
 // ---------- rendering ----------
 function videoCard(v) {
   const id = safeId(v.id);
-  const watched = S.watched.has(id), saved = S.saved.has(id);
+  const watched = S.watched.has(id), saved = S.saved.has(id), queued = S.queue.includes(id);
   const russian = v.category === "Russian";
   const badge = russian && v.level ? `<span class="badge lvl">${esc(v.level === "Mixed" ? "All levels" : v.level)}</span>`
                                    : `<span class="badge ${esc(v.category)}">${esc(v.category)}</span>`;
   const sum = v.s ? `<button class="act sum" data-act="summary">${v.s === 2 ? "Summary" : "Outline"}</button>` : "";
-  const meta = `${esc(v.channel)} · ${fmtViews(v.views || 0)} · ${esc(fmtAgo(v.published))}` + (v.topic ? ` · ${esc(v.topic)}` : "");
+  const lk = (kind, val) => `<button class="lnk" data-act="${kind}" data-v="${esc(val)}" title="Only show this ${kind}">${esc(val)}</button>`;
+  const meta = `${lk("channel", v.channel)} · ${fmtViews(v.views || 0)} · ${esc(fmtAgo(v.published))}` + (v.topic ? ` · ${lk("topic", v.topic)}` : "");
   return `<article class="card${watched ? " watched" : ""}" data-id="${id}" data-type="video">
     <button class="media" data-act="play" aria-label="Play: ${esc(v.title)}">
       <img loading="lazy" decoding="async" width="320" height="180" src="https://i.ytimg.com/vi/${id}/mqdefault.jpg" alt="">
@@ -476,7 +567,7 @@ function videoCard(v) {
     <div class="body">
       <h3 class="title"><button data-act="play">${esc(v.title)}</button></h3>
       <div class="meta">${meta}</div>
-      <div class="acts">${sum}<button class="act save" data-act="save" aria-pressed="${saved}">${saved ? "♥ Saved" : "♡ Save"}</button></div>
+      <div class="acts">${sum}<button class="act queue" data-act="queue" aria-pressed="${queued}">${queued ? "✓ Queued" : "＋ Queue"}</button><button class="act save" data-act="save" aria-pressed="${saved}">${saved ? "♥ Saved" : "♡ Save"}</button></div>
     </div></article>`;
 }
 
@@ -499,6 +590,7 @@ function paperEl(p) {
   const el = document.createElement("article");
   el.className = "paper";
   el.dataset.id = p.id;
+  if (S.read.has(p.id)) el.classList.add("read");
   const saved = S.saved.has(p.id);
   const links = [["Abstract ↗", p.url], ["PDF ↗", p.pdf], ["Code ↗", p.code]]
     .filter(([, u]) => safeUrl(u)).map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`).join("");
@@ -523,8 +615,10 @@ function renderChunk() {
     if (e.t === "video") html += videoCard(e.d);
     else if (e.t === "playlist") html += playlistCard(e.d);
     else if (e.t === "head") html += `<h2 class="head">${esc(e.d)}</h2>`;
-    else if (e.t === "vtools") html += `<div class="vtools"><span>${e.d} phrases from Russian lessons</span><button class="act" data-act="copyvocab">Copy all for Anki</button></div>`;
-    else if (e.t === "vocab") html += `<div class="vrow" data-id="${safeId(e.d.id)}"><div class="ru" lang="ru">${esc(e.d.ru)}</div><div>${esc(e.d.en)}</div><button class="act" data-act="play" title="${esc(e.d.title)}">▶ ${esc(e.d.level || "lesson")}</button></div>`;
+    else if (e.t === "qbar") {
+      const tot = e.d.reduce((n, v) => n + (v.seconds || 0), 0);
+      html += `<div class="qbar"><span>${e.d.length} video${e.d.length === 1 ? "" : "s"} · ${fmtLen(tot)} total</span><button class="act" data-act="playq">▶ Play queue</button><button class="act" data-act="clearq">Clear</button></div>`;
+    }
     else if (e.t === "paper") frag.appendChild(paperEl(e.d));
   }
   tpl.innerHTML = html;
@@ -538,7 +632,7 @@ function emptyMessage() {
   const tab = prefs.tab;
   if (S.q) return ["No matches", "Try different words, or clear the search."];
   if (S.since) return ["Nothing new", "Nothing was added since your last visit. Switch off “New since last visit” to see everything."];
-  if (tab === "Vocab") return ["No vocabulary yet", "Key phrases are collected from Russian lessons as the daily update summarises them."];
+  if (tab === "Queue") return ["Your queue is empty", "Tap “＋ Queue” on any video. Queued videos play one after another."];
   if (prefs.len) return ["Nothing that length", "Pick “Any length” to see everything in this section."];
   if (tab === "Saved") return ["Nothing saved yet", "Tap “♡ Save” on any video or playlist and it will show up here."];
   if (tab === "Russian" && !S.videos.some(v => v.category === "Russian") && !S.playlists.length)
@@ -548,10 +642,8 @@ function emptyMessage() {
 }
 
 function render() {
-  const tab = prefs.tab, research = tab === "Research", saved = tab === "Saved", russian = tab === "Russian", vocab = tab === "Vocab";
-  // tabs
+  const tab = prefs.tab, research = tab === "Research", saved = tab === "Saved", russian = tab === "Russian", queue = tab === "Queue";
   $$(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
-  // controls
   const sortEl = $("#sort");
   const opts = russian ? ["level", "best", "newest", "views", "shortest", "longest"] : ["best", "newest", "views", "shortest", "longest"];
   if (sortEl.dataset.tab !== tab) {
@@ -559,27 +651,29 @@ function render() {
     sortEl.dataset.tab = tab;
   }
   sortEl.value = currentSort();
-  sortEl.disabled = research || vocab;
+  sortEl.disabled = research || queue;
   const picksBtn = $("#picks");
   picksBtn.setAttribute("aria-pressed", prefs.picks);
-  picksBtn.disabled = research || saved || vocab || !S.hasPicks;
+  picksBtn.disabled = research || saved || queue || !S.hasPicks;
   $("#hideWatched").setAttribute("aria-pressed", prefs.hideWatched);
-  $("#hideWatched").disabled = research || vocab;
+  $("#hideWatched").textContent = research ? "Hide read" : "Hide watched";
+  $("#hideWatched").disabled = queue;
   $("#len").value = prefs.len;
-  $("#len").disabled = research || vocab;
+  $("#len").disabled = research || queue;
   $("#since").setAttribute("aria-pressed", S.since);
-  $("#since").disabled = !S.prevDate || vocab;
+  $("#since").disabled = !S.prevDate || queue;
+  $("#viewBtn").setAttribute("aria-pressed", prefs.view === "list");
+  $("#viewBtn").disabled = research;
   $("#note").hidden = !research;
-  $("#ruBar").hidden = !(russian || vocab);
-  $("#rtype").hidden = vocab;
+  $("#ruBar").hidden = !russian;
   $("#rsBar").hidden = !research;
-  if (russian || vocab) renderLevels();
+  if (russian) renderLevels();
   if (research) renderFields();
 
   const view = buildView();
   S.view = view.entries; S.shown = 0;
   const grid = $("#grid");
-  grid.className = research ? "papers" : vocab ? "vocabs" : "";
+  grid.className = research ? "papers" : prefs.view === "list" ? "list" : "";
   grid.textContent = "";
   if (!S.loaded) grid.innerHTML = '<div class="skeleton"></div>'.repeat(8);
   else renderChunk();
@@ -596,22 +690,17 @@ function render() {
   else if (view.hidden > 0) {
     info.innerHTML = `Showing the ${view.total} best of ${view.total + view.hidden}. <button id="showAll">Show everything</button>`;
   } else info.textContent = view.total ? `${view.total} ${view.total === 1 ? "result" : "results"}` : "";
-  renderCounts();
+  scheduleCounts();
+  syncHash();
 }
 
 function renderLevels() {
   const ts = terms(), opts = { picks: prefs.picks, hideWatched: prefs.hideWatched };
-  let count, all;
-  if (prefs.tab === "Vocab") {
-    const base = S.vocab.filter(x => hit(x, ts));
-    count = l => base.filter(x => x.level === l).length; all = base.length;
-  } else {
-    const saveLevel = prefs.level; prefs.level = "";
-    const vids = listVideos("Russian", ts, opts), pls = listPlaylists(ts, opts);
-    prefs.level = saveLevel;
-    count = l => vids.filter(v => v.level === l).length + pls.filter(p => p.level === l).length;
-    all = vids.length + pls.length;
-  }
+  const saveLevel = prefs.level; prefs.level = "";
+  const vids = listVideos("Russian", ts, opts), pls = listPlaylists(ts, opts);
+  prefs.level = saveLevel;
+  const count = l => vids.filter(v => v.level === l).length + pls.filter(p => p.level === l).length;
+  const all = vids.length + pls.length;
   $("#levels").innerHTML = `<button class="chip" data-level="" aria-pressed="${!prefs.level}">All levels<small>${all}</small></button>` +
     LEVELS.map(l => `<button class="chip" data-level="${l}" aria-pressed="${prefs.level === l}">${l === "C1" ? "C1+" : l}<small>${count(l)}</small></button>`).join("");
   $$("#rtype .chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.rt === prefs.rtype));
@@ -631,9 +720,9 @@ function renderCounts() {
   const lvl = prefs.level; prefs.level = "";
   for (const [k] of TABS) {
     if (k === "Research") n[k] = S.papers.length;
-    else if (k === "Vocab") n[k] = S.vocab.length;
+    else if (k === "Queue") n[k] = S.queue.length;
     else if (k === "Saved") n[k] = S.saved.size;
-    else n[k] = listVideos(k, [], opts).length + (k === "Russian" ? listPlaylists([], opts).length : 0);
+    else n[k] = listVideos(k, EMPTYQ, opts).length + (k === "Russian" ? listPlaylists(EMPTYQ, opts).length : 0);
   }
   prefs.level = lvl;
   $$(".tab .n").forEach(el => { const c = n[el.parentNode.dataset.tab]; el.textContent = S.loaded && c ? c : ""; });
@@ -644,9 +733,88 @@ function buildTabs() {
     `<button class="tab" role="tab" data-tab="${k}" aria-selected="false">${esc(label)}<span class="n"></span></button>`).join("");
 }
 
+// ---------- queue, related videos, shortcuts, URL ----------
+const idle = window.requestIdleCallback ? f => window.requestIdleCallback(f) : f => setTimeout(f, 50);
+let countsPending = false;
+function scheduleCounts() { if (countsPending) return; countsPending = true; idle(() => { countsPending = false; renderCounts(); }); }
+
+function syncHash() {                                           // the address bar always reflects the tab and search, so links can be shared
+  if (isOpen()) return;
+  const parts = ["tab=" + encodeURIComponent(prefs.tab)];
+  if (S.q) parts.push("q=" + encodeURIComponent(S.q));
+  try { history.replaceState(history.state, "", "#" + parts.join("&")); } catch (e) {}
+}
+
+function toggleQueue(id) {
+  const i = S.queue.indexOf(id);
+  if (i >= 0) S.queue.splice(i, 1); else if (S.queue.length < 100) S.queue.push(id);
+  saveQueue();
+  if (prefs.tab === "Queue") { if (!isOpen()) render(); else S.dirty = true; return; }
+  const on = S.queue.includes(id);
+  $$(`[data-id="${CSS.escape(id)}"] .act.queue`).forEach(b => { b.setAttribute("aria-pressed", on); b.textContent = on ? "✓ Queued" : "＋ Queue"; });
+  scheduleCounts();
+}
+function playNext() {
+  while (S.queue.length) {
+    const it = S.idx.get(S.queue.shift());
+    saveQueue();
+    if (it && it.seconds !== undefined) {
+      openItem(it, "watch", true);
+      if (prefs.tab === "Queue") S.dirty = true;
+      scheduleCounts();
+      return true;
+    }
+  }
+  return false;
+}
+function onEnded(item) {
+  if (S.modalId !== item.id) return;
+  try { const d = Math.floor(S.player.getDuration()); S.pos[item.id] = [d, d, Date.now()]; store.set("gt.pos", S.pos); S.dirty = true; } catch (e) {}
+  if (S.queue.length) playNext();
+}
+
+function renderRelated(item) {
+  const box = $("#related");
+  if (item.seconds === undefined) { box.innerHTML = ""; return; }
+  const rel = [];
+  for (const v of S.videos) {
+    if (v.id === item.id || v.category !== item.category) continue;
+    const sc = (item.topic && v.topic === item.topic ? 2 : 0) + (v.channel === item.channel ? 1 : 0);
+    if (sc) rel.push([sc + (v.score || 0) / 100, v]);
+  }
+  rel.sort((a, b) => b[0] - a[0]);
+  const top = rel.slice(0, 6).map(r => r[1]);
+  box.innerHTML = top.length
+    ? `<h3>More like this</h3><div class="rail">${top.map(v => `<button class="rel" data-id="${safeId(v.id)}">
+        <img loading="lazy" src="https://i.ytimg.com/vi/${safeId(v.id)}/mqdefault.jpg" alt=""><span>${esc(v.title)}</span>
+        <small>${esc(v.channel)} · ${fmtLen(v.seconds)}</small></button>`).join("")}</div>`
+    : "";
+}
+
+function toggleHelp(force) { $("#help").hidden = force === undefined ? !$("#help").hidden : !force; }
+function moveKb(dir) {
+  const cards = $$("#grid .card, #grid .paper");
+  if (!cards.length) return;
+  const cur = cards.findIndex(c => c.classList.contains("kb"));
+  const next = Math.max(0, Math.min(cards.length - 1, cur < 0 ? 0 : cur + dir));
+  if (cur >= 0) cards[cur].classList.remove("kb");
+  cards[next].classList.add("kb");
+  cards[next].scrollIntoView({ block: "center" });
+  if (next >= cards.length - 3 && S.shown < S.view.length) renderChunk();
+}
+
 // ---------- modal ----------
 const modal = $("#modal");
 const isOpen = () => modal.classList.contains("open");
+const isMini = () => modal.classList.contains("mini");
+function setMini(on) {                                  // mini-player: keeps playing in the corner while you browse
+  modal.classList.toggle("mini", on);
+  document.body.classList.toggle("noscroll", !on && isOpen());
+  const b = $("#mMini");
+  b.textContent = on ? "⤢" : "▁";
+  b.title = on ? "Expand" : "Keep playing while you browse";
+  b.setAttribute("aria-label", b.title);
+}
 
 function setPane(p) {
   modal.dataset.pane = p;
@@ -699,7 +867,11 @@ function trackPlayer(item, iframe) {
   if (item.seconds === undefined) return;                       // playlists are not tracked
   ensureYT().then(YT => {
     if (S.modalId !== item.id || !iframe.isConnected) return;
-    S.player = new YT.Player(iframe, {});
+    S.player = new YT.Player(iframe, { events: {
+      onReady: e => { try { if (prefs.rate && prefs.rate !== 1) e.target.setPlaybackRate(prefs.rate); } catch (x) {} },   // remembers your speed
+      onPlaybackRateChange: e => { if (e.data) { prefs.rate = e.data; savePrefs(); } },
+      onStateChange: e => { if (e.data === 0) onEnded(item); },                                                            // 0 = ended
+    } });
     S.poll = setInterval(savePos, 5000);
   }).catch(() => {});
 }
@@ -710,8 +882,9 @@ function showPoster(item) {
   $(".poster", stage).onclick = () => { loadPlayer(item); setPane("watch"); };
 }
 
-function openItem(item, mode) {
+function openItem(item, mode, keepMini) {
   const isPlaylist = item.seconds === undefined;
+  if (!keepMini) setMini(false);                          // opening something from the list expands the player
   S.modalId = item.id;
   S.lastFocus = document.activeElement;
   $("#mTitle").innerHTML = `${esc(item.title)}<span class="sub2">${esc(item.channel)}${isPlaylist ? ` · Playlist · ${item.count} videos` : ` · ${fmtLen(item.seconds)} · ${fmtViews(item.views || 0)}`}</span>`;
@@ -734,11 +907,19 @@ function openItem(item, mode) {
     b.onclick = () => { delete S.pos[item.id]; store.set("gt.pos", S.pos); S.dirty = true; loadPlayer(item, 0, true); setPane("watch"); b.remove(); };
     $("#mLinks").appendChild(b);
   }
+  if (S.queue.length) {
+    const nb = document.createElement("button");
+    nb.textContent = `Next in queue ▶ (${S.queue.length})`;
+    nb.onclick = playNext;
+    $("#mLinks").appendChild(nb);
+  }
+  renderRelated(item);
+  $(".pane.watch").scrollTop = 0;
   setPane(summaryFirst ? "sum" : "watch");
   renderSummary(item);
   modal.classList.add("open");
-  document.body.classList.add("noscroll");
-  $("#mClose").focus();
+  document.body.classList.toggle("noscroll", !isMini());
+  if (!isMini()) $("#mClose").focus();
   if (!(history.state && history.state.m)) history.pushState({ m: item.id }, "", "#v=" + item.id);
 }
 
@@ -746,7 +927,7 @@ function hideModal() {
   if (!isOpen()) return;
   savePos(); stopTracking();
   $("#stage").textContent = "";                               // removing the iframe stops the video
-  modal.classList.remove("open");
+  modal.classList.remove("open", "mini");
   document.body.classList.remove("noscroll");
   S.modalId = null;
   if (S.lastFocus && document.contains(S.lastFocus)) S.lastFocus.focus({ preventScroll: true });
@@ -813,8 +994,12 @@ async function renderSummary(item) {
 
 // focus trap + keyboard
 document.addEventListener("keydown", e => {
-  if (isOpen()) {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const typing = /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);
+  if (isOpen() && !isMini()) {
     if (e.key === "Escape") { e.preventDefault(); closeModal(); return; }
+    if (e.key === "n" && !typing) { e.preventDefault(); playNext(); return; }
+    if (e.key === "m" && !typing) { e.preventDefault(); setMini(true); return; }
     if (e.key === "Tab") {
       const f = $$("button, a[href], iframe, [tabindex]:not([tabindex='-1'])", modal).filter(el => !el.disabled && el.offsetParent !== null);
       if (!f.length) return;
@@ -824,28 +1009,51 @@ document.addEventListener("keydown", e => {
     }
     return;
   }
-  if (e.key === "/" && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); $("#search").focus(); }
+  if (e.key === "Escape" && !$("#help").hidden) { toggleHelp(false); return; }
+  if (typing) return;
+  const kb = $(".kb");
+  switch (e.key) {
+    case "/": e.preventDefault(); $("#search").focus(); break;
+    case "?": e.preventDefault(); toggleHelp(); break;
+    case "j": moveKb(1); break;
+    case "k": moveKb(-1); break;
+    case "Enter": if (kb && document.activeElement === document.body && kb.classList.contains("card")) { const it = byId(kb.dataset.id); if (it) openItem(it, "watch"); } break;
+    case "s": if (kb) toggleSave(kb.dataset.id); break;
+    case "m": if (isOpen()) setMini(false); break;
+    case "n": if (isOpen()) playNext(); break;
+    case "q": if (kb && kb.classList.contains("card") && kb.dataset.type === "video") toggleQueue(kb.dataset.id); break;
+  }
 });
 window.addEventListener("popstate", () => { if (isOpen() && !(history.state && history.state.m)) hideModal(); });
 
 // ---------- events ----------
 $("#grid").addEventListener("click", e => {
+  const link = e.target.closest(".paper a[href]");                // opening a paper marks it read
+  if (link) {
+    const pe = link.closest(".paper");
+    if (pe && !S.read.has(pe.dataset.id)) { S.read.add(pe.dataset.id); saveRead(); pe.classList.add("read"); }
+    return;
+  }
   const actEl = e.target.closest("[data-act]");
   if (!actEl) return;
   const act = actEl.dataset.act;
-  if (act === "copyvocab") {
-    const rows = S.view.filter(x => x.t === "vocab").map(x => x.d.ru + "\t" + x.d.en).join("\n");
-    navigator.clipboard.writeText(rows).then(() => { actEl.textContent = "Copied ✓"; }, () => { actEl.textContent = "Copy failed"; });
-    setTimeout(() => { actEl.textContent = "Copy all for Anki"; }, 1800);
+  if (act === "channel" || act === "topic") {                      // click a channel or topic to filter by it
+    const tok = `${act}:"${(actEl.dataset.v || "").replace(/"/g, "")}"`;
+    S.q = S.q === tok ? "" : tok;
+    $("#search").value = S.q;
+    render();
     return;
   }
-  const card = e.target.closest(".card, .paper, .vrow");
+  if (act === "playq") { playNext(); return; }
+  if (act === "clearq") { S.queue = []; saveQueue(); render(); return; }
+  const card = e.target.closest(".card, .paper");
   if (!card) return;
   const item = byId(card.dataset.id);
   if (!item) return;
   if (act === "play") openItem(item, "watch");
   else if (act === "summary") openItem(item, "summary");
   else if (act === "save") toggleSave(item.id);
+  else if (act === "queue") toggleQueue(item.id);
 });
 $("#grid").addEventListener("error", e => { if (e.target.tagName === "IMG") e.target.classList.add("broken"); }, true);
 $("#tabs").addEventListener("click", e => {
@@ -865,12 +1073,15 @@ function setTab(tab) {
 $("#search").addEventListener("input", debounce(e => { S.q = e.target.value; render(); }, 120));
 $("#sort").addEventListener("change", e => { prefs.sorts[prefs.tab] = e.target.value; savePrefs(); render(); });
 $("#picks").addEventListener("click", () => { prefs.picks = !prefs.picks; savePrefs(); render(); });
+$("#related").addEventListener("click", e => { const b = e.target.closest(".rel"); if (!b) return; const it = byId(b.dataset.id); if (it) openItem(it, "watch"); });
+$("#helpBtn").addEventListener("click", () => toggleHelp());
+$("#helpClose").addEventListener("click", () => toggleHelp(false));
 $("#len").addEventListener("change", e => { prefs.len = e.target.value; savePrefs(); render(); });
 $("#since").addEventListener("click", () => { S.since = !S.since; render(); });
 $("#fields").addEventListener("click", e => { const b = e.target.closest("[data-field]"); if (!b) return; prefs.rfield = b.dataset.field; savePrefs(); render(); });
 window.addEventListener("pagehide", savePos);
 $("#backup").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify({ v: 1, watched: [...S.watched], saved: [...S.saved], pos: S.pos, prefs })], { type: "application/json" });
+  const blob = new Blob([JSON.stringify({ v: 1, watched: [...S.watched], saved: [...S.saved], pos: S.pos, read: [...S.read], queue: S.queue, prefs })], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = "gogginstube-backup.json"; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
@@ -884,10 +1095,12 @@ $("#restoreFile").addEventListener("change", async e => {
     if (!d || typeof d !== "object") throw 0;
     (Array.isArray(d.watched) ? d.watched : []).forEach(x => { if (typeof x === "string") S.watched.add(x); });
     (Array.isArray(d.saved) ? d.saved : []).forEach(x => { if (typeof x === "string") S.saved.add(x); });
+    (Array.isArray(d.read) ? d.read : []).forEach(x => { if (typeof x === "string") S.read.add(x); });
+    (Array.isArray(d.queue) ? d.queue : []).forEach(x => { if (typeof x === "string" && !S.queue.includes(x) && S.queue.length < 100) S.queue.push(x); });
     for (const [k, v] of Object.entries(d.pos || {})) {
       if (Array.isArray(v) && v.length >= 3 && v.every(Number.isFinite) && (!S.pos[k] || v[2] > S.pos[k][2])) S.pos[k] = v;
     }
-    saveWatched(); saveSaved(); store.set("gt.pos", S.pos); render();
+    saveWatched(); saveSaved(); saveRead(); saveQueue(); store.set("gt.pos", S.pos); render();
     alert("Restored.");
   } catch (err) { alert("That file is not a GogginsTube backup."); }
 });
@@ -897,7 +1110,10 @@ $("#rtype").addEventListener("click", e => { const b = e.target.closest("[data-r
 $("#resultInfo").addEventListener("click", e => { if (e.target.id === "showAll") { prefs.picks = false; savePrefs(); render(); } });
 $("#more").addEventListener("click", renderChunk);
 $("#mClose").addEventListener("click", closeModal);
-modal.addEventListener("mousedown", e => { if (e.target === modal) closeModal(); });
+modal.addEventListener("mousedown", e => { if (e.target === modal && !isMini()) closeModal(); });
+$("#mMini").addEventListener("click", () => setMini(!isMini()));
+$("#mTitle").addEventListener("click", () => { if (isMini()) setMini(false); });
+$("#viewBtn").addEventListener("click", () => { prefs.view = prefs.view === "list" ? "grid" : "list"; savePrefs(); render(); });
 $("#mtWatch").addEventListener("click", () => { setPane("watch"); if (!$("#stage iframe")) { const it = byId(S.modalId); if (it) loadPlayer(it); } });
 $("#mtSum").addEventListener("click", () => setPane("sum"));
 $("#paneSum").addEventListener("click", e => {
@@ -917,10 +1133,13 @@ function readHash() {
   const h = location.hash.slice(1);
   const tab = /(?:^|&)tab=([^&]+)/.exec(h), vid = /(?:^|&)v=([\w-]+)/.exec(h);
   if (tab && TABS.some(([k]) => k === decodeURIComponent(tab[1]))) prefs.tab = decodeURIComponent(tab[1]);
+  const qm = /(?:^|&)q=([^&]*)/.exec(h);
+  if (qm) { try { S.q = decodeURIComponent(qm[1]); } catch (e) {} }
   return vid ? vid[1] : null;
 }
 const wantVideo = readHash();
 buildTabs();
+$("#search").value = S.q;
 render();                                                     // shows tabs and controls straight away
 
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
@@ -936,12 +1155,10 @@ if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catc
 
 Promise.all([
   fetchJSON("videos.json", null), fetchJSON("playlists.json", []), fetchJSON("papers.json", []), fetchJSON("status.json", null),
-  fetchJSON("summaries.json", {}),
-]).then(([v, pl, pa, st, sm]) => {
-  S.videos = v || []; S.playlists = pl || []; S.papers = pa || []; S.summaries = sm || {};
+]).then(([v, pl, pa, st]) => {                                 // summaries.json loads only when you open a summary
+  S.videos = v || []; S.playlists = pl || []; S.papers = pa || [];
   S.loaded = true;
   prepare();
-  S.vocab = buildVocab();
   if (v === null) {
     $("#grid").textContent = "";
     $("#empty").hidden = false;
