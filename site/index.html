@@ -216,6 +216,75 @@
   .modal.mini .pane.watch { overflow:visible; }
   .modal.mini .x { width:30px; height:30px; }
   @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } html { scroll-behavior:auto; } }
+
+  /* Refined library interface */
+  :root {
+    --bg:#090a0c; --card:#14161a; --card2:#1c2026; --line:#292e36;
+    --text:#f4f6f8; --muted:#929ba8; --goggins:#ff4d45; --long:#4ade80;
+    --ru:#65b7ff; --radius:15px; --gutter:clamp(16px, 3.2vw, 42px);
+    --shadow:0 12px 34px rgba(0,0,0,.24);
+  }
+  body { background:radial-gradient(ellipse at 50% -18%, rgba(56,75,102,.18), transparent 42%),var(--bg); }
+  header.hero { padding:26px var(--gutter) 16px; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; }
+  h1 { font-size:clamp(25px,3vw,34px); letter-spacing:.075em; font-weight:850; }
+  .sub { font-size:12px; letter-spacing:.015em; margin-top:7px; }
+  .hero-mark { color:#7e8998; font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; white-space:nowrap; padding-bottom:5px; }
+  nav.tabs { top:0; padding:10px var(--gutter); gap:8px; background:rgba(9,10,12,.86); border-color:#20242b; }
+  .tab { padding:9px 15px; font-size:13px; transition:background .18s,color .18s; }
+  .tab[aria-selected="true"] { box-shadow:0 3px 12px rgba(255,255,255,.08); }
+  .toolbar { padding:16px var(--gutter) 5px; display:grid; grid-template-columns:minmax(230px,1fr); gap:11px; }
+  .searchbox { display:flex; align-items:center; gap:11px; width:min(100%,620px); min-height:46px; padding:0 13px; background:#12151a; border:1px solid #303640; border-radius:13px; box-shadow:0 3px 14px rgba(0,0,0,.15); transition:border-color .18s,box-shadow .18s; }
+  .searchbox:focus-within { border-color:#6a9ed0; box-shadow:0 0 0 3px rgba(101,183,255,.10); }
+  .searchbox svg { width:18px; height:18px; fill:none; stroke:#8d98a7; stroke-width:1.8; flex:none; }
+  .searchbox input { flex:1; min-width:0; border:0; outline:0; background:transparent; color:var(--text); font-size:14px; padding:10px 0; }
+  .searchbox input::placeholder { color:#737e8c; }
+  .searchbox kbd { border:1px solid #343b46; color:#8b95a2; background:#1a1e24; border-radius:5px; padding:2px 7px; font:11px ui-monospace,monospace; }
+  .search-clear { display:none; border:0; background:transparent; color:#aab3bf; font-size:21px; line-height:1; padding:3px 5px; border-radius:6px; }
+  .search-clear.visible { display:block; }
+  .search-clear:hover { background:#252b33; color:#fff; }
+  .controls { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:0; }
+  .controls input,.controls select,.pill { min-height:36px; border:1px solid #2d333d; border-radius:10px; background:#15191f; padding:7px 12px; font-size:12px; }
+  .pill { color:#c8d0da; font-weight:650; transition:background .16s,border-color .16s,color .16s,transform .16s; }
+  .pill:hover { border-color:#596575; color:#fff; background:#202630; }
+  .pill[aria-pressed="true"] { background:#e8edf3; border-color:#e8edf3; color:#101318; }
+  .pill.primary-filter[aria-pressed="true"] { background:#f1d58b; border-color:#f1d58b; color:#241d0d; }
+  .select-wrap { display:flex; align-items:center; gap:7px; color:#778291; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; }
+  .select-wrap select { color:#e2e7ed; text-transform:none; letter-spacing:0; font-weight:600; }
+  .view-toggle { min-width:38px; font-size:17px; padding-inline:9px; }
+  .reset-filter { color:#8f9aaa; background:transparent; border-color:transparent; }
+  .rubar { padding:8px var(--gutter) 0; }
+  .chip { border-radius:8px; background:#15191f; border-color:#2d333d; }
+  .info { padding:10px var(--gutter) 2px; font-size:12px; }
+  #grid { gap:18px; padding-top:13px; }
+  .card { border:1px solid rgba(255,255,255,.045); border-radius:15px; background:linear-gradient(180deg,#171a1f,#131519); box-shadow:0 3px 14px rgba(0,0,0,.12); }
+  @media (hover:hover) { .card:hover { transform:translateY(-4px); border-color:#3b4552; box-shadow:0 14px 32px rgba(0,0,0,.38); } }
+  .media { background:#090b0e; }
+  .body { padding:12px 13px 13px; gap:8px; }
+  .title { font-size:13px; line-height:1.42; letter-spacing:.002em; }
+  .meta { font-size:11px; line-height:1.5; color:#8f99a7; }
+  .acts { gap:7px; padding-top:5px; }
+  .act { border-radius:8px; padding:6px 10px; font-size:11px; background:#20252d; border-color:#303741; color:#d5dbe3; }
+  .act.sum { background:#18283a; border-color:#294b6d; color:#a9d2ff; }
+  .act.save[aria-pressed="true"] { background:#351b20; border-color:#68313a; color:#ffaaa9; }
+  .act.queue[aria-pressed="true"] { background:#153022; border-color:#286342; color:#91e5ae; }
+  #more { border-radius:10px; padding:10px 22px; background:#e8edf3; color:#101318; border:0; font-weight:750; }
+  #more:hover { background:#fff; }
+  .foot { border-top:1px solid #20242b; margin:24px var(--gutter) 0; padding:16px 0 36px; }
+  .foot .pill { background:#15191f; }
+  .modal { backdrop-filter:blur(9px); }
+  .sheet { box-shadow:var(--shadow); border-color:#303640; }
+  .x { background:#1a1f26; border-color:#343b46; }
+  @media (max-width:650px) {
+    header.hero { align-items:flex-start; flex-direction:column; gap:5px; padding-top:20px; }
+    .hero-mark { display:none; }
+    .toolbar { padding-top:12px; }
+    .controls { gap:7px; }
+    .select-wrap { flex:1 1 145px; justify-content:space-between; }
+    .select-wrap select { flex:1; }
+    .controls .pill { flex:0 0 auto; }
+    .reset-filter { margin-left:auto; }
+  }
+
 </style>
 </head>
 <body>
@@ -223,22 +292,31 @@
 <header class="hero">
   <h1>GOGGINS<span>TUBE</span></h1>
   <p class="sub" id="status">Stay hard. Live long. Learn Russian.</p>
+  <div class="hero-mark">Your personal knowledge library</div>
 </header>
 
 <nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
 
-<div class="controls">
-  <input id="search" type="search" placeholder="Search…  try channel:huberman len:<20 -shorts" aria-label="Search" autocomplete="off">
-  <select id="sort" aria-label="Sort by"></select>
-  <button class="pill" id="picks" aria-pressed="true" title="Only show the highest-ranked videos">★ Top picks</button>
-  <button class="pill" id="hideWatched" aria-pressed="false">Hide watched</button>
-  <select id="len" aria-label="Video length">
-    <option value="">Any length</option><option value="short">Under 20 min</option>
-    <option value="mid">20–60 min</option><option value="long">Over 1 hour</option>
-  </select>
-  <button class="pill" id="since" aria-pressed="false" title="Only things added since you last opened the site">New since last visit</button>
-  <button class="pill" id="viewBtn" aria-pressed="false" title="Compact list view">☰ List</button>
-</div>
+<section class="toolbar" aria-label="Library controls">
+  <div class="searchbox">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+    <input id="search" type="search" placeholder="Search your library…" aria-label="Search videos, topics and channels" autocomplete="off">
+    <button id="clearSearch" class="search-clear" type="button" aria-label="Clear search" title="Clear search">×</button>
+    <kbd>/</kbd>
+  </div>
+  <div class="controls">
+    <label class="select-wrap"><span>Sort</span><select id="sort" aria-label="Sort by"></select></label>
+    <button class="pill primary-filter" id="picks" aria-pressed="true" title="Only show the highest-ranked videos">★ Top picks</button>
+    <button class="pill" id="hideWatched" aria-pressed="false">Hide watched</button>
+    <label class="select-wrap"><span>Duration</span><select id="len" aria-label="Video length">
+      <option value="">Any length</option><option value="short">Under 20 min</option>
+      <option value="mid">20–60 min</option><option value="long">Over 1 hour</option>
+    </select></label>
+    <button class="pill" id="since" aria-pressed="false" title="Only things added since you last opened the site">✦ New</button>
+    <button class="pill view-toggle" id="viewBtn" aria-pressed="false" title="Switch to compact list view">☷</button>
+    <button class="pill reset-filter" id="resetFilters" type="button" title="Reset all filters">Reset</button>
+  </div>
+</section>
 
 <div class="rubar" id="ruBar" hidden>
   <div class="chips" id="levels" role="group" aria-label="Level"></div>
@@ -1070,7 +1148,20 @@ function setTab(tab) {
   try { history.replaceState(history.state, "", "#tab=" + tab); } catch (e) {}
   render(); window.scrollTo({ top: Math.min(window.scrollY, $("#tabs").offsetTop), behavior: "instant" });
 }
-$("#search").addEventListener("input", debounce(e => { S.q = e.target.value; render(); }, 120));
+function syncSearchClear() {
+  $("#clearSearch").classList.toggle("visible", Boolean($("#search").value));
+}
+$("#search").addEventListener("input", debounce(e => { S.q = e.target.value; syncSearchClear(); render(); }, 120));
+$("#clearSearch").addEventListener("click", () => {
+  $("#search").value = ""; S.q = ""; syncSearchClear(); render(); $("#search").focus();
+});
+$("#resetFilters").addEventListener("click", () => {
+  S.q = ""; $("#search").value = ""; syncSearchClear();
+  prefs.picks = true; prefs.hideWatched = false; prefs.len = "";
+  prefs.level = ""; prefs.rtype = "all"; prefs.rfield = "";
+  S.since = false;
+  savePrefs(); render();
+});
 $("#sort").addEventListener("change", e => { prefs.sorts[prefs.tab] = e.target.value; savePrefs(); render(); });
 $("#picks").addEventListener("click", () => { prefs.picks = !prefs.picks; savePrefs(); render(); });
 $("#related").addEventListener("click", e => { const b = e.target.closest(".rel"); if (!b) return; const it = byId(b.dataset.id); if (it) openItem(it, "watch"); });
@@ -1140,6 +1231,7 @@ function readHash() {
 const wantVideo = readHash();
 buildTabs();
 $("#search").value = S.q;
+$("#clearSearch").classList.toggle("visible", Boolean(S.q));
 render();                                                     // shows tabs and controls straight away
 
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
