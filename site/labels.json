@@ -3518,7 +3518,88 @@
     "GSJehoHbhvk": "Cool Stuff",
     "bmfCcAps3E8": "Cool Stuff",
     "DKsMdSj1YT8": "Cool Stuff",
-    "86iF9-03nH4": "Cool Stuff"
+    "86iF9-03nH4": "Cool Stuff",
+    "p0-2A2s9k1U": "Longevity",
+    "8GM_TClSpys": "Russian",
+    "NdAqYudkvto": "Russian",
+    "oMqPXPxxPyI": "Longevity",
+    "bGSkFubHd6M": "Longevity",
+    "i9C5q-U5R3s": "Russian",
+    "vlaU7sopaFo": "Russian",
+    "4nFA4zntF7I": "Cool Stuff",
+    "QBvcN9eTNLY": "Cool Stuff",
+    "bcehhxkfJlw": "Longevity",
+    "0qOPRgg_Dzg": "Longevity",
+    "hPnnbIVgjJU": "Russian",
+    "u7WML-w_DmA": "Longevity",
+    "mZ1EOijrJV0": "Russian",
+    "XiqMu-MZpHA": "Russian",
+    "t-erxGhTTRM": "Russian",
+    "oJqiErojJf8": "Russian",
+    "_kfx58xk0Wk": "Longevity",
+    "Lv1R2YoA8ug": "Russian",
+    "jmmgf-IicU0": "Russian",
+    "3LSSq9eJJFo": "Russian",
+    "vgeDAoJcGaM": "Cool Stuff",
+    "XN3xNJvWXsc": "Cool Stuff",
+    "PieFUmjG0do": "Cool Stuff",
+    "gqYFT6iecHw": "Cool Stuff",
+    "XQTzLcnxMrE": "Cool Stuff",
+    "lsc3eoQRPqw": "Cool Stuff",
+    "AR1_SrH3hck": "Cool Stuff",
+    "QPX3Yrqs6yY": "Cool Stuff",
+    "bdHYZrhas5U": "Cool Stuff",
+    "ZNEeKpCt4LE": "Cool Stuff",
+    "N3rDMHvDhXM": "Cool Stuff",
+    "MCXfZwwQ5fY": "Cool Stuff",
+    "SRP5zR8p9mo": "Cool Stuff",
+    "j5oqRz0gZC4": "Cool Stuff",
+    "m41kM1QsIwE": "Cool Stuff",
+    "IAAbQQXVw4Y": "Cool Stuff",
+    "PNBzZQ6DacE": "Cool Stuff",
+    "_AmgauI_sVQ": "Cool Stuff",
+    "ehEIKe_Ce0A": "Cool Stuff",
+    "YYZF2lVoTDk": "Cool Stuff",
+    "wNs5TdaMHNo": "Cool Stuff",
+    "7tnllg9RU9M": "Cool Stuff",
+    "NWUQ9Tznmvg": "Cool Stuff",
+    "w43L520WSso": "Cool Stuff",
+    "MI7aKSVZmmU": "Cool Stuff",
+    "NnNQJoNzTM4": "Cool Stuff",
+    "mcFi7NwvUVw": "Cool Stuff",
+    "12rZKyYrTvo": "Cool Stuff",
+    "GnepezqgfpE": "Cool Stuff",
+    "wnFBywu7SXM": "Cool Stuff",
+    "hw3eSCoyjsg": "Cool Stuff",
+    "HybLM8xOPjg": "Cool Stuff",
+    "E3XWOEzZCEk": "Cool Stuff",
+    "vY0TBNe1mSg": "Cool Stuff",
+    "bKYkcbjTAeE": "Cool Stuff",
+    "y0j4M8H58ws": "Cool Stuff",
+    "3mid_p1VEgU": "Cool Stuff",
+    "55lPK2roh1I": "Cool Stuff",
+    "rVxWx7SOpz0": "Cool Stuff",
+    "5akNuNUdkdU": "Cool Stuff",
+    "ie9wsLi7-zc": "Cool Stuff",
+    "yGBd9oKr8VY": "Cool Stuff",
+    "4RBP2-9RuDE": "Cool Stuff",
+    "HZty8YElM3k": "Cool Stuff",
+    "kam8SODtHCw": "Cool Stuff",
+    "yt_MrZyc_S4": "Cool Stuff",
+    "yjbC7oxSd10": "Cool Stuff",
+    "ZG498Ztsox0": "Cool Stuff",
+    "Bg66NiNbjmo": "Cool Stuff",
+    "rmRVwjMID6M": "Cool Stuff",
+    "EhmZ5qTfJ0E": "Cool Stuff",
+    "ZGZ1eSNlvNs": "Cool Stuff",
+    "dMS39tB-y7k": "Cool Stuff",
+    "lR7MjNaMEAg": "Cool Stuff",
+    "nTUj_GmLcKU": "Cool Stuff",
+    "Esr8ZcUfrgU": "Cool Stuff",
+    "CFkRX35eAJ4": "Cool Stuff",
+    "aO-wnzk1D4E": "Cool Stuff",
+    "VEpZTKKn0FE": "Cool Stuff",
+    "tFXPJCLqIxY": "Cool Stuff"
   },
   "wbJ_Q1xsDHg": {
     "keep": true,
@@ -10576,7 +10657,7 @@
   },
   "qMs145DJyb0": {
     "keep": true,
-    "sum_fail": 2
+    "sum_fail": 3
   },
   "evQAzGaW1JU": {
     "keep": true,
@@ -10584,7 +10665,7 @@
   },
   "QnloZ45PVxQ": {
     "keep": true,
-    "sum_fail": 2
+    "sum_fail": 3
   },
   "BmXKZLxfxCo": {
     "keep": false,
@@ -17651,7 +17732,7 @@
     "q": 5,
     "kind": "lesson",
     "level": "A2",
-    "sum_fail": 2
+    "sum_fail": 3
   },
   "JKK0F51W1GA": {
     "keep": true,
@@ -23052,7 +23133,8 @@
     "topic": "three little pigs story",
     "q": 5,
     "kind": "lesson",
-    "level": "A1"
+    "level": "A1",
+    "sum_fail": 1
   },
   "MiUHjLxm3V0": {
     "keep": true,
@@ -23150,7 +23232,8 @@
     "cat": "Cool Stuff",
     "topic": "speed of light measurement",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "CxVXvFOPIyQ": {
     "keep": false
@@ -23213,7 +23296,8 @@
     "cat": "Cool Stuff",
     "topic": "aperiodic tiling crystals",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "4X3N5oASqbE": {
     "keep": false
@@ -23552,7 +23636,8 @@
     "cat": "Cool Stuff",
     "topic": "computer security history",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "yErh67ls9XA": {
     "keep": false
@@ -23962,7 +24047,8 @@
     "cat": "Cool Stuff",
     "topic": "future analog computing",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "yPEiBXdnQZU": {
     "keep": true,
@@ -24009,7 +24095,8 @@
     "cat": "Cool Stuff",
     "topic": "electricity energy flow physics",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "spUNpyF58BY": {
     "keep": true,
@@ -24307,7 +24394,8 @@
     "cat": "Cool Stuff",
     "topic": "alphafold protein structure ai",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "zUyH3XhpLTo": {
     "keep": true,
@@ -24542,14 +24630,16 @@
     "cat": "Cool Stuff",
     "topic": "magnesium production chemistry",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "qf7ws2DF-zk": {
     "keep": true,
     "cat": "Cool Stuff",
     "topic": "Arrow's impossibility theorem",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "S-JA0f-wR8Y": {
     "keep": false
@@ -24562,7 +24652,8 @@
     "cat": "Cool Stuff",
     "topic": "genetic genealogy forensics",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "x32Zq-XvID4": {
     "keep": true,
@@ -24710,7 +24801,8 @@
     "cat": "Cool Stuff",
     "topic": "evolution biology concept",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "PAEx-5CdX94": {
     "keep": false
@@ -25327,7 +25419,8 @@
     "cat": "Cool Stuff",
     "topic": "credit card security tech",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "zB_OApdxcno": {
     "keep": true,
@@ -25521,7 +25614,8 @@
     "cat": "Cool Stuff",
     "topic": "audio illusions psychology",
     "q": 5,
-    "kind": "other"
+    "kind": "other",
+    "sum_fail": 1
   },
   "cI6CNFeBl88": {
     "keep": true,
@@ -25550,7 +25644,8 @@
     "cat": "Cool Stuff",
     "topic": "missing baryonic matter",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "tsdpUvAjdWo": {
     "keep": true,
@@ -25746,7 +25841,8 @@
     "topic": "spoken Russian listening",
     "q": 5,
     "kind": "lesson",
-    "level": "Mixed"
+    "level": "Mixed",
+    "sum_fail": 1
   },
   "BHdbsHFs2P0": {
     "keep": true,
@@ -25760,7 +25856,8 @@
     "cat": "Cool Stuff",
     "topic": "Benford's Law analysis",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "50_mJBuxY1A": {
     "keep": true,
@@ -26020,7 +26117,8 @@
     "topic": "Russian surprise phrases",
     "q": 5,
     "kind": "lesson",
-    "level": "Mixed"
+    "level": "Mixed",
+    "sum_fail": 1
   },
   "-RdOwhmqP5s": {
     "keep": true,
@@ -26124,7 +26222,8 @@
     "cat": "Cool Stuff",
     "topic": "complex analysis image logarithm",
     "q": 5,
-    "kind": "explainer"
+    "kind": "explainer",
+    "sum_fail": 1
   },
   "ZiT66zjKB_8": {
     "keep": false
@@ -26242,7 +26341,8 @@
     "cat": "Cool Stuff",
     "topic": "scorpion fluorescence biology physics",
     "q": 5,
-    "kind": "other"
+    "kind": "other",
+    "sum_fail": 1
   },
   "iv-5mZ_9CPY": {
     "keep": true,
@@ -27481,5 +27581,21 @@
   },
   "arxiv:2611.31049": {
     "keep": false
+  },
+  "ZFAw37S_bYQ": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "MugHRnHE5ZE": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "mF07Hmymusk": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "kjPXMhWLuP4": {
+    "keep": false,
+    "why": "not embeddable"
   }
 }

@@ -1,6 +1,6 @@
 {
   "day": "2026-11-24",
-  "used": 4800,
+  "used": 6368,
   "done": [
     "Goggins|David Goggins documentary|fresh",
     "Longevity|longevity science explained|fresh",
@@ -43,6 +43,20 @@
     "Longevity|zone 2 cardio VO2 max longevity|long",
     "Russian|Russian alphabet pronunciation lesson|top",
     "Cool Stuff|Ben Eater computer engineering build|long",
-    "Goggins|David Goggins workout|top"
+    "Goggins|David Goggins workout|top",
+    "Longevity|Valter Longo fasting longevity|top",
+    "Russian|Russian alphabet pronunciation lesson|long",
+    "Cool Stuff|Ben Eater computer engineering build|mid",
+    "Goggins|David Goggins workout|long",
+    "Longevity|Valter Longo fasting longevity|long",
+    "Russian|Russian alphabet pronunciation lesson|mid",
+    "Cool Stuff|Practical Engineering infrastructure science|top",
+    "Longevity|strength training healthy aging|top",
+    "Russian|Russian comprehensible input|top",
+    "Cool Stuff|Practical Engineering infrastructure science|long",
+    "Longevity|strength training healthy aging|long",
+    "Russian|Russian comprehensible input|long",
+    "Cool Stuff|Practical Engineering infrastructure science|mid",
+    "Longevity|metabolic health insulin resistance|top"
   ]
 }
