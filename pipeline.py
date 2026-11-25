@@ -56,7 +56,8 @@ CATS = ("Goggins", "Longevity", "Russian", "Cool Stuff")
 # A wrong handle just prints "Couldn't find channel" once and is retried after two weeks.
 CHANNELS = {
     "Goggins": [],
-    "Longevity": ["@PeterAttiaMD", "@hubermanlab", "@FoundMyFitness", "@bryanjohnson", "@SiimLand"],
+    "Longevity": ["@PeterAttiaMD", "@hubermanlab", "@FoundMyFitness", "@bryanjohnson", "@SiimLand","@ARDD","@Aging-US","@DaveAspreyBPR","optispan","@quinnstillsonmd"
+],
     "Russian": ["@RealRussianClub", "@russianpod101", "@RussianLevel1", "@BeFluentinRussian",
                 "@RussianwithAnastasia", "@RussianwithDasha", "@LearnRussianStanislavAcademy",
                 "@BoostYourRussian", "@EasyRussianVideos", "@RussianwithMax", "@ComprehensibleRussian"],
