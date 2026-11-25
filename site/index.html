@@ -126,6 +126,7 @@
   #empty h2 { color:var(--text); margin:0 0 6px; font-size:18px; }
 
   .tag.Physics { background:#ff9f0a; }
+  .tag.Quant-Finance { background:#5eead4; }
   .prog { position:absolute; left:0; bottom:0; height:4px; background:var(--goggins); pointer-events:none; }
   .paper .links .act { margin-left:auto; }
   #grid:not(.papers) .paper { grid-column:1 / -1; }
@@ -342,7 +343,7 @@
 </div>
 
 <div class="info" id="resultInfo" aria-live="polite"></div>
-<div id="note" hidden>Open-access math, AI and physics papers from arXiv, picked for substance. arXiv papers are preprints, so they are not peer reviewed (a venue badge means the authors say it was accepted there). Summaries are written by AI from each abstract and can be wrong, so read the paper itself.</div>
+<div id="note" hidden>Open-access math, AI, physics and quantitative finance papers from arXiv, picked for substance. arXiv papers are preprints, so they are not peer reviewed (a venue badge means the authors say it was accepted there). Summaries are written by AI from each abstract and can be wrong, so read the paper itself.</div>
 <main id="grid"></main>
 <button class="pill" id="more">Show more</button>
 <div id="empty" hidden></div>
@@ -679,7 +680,7 @@ function paperEl(p) {
   const saved = S.saved.has(p.id);
   const links = [["Abstract ↗", p.url], ["PDF ↗", p.pdf], ["Code ↗", p.code]]
     .filter(([, u]) => safeUrl(u)).map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`).join("");
-  el.innerHTML = `<div class="tags"><span class="tag ${esc(p.category)}">${esc(p.category)}</span>
+  el.innerHTML = `<div class="tags"><span class="tag ${esc(String(p.category).replace(/\s+/g, '-'))}">${esc(p.category)}</span>
       ${p.kind ? `<span class="tag chip">${esc(p.kind)}</span>` : ""}${p.level ? `<span class="tag chip">${esc(p.level)}</span>` : ""}
       ${isNew(p.date) ? '<span class="tag new">NEW</span>' : ""}</div>
     <h3>${esc(p.title)}</h3>
@@ -795,7 +796,7 @@ function renderFields() {
   const ts = terms();
   const base = S.papers.filter(p => hit(p, ts) && sinceOk(p));
   const n = f => f ? base.filter(p => p.category === f).length : base.length;
-  $("#fields").innerHTML = ["", "Math", "AI", "Proofs", "Physics"].map(f =>
+  $("#fields").innerHTML = ["", "Math", "AI", "Quant Finance", "Proofs", "Physics"].map(f =>
     `<button class="chip" data-field="${f}" aria-pressed="${prefs.rfield === f}">${f || "All"}<small>${n(f)}</small></button>`).join("");
 }
 
