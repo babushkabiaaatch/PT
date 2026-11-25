@@ -207,7 +207,7 @@
     --ru:#65b7ff; --radius:15px; --gutter:clamp(16px, 3.2vw, 42px);
     --shadow:0 12px 34px rgba(0,0,0,.24);
   }
-  body { background:radial-gradient(ellipse at 50% -18%, rgba(56,75,102,.18), transparent 42%),var(--bg); }
+  body { background:radial-gradient(ellipse at 50% -18%, rgba(0,0,0,0), transparent 42%),var(--bg); }
   header.hero { padding:26px var(--gutter) 16px; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; }
   h1 { font-size:clamp(25px,3vw,34px); letter-spacing:.075em; font-weight:850; }
   .sub { font-size:12px; letter-spacing:.015em; margin-top:7px; }
@@ -267,6 +267,34 @@
     .reset-filter { margin-left:auto; }
   }
 
+  /* ===== Black glass UI ===== */
+  :root { --glass:rgba(16,17,21,.52); --glass2:rgba(255,255,255,.055); --glass-line:rgba(255,255,255,.10); --glass-hi:inset 0 1px 0 rgba(255,255,255,.07); }
+  body { background:#000; }
+  nav.tabs { background:rgba(8,9,12,.55); backdrop-filter:blur(22px) saturate(1.5); -webkit-backdrop-filter:blur(22px) saturate(1.5); border-bottom:1px solid var(--glass-line); }
+  .searchbox, .controls input, .controls select, .pill, .chip, .act, .x, .mlinks a, .mlinks button {
+    background:var(--glass2); border-color:var(--glass-line); box-shadow:var(--glass-hi);
+    backdrop-filter:blur(14px) saturate(1.4); -webkit-backdrop-filter:blur(14px) saturate(1.4); }
+  .pill:hover, .act:hover, .x:hover, .mlinks a:hover, .mlinks button:hover { background:rgba(255,255,255,.11); border-color:rgba(255,255,255,.22); }
+  .pill[aria-pressed="true"] { background:rgba(240,244,250,.92); color:#101318; }
+  .pill.primary-filter[aria-pressed="true"] { background:rgba(241,213,139,.92); color:#241d0d; }
+  .reset-filter { background:transparent; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .chip[aria-pressed="true"] { background:rgba(101,183,255,.9); }
+  .act.save[aria-pressed="true"] { background:rgba(120,30,40,.55); }
+  .act.queue[aria-pressed="true"] { background:rgba(25,100,60,.5); }
+  select option { background:#15171b; color:#f4f6f8; }
+  .card, .paper, .rel { background:linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.03)); border:1px solid var(--glass-line); box-shadow:var(--glass-hi), 0 8px 26px rgba(0,0,0,.35); }
+  @media (hover:hover) { .card:hover { border-color:rgba(255,255,255,.24); box-shadow:var(--glass-hi), 0 16px 38px rgba(0,0,0,.5); } }
+  .media { background:rgba(0,0,0,.55); }
+  .foot { border-top-color:var(--glass-line); }
+  #help { background:rgba(12,13,17,.6); border:1px solid var(--glass-line); backdrop-filter:blur(26px) saturate(1.5); -webkit-backdrop-filter:blur(26px) saturate(1.5); box-shadow:var(--glass-hi), 0 14px 44px rgba(0,0,0,.6); }
+  #help kbd, #help code { background:rgba(255,255,255,.08); border-color:var(--glass-line); }
+
+  /* video player: see-through black glass */
+  .modal.open { background:rgba(0,0,0,.38); backdrop-filter:blur(22px) saturate(1.4); -webkit-backdrop-filter:blur(22px) saturate(1.4); }
+  .sheet { background:linear-gradient(180deg, rgba(24,26,32,.48), rgba(8,9,12,.58)); border:1px solid var(--glass-line); box-shadow:var(--glass-hi), 0 24px 70px rgba(0,0,0,.6); }
+  .stage { box-shadow:0 10px 40px rgba(0,0,0,.55); }
+  .modal.mini { background:transparent; backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .modal.mini .sheet { background:rgba(10,11,14,.5); backdrop-filter:blur(24px) saturate(1.5); -webkit-backdrop-filter:blur(24px) saturate(1.5); }
 </style>
 </head>
 <body>
@@ -387,12 +415,12 @@ const LEVELS = ["A1", "A2", "B1", "B2", "C1"];
 const LEVEL_ORDER = l => { const i = LEVELS.indexOf(l); return i < 0 ? 9 : i; };
 const TABS = [["Goggins","Goggins"], ["Longevity","Longevity"], ["Russian","Russian"], ["Cool Stuff","Cool Stuff"], ["Research","Math, AI & Physics"]];
 const SORTS = {
-  best: "Best first", level: "Beginner → advanced", newest: "Newest", views: "Most viewed", shortest: "Shortest", longest: "Longest",
+  best: "Best first", level: "Beginner → advanced", newest: "Newest", oldest: "Oldest first", views: "Most viewed", shortest: "Shortest", longest: "Longest",
 };
 const PAGE = 48;
 
 // ---------- state ----------
-const prefs = Object.assign({ tab:"Goggins", sorts:{}, picks:false, hideWatched:false, level:"", rtype:"all", len:"", rfield:"", rate:1, view:"grid" }, store.get("gt.prefs2", {}));
+const prefs = Object.assign({ tab:"Goggins", sorts:{}, picks:false, hideWatched:false, level:"", rtype:"all", len:"", rfield:"", rate:1, view:"grid", sorts2:{} }, store.get("gt.prefs2", {}));
 if (!TABS.some(([key]) => key === prefs.tab)) prefs.tab = "Goggins";
 prefs.picks = false; prefs.hideWatched = false; prefs.len = "";
 const S = {
@@ -470,12 +498,13 @@ const continueList = () => S.videos.filter(v => resumeAt(v)).sort((a, b) => S.po
 const sorters = {
   best: (a, b) => (b.score ?? 0) - (a.score ?? 0) || (b.views ?? 0) - (a.views ?? 0),
   level: (a, b) => LEVEL_ORDER(a.level) - LEVEL_ORDER(b.level) || (b.score ?? b.q ?? 0) - (a.score ?? a.q ?? 0),
-  newest: (a, b) => (b.published || "").localeCompare(a.published || "") || (b.score ?? 0) - (a.score ?? 0),
+  newest: (a, b) => (b.published || "").localeCompare(a.published || "") || (b.added || "").localeCompare(a.added || "") || (b.score ?? 0) - (a.score ?? 0),
+  oldest: (a, b) => (!a.published - !b.published) || (a.published || "").localeCompare(b.published || "") || (a.added || "").localeCompare(b.added || "") || (b.score ?? 0) - (a.score ?? 0),
   views: (a, b) => (b.views ?? 0) - (a.views ?? 0),
   shortest: (a, b) => a.seconds - b.seconds,
   longest: (a, b) => b.seconds - a.seconds,
 };
-const currentSort = () => "newest";   // newest first by default, so fresh uploads are on top
+const currentSort = () => prefs.sorts2[prefs.tab] || (prefs.tab === "Russian" ? "oldest" : "newest");   // new uploads on top everywhere, except Russian (new ones land at the bottom)
 // search language: words, "exact phrase", -excluded, channel: topic: kind: level: cat: filters, len:<20 / len:>60 (minutes)
 const FIELDS = new Set(["channel", "topic", "kind", "level", "cat"]);
 const EMPTYQ = { terms: [], not: [], f: {}, minLen: null, maxLen: null };
@@ -549,7 +578,7 @@ function buildView() {
   if (tab === "Research") {
     const list = S.papers.filter(p => hit(p, ts) && sinceOk(p) && (!prefs.rfield || p.category === prefs.rfield)
                                       && !(prefs.hideWatched && S.read.has(p.id)))
-      .sort((a, b) => b.date.localeCompare(a.date));
+      .sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.added || "").localeCompare(a.added || ""));
     list.forEach(p => entries.push({ t: "paper", d: p }));
     return { entries, total: list.length, hidden: 0 };
   }
@@ -563,7 +592,7 @@ function buildView() {
     const all = { picks: false, hideWatched: prefs.hideWatched };
     const vs = S.videos.filter(v => S.saved.has(v.id) && passes(v, ts, all)).sort(sort);
     const ps = S.playlists.filter(p => S.saved.has(p.id) && hit(p, ts));
-    const pa = S.papers.filter(p => S.saved.has(p.id) && hit(p, ts)).sort((a, b) => b.date.localeCompare(a.date));
+    const pa = S.papers.filter(p => S.saved.has(p.id) && hit(p, ts)).sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.added || "").localeCompare(a.added || ""));
     ps.forEach(p => entries.push({ t: "playlist", d: p }));
     vs.forEach(v => entries.push({ t: "video", d: v }));
     if (pa.length && entries.length) entries.push({ t: "head", d: "Papers" });
@@ -701,7 +730,7 @@ function render() {
   const tab = prefs.tab, research = tab === "Research", saved = tab === "Saved", russian = tab === "Russian", queue = tab === "Queue";
   $$(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
   const sortEl = $("#sort");
-  const opts = russian ? ["level", "best", "newest", "views", "shortest", "longest"] : ["best", "newest", "views", "shortest", "longest"];
+  const opts = russian ? ["oldest", "newest", "level", "best", "views", "shortest", "longest"] : ["newest", "best", "views", "shortest", "longest"];
   if (sortEl.dataset.tab !== tab) {
     sortEl.innerHTML = opts.map(k => `<option value="${k}">${SORTS[k]}</option>`).join("");
     sortEl.dataset.tab = tab;
@@ -1080,7 +1109,7 @@ $("#resetFilters").addEventListener("click", () => {
   S.since = false;
   savePrefs(); render();
 });
-$("#sort").addEventListener("change", e => { prefs.sorts[prefs.tab] = e.target.value; savePrefs(); render(); });
+$("#sort").addEventListener("change", e => { prefs.sorts2[prefs.tab] = e.target.value; savePrefs(); render(); });
 $("#picks").addEventListener("click", () => { prefs.picks = !prefs.picks; savePrefs(); render(); });
 $("#related").addEventListener("click", e => { const b = e.target.closest(".rel"); if (!b) return; const it = byId(b.dataset.id); if (it) openItem(it, "watch"); });
 $("#helpBtn").addEventListener("click", () => toggleHelp());
