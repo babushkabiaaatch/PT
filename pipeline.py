@@ -68,7 +68,6 @@ CHANNELS = {
 
 # --- YouTube searches (expensive: 100 units each) ---
 MAX_SEARCHES_PER_RUN = 14
-DAILY_UNITS = 10000                 # YouTube's default free quota
 SEARCH_UNITS_CAP = 9000             # never start a search past this many units used today
 SEARCHES = {
     "Goggins": ["David Goggins interview", "David Goggins podcast", "David Goggins speech",
@@ -113,6 +112,7 @@ SUMMARY_CALLS = 30                  # one video per request
 VIDEO_BATCH = 50
 PLAYLIST_BATCH = 30
 PAPER_BATCH = 15
+PAPER_CATS = ("Math", "AI", "Physics", "Quant Finance", "Proofs")   # the only labels the site understands
 PAUSE_BETWEEN_CALLS = 8             # seconds (the free tier allows roughly 5-15 requests a minute)
 
 # --- Summaries ---
@@ -143,7 +143,7 @@ TRUSTED = {
 }
 LOW_TRUST_HINTS = ["motivat", "inspir", "mindset", "clips", "compilation", "shorts", "status", "quotes", "viral"]
 
-# --- Research: open-access math + AI papers from arXiv (free, no key) ---
+# --- Research: open-access math, AI, physics and quant finance papers from arXiv (free, no key) ---
 PAPER_KEEP_DAYS = 120
 FIRST_RUN_MULTIPLIER = 4
 ARXIV_PAUSE = 3
@@ -154,6 +154,8 @@ PAPER_FEEDS = {
     "Physics": ("cat:hep-th OR cat:hep-ph OR cat:hep-ex OR cat:gr-qc OR cat:quant-ph OR cat:math-ph OR cat:nucl-th "
                 "OR cat:cond-mat.str-el OR cat:cond-mat.supr-con OR cat:cond-mat.mes-hall OR cat:astro-ph.CO "
                 "OR cat:astro-ph.HE OR cat:astro-ph.GA", 3, 300),
+    "Quant Finance": ("cat:q-fin.RM OR cat:q-fin.PM OR cat:q-fin.MF OR cat:q-fin.CP OR cat:q-fin.ST "
+                      "OR cat:q-fin.TR OR cat:q-fin.PR", 10, 300),
     "Proofs": ('(cat:cs.LO OR cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:math.LO) AND '
                '(abs:"theorem proving" OR abs:"formal proof" OR abs:Lean OR abs:autoformalization '
                'OR abs:"proof assistant" OR abs:"formal verification" OR abs:"mathematical reasoning")', 14, 100),
@@ -161,13 +163,19 @@ PAPER_FEEDS = {
 GOOD_VENUES = ["NeurIPS", "ICML", "ICLR", "ACL", "EMNLP", "NAACL", "CVPR", "AAAI", "COLT", "STOC", "FOCS",
                "SODA", "LICS", "ITP", "CAV", "JACM", "Annals of Mathematics", "Inventiones", "Acta Mathematica",
                "Journal of the American Mathematical Society", "Duke Mathematical Journal",
-               "Forum of Mathematics", "Compositio", "Advances in Mathematics"]
+               "Forum of Mathematics", "Compositio", "Advances in Mathematics",
+               "Mathematical Finance", "Quantitative Finance", "Finance and Stochastics", "Journal of Finance",
+               "Review of Financial Studies", "Journal of Financial Economics", "SIAM Journal on Financial Mathematics",
+               "Journal of Econometrics", "Journal of Banking & Finance"]
 SIGNALS = {"we prove": 3, "we resolve": 4, "we settle": 4, "we disprove": 4, "counterexample": 3,
            "conjecture": 2, "open problem": 3, "new proof": 3, "first proof": 4, "theorem": 2,
            "formalized": 3, "formalised": 3, "lean 4": 3, "machine-checked": 3, "state-of-the-art": 1,
            "scaling law": 2, "mathematical reasoning": 2, "we show that": 1,
            "first observation": 4, "we observe": 1, "experimental": 1, "quantum advantage": 3, "gravitational wave": 2,
-           "dark matter": 1, "black hole": 1, "superconduct": 2, "we derive": 2, "exact solution": 3}
+           "dark matter": 1, "black hole": 1, "superconduct": 2, "we derive": 2, "exact solution": 3,
+           "no-arbitrage": 3, "risk measure": 2, "expected shortfall": 2, "value-at-risk": 2, "tail risk": 2,
+           "stochastic volatility": 2, "option pricing": 2, "portfolio optimization": 2, "market microstructure": 2,
+           "out-of-sample": 2, "optimal execution": 2, "hedging": 1, "calibration": 1}
 
 LEVELS = ("A1", "A2", "B1", "B2", "C1")
 VIDEO_KINDS = ("interview", "talk", "lecture", "explainer", "documentary", "workout", "course", "lesson",
@@ -614,7 +622,7 @@ def fetch_arxiv(feed, query, days, max_results):
     params = {"search_query": f"({query}) AND submittedDate:[{start} TO {now.strftime('%Y%m%d2359')}]",
               "sortBy": "submittedDate", "sortOrder": "descending", "start": 0, "max_results": max_results}
     content = None
-    for attempt in range(2):
+    for _ in range(2):
         try:
             r = requests.get(ARXIV_API, params=params, timeout=90)
             if r.status_code == 200:
@@ -707,14 +715,17 @@ Playlists:
 
 PAPER_PROMPT = """You are curating a research section for a reader who wants HIGH-LEVEL work in mathematics
 (proofs, number theory, combinatorics, logic, ...), AI (reasoning, theory, formal theorem proving,
-major advances) and PHYSICS (fundamental and theoretical physics: quantum, high-energy, gravity, cosmology,
-condensed matter; plus experiments with strong, well-supported results). All papers below are open-access arXiv preprints, so quality varies a lot.
+major advances), PHYSICS (fundamental and theoretical physics: quantum, high-energy, gravity, cosmology,
+condensed matter; plus experiments with strong, well-supported results) and QUANT FINANCE (market and credit risk
+modelling, derivatives pricing, stochastic and rough volatility, portfolio theory, market microstructure and optimal
+execution, statistical finance, and rigorous empirical work with honest out-of-sample evidence). All papers below are open-access arXiv preprints, so quality varies a lot.
 KEEP only papers that look substantive and significant: new theorems or proofs, resolved or advanced
 conjectures, rigorous theory, formalized or machine-checked proofs (Lean etc.), important new methods,
 strong results from credible work. REJECT incremental tweaks, narrow applications, hype, vague or
-low-information abstracts.
+low-information abstracts. For Quant Finance also REJECT backtest-only trading strategies, crypto or stock price
+prediction with naive machine learning, and results that only hold in-sample.
 For kept papers also write:
-- "cat": "Math", "AI", "Physics" or "Proofs" ("Proofs" = formal, machine-checked proofs or AI theorem proving)
+- "cat": "Math", "AI", "Physics", "Quant Finance" or "Proofs" ("Proofs" = formal, machine-checked proofs or AI theorem proving)
 - "summary": ONE plain-English sentence (max 35 words) using ONLY what the abstract says. No hype,
   and never add claims that are not in the abstract.
 - "kind": one of "new theorem", "new proof", "survey", "new method", "theory", "benchmark", "formal proof", "other"
@@ -768,7 +779,7 @@ def gemini_request(body):
     if GEM["dead"]:
         raise RuntimeError("Gemini's free DAILY limit is already used up")
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
-    for attempt in range(3):
+    for _ in range(3):
         try:
             r = requests.post(url, headers={"x-goog-api-key": GEMINI_KEY}, json=body, timeout=180)
         except requests.RequestException as e:
@@ -879,7 +890,7 @@ def judge_papers(batch):
     out = []
     for i in range(len(batch)):
         x = verdicts.get(i)
-        if x and x.get("keep") and x.get("cat") in ("Math", "AI", "Physics", "Proofs") and x.get("summary"):
+        if x and x.get("keep") and x.get("cat") in PAPER_CATS and x.get("summary"):
             out.append({"keep": True, "cat": x["cat"], "summary": x["summary"],
                         "kind": x.get("kind", "other"), "level": x.get("level", "advanced")})
         elif x is None:
@@ -1013,7 +1024,7 @@ def clean_summary(obj, source, chapters):
 
 def summarise_one(v, chapters):
     """Try transcript, then Gemini watching the video, then the description. Returns a summary dict or None."""
-    head = f"Chapters:\n" + "\n".join(f"{t // 60}:{t % 60:02d} {title}" for t, title in chapters) if chapters else ""
+    head = "Chapters:\n" + "\n".join(f"{t // 60}:{t % 60:02d} {title}" for t, title in chapters) if chapters else ""
     rows = fetch_transcript(v["id"])
     if rows:
         material = (head + "\n\n" if head else "") + transcript_text(rows)
@@ -1337,11 +1348,13 @@ def stage_playlists(lib):
 
 def stage_papers(lib):
     print()
-    first_run = not any(k.startswith("arxiv:") for k in lib.papers)
     by_feed, seen = {}, set()
     for feed, (query, days, max_results) in PAPER_FEEDS.items():
-        print(f"Searching arXiv: {feed}")
-        got = fetch_arxiv(feed, query, days * (FIRST_RUN_MULTIPLIER if first_run else 1), max_results)
+        # a feed with nothing kept yet (first run, or a feed added later) looks further back
+        first_run = not any(p.get("category") == feed for p in lib.papers.values())
+        mult = FIRST_RUN_MULTIPLIER if first_run else 1
+        print(f"Searching arXiv: {feed}" + (" (backfill)" if first_run else ""))
+        got = fetch_arxiv(feed, query, days * mult, min(max_results * mult, 1000))
         by_feed[feed] = []
         for p in got:
             if p["id"] in seen or p["id"] in lib.papers:
@@ -1398,7 +1411,7 @@ def build_site(lib):
                                                               -(p.get("q") or 0), -p.get("count", 0)))
     paper_cutoff = (TODAY - datetime.timedelta(days=PAPER_KEEP_DAYS)).isoformat()
     papers = sorted((p for p in lib.papers.values() if p.get("date", "") >= paper_cutoff),
-                    key=lambda p: p["date"], reverse=True)[:150]
+                    key=lambda p: p["date"], reverse=True)[:200]
     # keep only summaries of videos that are still on the site
     live = {v["id"] for v in videos}
     summaries = {k: v for k, v in lib.summaries.items() if k in live and (v.get("tldr") or v.get("ch"))}
