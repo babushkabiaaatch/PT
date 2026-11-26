@@ -62,7 +62,7 @@ CHANNELS = {
                 "@RussianwithAnastasia", "@RussianwithDasha", "@LearnRussianStanislavAcademy",
                 "@BoostYourRussian", "@EasyRussianVideos", "@RussianwithMax", "@ComprehensibleRussian"],
     "Cool Stuff": ["@numberphile", "@computerphile", "@veritasium", "@3blue1brown",
-                   "@standupmaths", "@mattparker", "@minutephysics", "@PBSInfiniteSeries",
+                   "@standupmaths", "@mattparker", "@minutephysics", "@PBSInfiniteSeries", "@FromFirstPrinciplesPod"
                    "@Fermilab", "@SmarterEveryDay", "@SteveMould", "@PracticalEngineeringChannel",
                    "@BenEater", "@SebastianLague", "@WelchLabsVideo", "@TheRoyalInstitution"],
 }
