@@ -43173,7 +43173,7 @@
     "q": 3,
     "kind": "talk",
     "sum_fail": 2,
-    "miss": 1
+    "miss": 2
   },
   "QnkrlnXXDbM": {
     "keep": true,
@@ -47872,5 +47872,765 @@
     "summary": "We show that the correlation length of the gapped phase in LoopTNR is set by the seed of dimerization injected by truncation, predictable via the sine-Gordon mass-coupling relation.",
     "kind": "theory",
     "level": "expert"
+  },
+  "W5VvONhSJuM": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "6h0tMKu5grg": {
+    "keep": false,
+    "why": "not embeddable"
+  },
+  "V0ClPrakL1s": {
+    "keep": true,
+    "cat": "Cool Stuff",
+    "topic": "James Webb Universe",
+    "q": 5,
+    "kind": "talk"
+  },
+  "zSGBxRjzyb8": {
+    "keep": true,
+    "cat": "Cool Stuff",
+    "topic": "Riemann Hypothesis AI",
+    "q": 4,
+    "kind": "explainer"
+  },
+  "2NRx9ouShic": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "mental collapse discipline",
+    "q": 2,
+    "kind": "compilation"
+  },
+  "KJdLVps1E7Q": {
+    "keep": true,
+    "cat": "Longevity",
+    "topic": "plaque tartar health",
+    "q": 4,
+    "kind": "explainer"
+  },
+  "3KGWxi_Y0pg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "learning progress study",
+    "q": 3,
+    "kind": "lesson",
+    "level": "A2"
+  },
+  "6np-iy45fmI": {
+    "keep": false
+  },
+  "zlRIGjo3LOs": {
+    "keep": false
+  },
+  "RPv7YgeUTdQ": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "confidence motivation speech",
+    "q": 2,
+    "kind": "other"
+  },
+  "vi2oiiS8feM": {
+    "keep": true,
+    "cat": "Longevity",
+    "topic": "VO2 max longevity",
+    "q": 4,
+    "kind": "explainer"
+  },
+  "XchiyVm7yq4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Cyrillic alphabet sounds",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "WCJcEjHS2NI": {
+    "keep": false
+  },
+  "n2FL683yorE": {
+    "keep": false
+  },
+  "Qzz8BjWX5kM": {
+    "keep": false
+  },
+  "3PmWVUdJ_AM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian alphabet letters",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "Ket3LCTBML8": {
+    "keep": false
+  },
+  "SD9IaPGhgLk": {
+    "keep": false
+  },
+  "TRaXqGJ91Lo": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "hardest days mindset",
+    "q": 2,
+    "kind": "other"
+  },
+  "sxsCF5q3uSo": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian letters sounds",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "2zCjP3C_rNM": {
+    "keep": false
+  },
+  "awUrPLbDVEU": {
+    "keep": false
+  },
+  "ws2X8bVBawI": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "do it alone motivation",
+    "q": 2,
+    "kind": "other"
+  },
+  "m00qqPDidXI": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "alphabet letter A",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "gesrBBFYLIA": {
+    "keep": false
+  },
+  "I_qNtHnlAY8": {
+    "keep": false
+  },
+  "7ATGrpd26bo": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "mediocrity discipline speech",
+    "q": 3,
+    "kind": "other"
+  },
+  "WeJXgEbvSxE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Cyrillic reading spelling",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "ENI-yndBjNA": {
+    "keep": false
+  },
+  "-AlzpjEefdM": {
+    "keep": false
+  },
+  "BqAh62VMa3g": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "mindset words motivation",
+    "q": 2,
+    "kind": "other"
+  },
+  "785bCLWrIf4": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "alphabet goals tips",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "f7PiQkNlLq8": {
+    "keep": false
+  },
+  "PRiHHTUxEzE": {
+    "keep": false
+  },
+  "TUoD-RqmgvM": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "stop normal thinking",
+    "q": 2,
+    "kind": "other"
+  },
+  "C_zEDpDPsMM": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "alphabet absolute beginners",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "9f6wS4U9rXo": {
+    "keep": false
+  },
+  "QcysBw4AXL4": {
+    "keep": false
+  },
+  "4xs5U8yEQ5E": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "empty success mindset",
+    "q": 2,
+    "kind": "other"
+  },
+  "axbdN1BpJ6s": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "reading all letters",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "MVLM3-5bW1U": {
+    "keep": false
+  },
+  "ri-yDMV7v8I": {
+    "keep": false
+  },
+  "9BlXimO8jf4": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "discipline no excuses",
+    "q": 2,
+    "kind": "other"
+  },
+  "P3K9qw8IrAc": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Cyrillic script pronunciation",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "gos1--kZUtA": {
+    "keep": false
+  },
+  "SJHkvNzeIwQ": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "5 AM mindset winners",
+    "q": 2,
+    "kind": "other"
+  },
+  "DPd1pP1jKIE": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "false friends letters",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "qXl7WyCstR0": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "mental toughness reminder",
+    "q": 2,
+    "kind": "other"
+  },
+  "MFxLwgUbaTs": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "strange letters familiar sounds",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "YrSLOHt3urY": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "stop caring opinions",
+    "q": 2,
+    "kind": "other"
+  },
+  "nu6KujUv-7E": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "pronouncing letter Ы",
+    "q": 5,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "QN4tjgkTUJA": {
+    "keep": true,
+    "cat": "Goggins",
+    "topic": "leave excuses compilation",
+    "q": 2,
+    "kind": "compilation"
+  },
+  "299BdWSpHaU": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian alphabet lecture",
+    "q": 3,
+    "kind": "lecture",
+    "level": "A1"
+  },
+  "sCG0WKFAr18": {
+    "keep": false
+  },
+  "2z1-KyLFwHQ": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian alphabet reading",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "b0FVTOxsWw0": {
+    "keep": false
+  },
+  "0ct7BmGROzo": {
+    "keep": false
+  },
+  "RHE7xoHSbSg": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian cursive alphabet",
+    "q": 3,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "S7-fs--nFHk": {
+    "keep": true,
+    "cat": "Russian",
+    "topic": "Russian alphabet beginner",
+    "q": 4,
+    "kind": "lesson",
+    "level": "A1"
+  },
+  "arxiv:2611.34537": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We show that for the face lattice of the permutohedron, smaller adjacent levels can be matched into larger ones by parent--child pairs except for a small window of width about 0.0043n.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.34575": {
+    "keep": false
+  },
+  "arxiv:2611.34029": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We formulate an entanglement-assisted classical communication hypothesis-testing framework to investigate quantum advantages in privacy-preserving hypothesis testing.",
+    "kind": "theory",
+    "level": "advanced"
+  },
+  "arxiv:2611.34696": {
+    "keep": false
+  },
+  "arxiv:2611.33825": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We extend signal-channel theory for grokking by relating training dissipation and evaluation transfer to population risk, establishing quantitative bounds for task stability.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.34509": {
+    "keep": false
+  },
+  "arxiv:2611.33363": {
+    "keep": false
+  },
+  "arxiv:2611.33608": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We provide a short, elementary proof of the martingale averaged Fourier extension theorem for the paraboloid using embedding and interpolation.",
+    "kind": "new proof",
+    "level": "expert"
+  },
+  "arxiv:2611.34452": {
+    "keep": false
+  },
+  "arxiv:2611.33317": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We prove that two Bell-diagonal qubit states with the same singlet fraction have different attainable rates under positive partial transpose operations unless a Bell probability vanishes.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.33444": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove an integration-by-parts formula for the KPZ fixed point, showing that spatial height covariance derivatives relate to point-to-line geodesic coalescence probabilities.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34923": {
+    "keep": false
+  },
+  "arxiv:2611.33299": {
+    "keep": false
+  },
+  "arxiv:2611.34308": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove a measurable analogue of the Banach--Tarski paradox over locally compact non-Archimedean valued fields for bounded Haar measurable subsets.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34276": {
+    "keep": false
+  },
+  "arxiv:2611.33285": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We derive exact bounds on Love numbers and quasinormal modes of a stable physical body based on whether it is lossless or passive.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.34282": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove an elliptic-curve criterion for the irreducibility of certain trinomials over the binary field and construct explicit infinite families across fourteen exponent classes.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34273": {
+    "keep": false
+  },
+  "arxiv:2611.33803": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "In an exactly solvable nodal Bose metal model, logarithmic divergence of pair susceptibility along Cooper surfaces enables superconductivity despite a vanishing one-electron density of states.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34242": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that deciding integer abundance is equivalent to complete integer factorization under deterministic polynomial-time Turing reductions.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34249": {
+    "keep": false
+  },
+  "arxiv:2611.33787": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We study Higgsino dark matter within a supersymmetric framework to explain the LZ high-recoil event using deflected anomaly-mediated parameter regimes.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.34205": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that every finite 5-group containing an abelian subgroup of order 5^6 has a normal abelian subgroup of that order, resolving the last open case of Kourovka Notebook Problem 21.51.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34248": {
+    "keep": false
+  },
+  "arxiv:2611.33776": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We establish a structure theorem showing that an arbitrary separable quantum system coupled to a phase-oscillator environment is forced into a universal operator structure.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34167": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "This paper presents a new general upper bound on the broadcast function B(n) using Knödel graphs.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.34218": {
+    "keep": false
+  },
+  "arxiv:2611.33723": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We examine electromagnetic gauge invariance and identify dissipation-free states arising from Berry connection fluctuations as superconducting states.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.34165": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove the entropic continuity of the sum of positive Lyapunov exponents for every C^infty diffeomorphism in arbitrary dimensions under an entropy gap condition.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34215": {
+    "keep": false
+  },
+  "arxiv:2611.33717": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We demonstrate precise control of the field-free superconducting diode effect in epitaxial [111]-oriented A1-CoPt/Nb heterostructures.",
+    "kind": "new method",
+    "level": "advanced"
+  },
+  "arxiv:2611.34095": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that simple random walk on the uniform spanning forest component is transient for dimension five and recurrent for every dimension at least six.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "arxiv:2611.34211": {
+    "keep": false
+  },
+  "arxiv:2611.33662": {
+    "keep": false
+  },
+  "arxiv:2611.34052": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that the maximal rank of an n by n by n tensor is n squared over 3 plus O of n to the three halves over the real numbers and every algebraically closed field.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34179": {
+    "keep": false
+  },
+  "arxiv:2611.33570": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We establish equilibrium finiteness and prove the amended-potential form of Saari's conjecture for the restricted N-body problem.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34041": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove an exact rational-curve formula for the nef-curve cone of every complex projective dlt pair with effective real boundary.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34152": {
+    "keep": false
+  },
+  "arxiv:2611.33551": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We study spinor valued differential forms on compact even-dimensional Riemannian spin manifolds and develop their algebra and associated identities.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.34038": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We show the non-triviality of the sigma-ramified Iwasawa module of the maximal multiple Zp-extension of a CM-field of degree greater than two.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34130": {
+    "keep": false
+  },
+  "arxiv:2611.33541": {
+    "keep": false
+  },
+  "arxiv:2611.33921": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that a specific graph uniquely maximizes the p-spectral Turan-type problem for disjoint color-critical graphs for all sufficiently large n.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34126": {
+    "keep": false
+  },
+  "arxiv:2611.33481": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We demonstrate singlet-absorption magnetometry using spin-dense diamond nanocavities to overcome the short optical interaction length limits of conventional absorption-based sensors.",
+    "kind": "new method",
+    "level": "advanced"
+  },
+  "arxiv:2611.33837": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We present two Maple-implemented algorithms for decomposing rational curves on real classical groups, one handling multiple poles and another decomposing single-pole curves into low-degree products.",
+    "kind": "new method",
+    "level": "expert"
+  },
+  "arxiv:2611.34112": {
+    "keep": false
+  },
+  "arxiv:2611.33413": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We define the quantum Nakamoto coefficient as the number of secret keys a quantum computer must break to take over proof-of-stake blockchains, measuring it across fifteen live networks.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.33781": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We establish unconditional murmuration formulas for elliptic curves ordered by height in short intervals.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34093": {
+    "keep": false
+  },
+  "arxiv:2611.33354": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We identify the renormalization-group interface up to topological dressing for conjectured massless WZW flows at every odd level $k\\geq 3$.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.33569": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We develop a large-deviation theory for noise-induced extinction in hierarchical food webs of arbitrary size.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.34068": {
+    "keep": false
+  },
+  "arxiv:2611.33334": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We update model-independent constraints on the angular acoustic scale and physical densities by disentangling early-Universe information from late-time signatures in CMB data.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.33554": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We propose a two-timescale stochastic approximation variational Q-learning algorithm for ergodic risk-sensitive control of Markov chains and prove almost sure convergence.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34024": {
+    "keep": false
+  },
+  "arxiv:2611.33324": {
+    "keep": false
+  },
+  "arxiv:2611.33540": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We establish a graphon analogue to the classical Erdős--Rényi result regarding graph connectivity and minimum-degree-one hitting times.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34016": {
+    "keep": false
+  },
+  "arxiv:2611.33530": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that all abstract classes equipped with an independence relation satisfying a mild local character condition are stable, using model-theoretic and set-theoretic methods.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.33430": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that every semigroup admitting a presentation satisfying the small overlap condition C(3) is neither left nor right reversible, unless it is the free semigroup on one generator.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.33361": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "Under the Taylor-Wiles residual irreducibility hypothesis, we prove the vanishing of the adjoint Bloch-Kato Selmer group with characteristic-zero coefficients for regular algebraic cuspidal automorphic representations.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34924": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We propose a background independent quantization of vacuum general relativity on four-dimensional Lorentzian spacetimes by solving gravitational constraints on intersecting null cones.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.33114": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that a homogeneous form hypersurface satisfies the smooth Hasse principle when the number of variables minus the singular locus affine dimension is at least 2^(d+1) - 3.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34922": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We show that in any d-dimensional CFT, vacuum sandwiched Rényi mutual information maps to a CFT partition function on a specific manifold, with explicit evaluations matching density matrix computations.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.33073": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove almost-sure finite generation and finite presentation for the Sawin-Wood measure and establish the sharp tail for the generator rank of the random group.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34921": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We show that a specific Werner state has a negative partial transpose and is bound entangled, proving that distillable entanglement is neither additive nor convex.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.33058": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We characterize the boundedness of the Hardy-Littlewood maximal operator on weighted variable Lebesgue spaces using a variable Muckenhoupt condition and auxiliary functions.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34916": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We identify a complementary mechanism for critical quantum metrology via suppressed quantum noise rather than enhanced response, demonstrated in coherently radiating spin states.",
+    "kind": "new method",
+    "level": "expert"
+  },
+  "arxiv:2611.33260": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We prove that the unstable theory of a specific renormed Banach space is NIP and classify its continuum many separable models up to surjective linear isometry.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.34900": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We show that rhombohedral stacking in a 3R-MoS2 homobilayer can brighten two symmetry-forbidden interlayer excitons.",
+    "kind": "new method",
+    "level": "expert"
+  },
+  "arxiv:2611.33001": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We study reproducing kernel Hilbert spaces from the local Weil quadratic form, prove a local explicit formula, and characterize the Riemann hypothesis by uniform boundedness.",
+    "kind": "theory",
+    "level": "expert"
+  },
+  "arxiv:2611.34886": {
+    "keep": true,
+    "cat": "Physics",
+    "summary": "We show that energy correlators with a weight in the arrival time are infrared unsafe in gauge theories due to divergences arising at two loops.",
+    "kind": "new theorem",
+    "level": "expert"
+  },
+  "arxiv:2611.32999": {
+    "keep": true,
+    "cat": "Math",
+    "summary": "We show that a triangle-free planar graph need not be partial one-sided Hamiltonian, disproving a known conjecture.",
+    "kind": "new theorem",
+    "level": "advanced"
+  },
+  "pl:PLk0dFHornymBELeMef9EiK8Mn01dGb1a5": {
+    "keep": true,
+    "cat": "Russian",
+    "level": "Mixed",
+    "topic": "comprehensible input listening",
+    "q": 4
   }
 }
